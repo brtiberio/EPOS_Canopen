@@ -20,6 +20,8 @@ lib64/
 parts/
 sdist/
 var/
+bin/
+share/
 *.egg-info/
 .installed.cfg
 *.egg
@@ -56,3 +58,6 @@ docs/_build/
 
 # PyBuilder
 target/
+
+Scripts/
+pyvenv.cfg

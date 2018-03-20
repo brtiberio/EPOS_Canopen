@@ -1,0 +1,3252 @@
+[FileInfo]
+FileName=maxon-70_10.eds
+FileVersion=1
+FileRevision=16
+LastEDS=
+EDSVersion=4.0
+Description=Electronic Data Sheet for EPOS
+CreationTime=8:00AM
+CreationDate=04-15-2003
+CreatedBy=SAN
+ModificationTime=12:00AM
+ModificationDate=10-30-2006
+ModifiedBy=OTH
+
+[DeviceInfo]
+VendorName=maxon motor ag
+VendorNumber=251
+ProductName=EPOS 70/10
+ProductNumber=1611661312
+RevisionNumber=540213248
+BaudRate_10=0
+BaudRate_20=1
+BaudRate_50=1
+BaudRate_125=1
+BaudRate_250=1
+BaudRate_500=1
+BaudRate_800=1
+BaudRate_1000=1
+SimpleBootUpMaster=0
+SimpleBootUpSlave=1
+Granularity=8
+DynamicChannelsSupported=0
+CompactPDO=0
+GroupMessaging=0
+NrOfRXPDO=4
+NrOfTXPDO=4
+LSS_Supported=0
+;LSS_Type=Server
+
+[DummyUsage]
+Dummy0001=0
+Dummy0002=0
+Dummy0003=0
+Dummy0004=0
+Dummy0005=0
+Dummy0006=0
+Dummy0007=0
+
+[Comments]
+Lines=4
+Line1=Software Version:    0x2033
+Line2=Hardware Version:    0x6010
+Line3=Application Number:  0x0000
+Line4=Application Version: 0x0000
+
+[MandatoryObjects]
+Supported Objects=3
+1=0x1000
+2=0x1001
+3=0x1018
+
+[1000]
+ParameterName=Device Type
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=ro
+DefaultValue=0x00020192
+PDOMapping=0
+ObjFlags=1
+
+[1001]
+ParameterName=Error Register
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0005
+AccessType=ro
+DefaultValue=0
+PDOMapping=0
+ObjFlags=1
+
+[1018]
+ParameterName=Identity Object
+ObjectType=0x9
+;StorageLocation=RAM
+SubNumber=0x5
+
+[1018sub0]
+ParameterName=Internal Number of Entries
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0005
+AccessType=ro
+DefaultValue=4
+PDOMapping=0
+ObjFlags=3
+
+[1018sub1]
+ParameterName=Vendor ID
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=ro
+DefaultValue=0x000000FB
+PDOMapping=0
+ObjFlags=1
+
+[1018sub2]
+ParameterName=Product Code
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=ro
+DefaultValue=
+PDOMapping=0
+ObjFlags=1
+
+[1018sub3]
+ParameterName=Revision Number
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=ro
+DefaultValue=
+PDOMapping=0
+ObjFlags=1
+
+[1018sub4]
+ParameterName=Serial Number
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=ro
+DefaultValue=
+PDOMapping=0
+ObjFlags=1
+
+[OptionalObjects]
+Supported Objects=66
+1=0x1003
+2=0x1005
+3=0x1008
+4=0x100C
+5=0x100D
+6=0x1010
+7=0x1011
+8=0x1014
+9=0x1016
+10=0x1017
+11=0x1020
+12=0x1200
+13=0x1400
+14=0x1401
+15=0x1402
+16=0x1403
+17=0x1600
+18=0x1601
+19=0x1602
+20=0x1603
+21=0x1800
+22=0x1801
+23=0x1802
+24=0x1803
+25=0x1A00
+26=0x1A01
+27=0x1A02
+28=0x1A03
+29=0x6040
+30=0x6041
+31=0x6060
+32=0x6061
+33=0x6062
+34=0x6064
+35=0x6065
+36=0x6067
+37=0x6068
+38=0x6069
+39=0x606B
+40=0x606C
+41=0x6078
+42=0x607A
+43=0x607C
+44=0x607D
+45=0x607F
+46=0x6081
+47=0x6083
+48=0x6084
+49=0x6085
+50=0x6086
+51=0x6089
+52=0x608A
+53=0x608B
+54=0x608C
+55=0x608D
+56=0x608E
+57=0x6098
+58=0x6099
+59=0x609A
+60=0x60F6
+61=0x60F9
+62=0x60FB
+63=0x60FF
+64=0x6402
+65=0x6410
+66=0x6502
+
+[1003]
+ParameterName=Error History
+ObjectType=0x8
+;StorageLocation=RAM
+SubNumber=0x6
+
+[1003sub0]
+ParameterName=Number of Errors
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0005
+AccessType=rw
+DefaultValue=0
+PDOMapping=0
+ObjFlags=1
+
+[1003sub1]
+ParameterName=Error History (1)
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=ro
+DefaultValue=0x00000000
+PDOMapping=0
+ObjFlags=1
+
+[1003sub2]
+ParameterName=Error History (2)
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=ro
+DefaultValue=0x00000000
+PDOMapping=0
+ObjFlags=1
+
+[1003sub3]
+ParameterName=Error History (3)
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=ro
+DefaultValue=0x00000000
+PDOMapping=0
+ObjFlags=1
+
+[1003sub4]
+ParameterName=Error History (4)
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=ro
+DefaultValue=0x00000000
+PDOMapping=0
+ObjFlags=1
+
+[1003sub5]
+ParameterName=Error History (5)
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=ro
+DefaultValue=0x00000000
+PDOMapping=0
+ObjFlags=1
+
+[1005]
+ParameterName=COB-ID SYNC Message
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x80
+PDOMapping=0
+ObjFlags=1
+
+[1008]
+ParameterName=Device Name
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0009
+AccessType=const
+DefaultValue=EPOS
+PDOMapping=0
+ObjFlags=1
+
+[100C]
+ParameterName=Guard Time
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=rw
+DefaultValue=0
+PDOMapping=0
+
+[100D]
+ParameterName=Life Time Factor
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0005
+AccessType=rw
+DefaultValue=0
+PDOMapping=0
+
+[1010]
+ParameterName=Store Parameters
+ObjectType=0x8
+;StorageLocation=RAM
+SubNumber=0x2
+
+[1010sub0]
+ParameterName=Largest SubIndex Supported
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0005
+AccessType=ro
+DefaultValue=1
+PDOMapping=0
+ObjFlags=3
+
+[1010sub1]
+ParameterName=Save All Parameters
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=
+PDOMapping=0
+ObjFlags=3
+
+[1011]
+ParameterName=Restore Default Parameters
+ObjectType=0x8
+;StorageLocation=RAM
+SubNumber=0x3
+
+[1011sub0]
+ParameterName=Largest SubIndex Supported
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0005
+AccessType=ro
+DefaultValue=5
+PDOMapping=0
+ObjFlags=3
+
+[1011sub1]
+ParameterName=Restore All Default Parameters
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=
+PDOMapping=0
+ObjFlags=3
+
+[1011sub5]
+ParameterName=Restore Default PDO COB-IDs
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=
+PDOMapping=0
+ObjFlags=3
+
+[1014]
+ParameterName=COB-ID Emergency Object
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=ro
+DefaultValue=$NODEID+0x80
+PDOMapping=0
+ObjFlags=1
+
+[1016]
+ParameterName=Consumer Heartbeat Time
+ObjectType=0x8
+;StorageLocation=RAM
+SubNumber=0x3
+
+[1016sub0]
+ParameterName=Internal Number of Entries
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0005
+AccessType=ro
+DefaultValue=2
+PDOMapping=0
+ObjFlags=3
+
+[1016sub1]
+ParameterName=Consumer 1 Heartbeat Time
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0
+PDOMapping=0
+
+[1016sub2]
+ParameterName=Consumer 2 Heartbeat Time
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0
+PDOMapping=0
+
+[1017]
+ParameterName=Producer Heartbeat Time
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=rw
+DefaultValue=0
+PDOMapping=0
+
+[1020]
+ParameterName=Verify configuration
+ObjectType=0x8
+;StorageLocation=RAM
+SubNumber=0x3
+
+[1020sub0]
+ParameterName=Internal Number of Entries
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0005
+AccessType=rw
+DefaultValue=2
+PDOMapping=0
+ObjFlags=3
+
+[1020sub1]
+ParameterName=Configuration Date
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x00000000 
+PDOMapping=0
+
+[1020sub2]
+ParameterName=Configuration Time
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=
+PDOMapping=0
+
+[1200]
+ParameterName=Server SDO 1 Parameter
+ObjectType=0x9
+;StorageLocation=RAM
+SubNumber=0x3
+
+[1200sub0]
+ParameterName=Internal Number of Entries
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0005
+AccessType=ro
+DefaultValue=2
+PDOMapping=0
+ObjFlags=3
+
+[1200sub1]
+ParameterName=SDO COB-ID Client->Server (rx)
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=ro
+DefaultValue=$NODEID+0x600
+PDOMapping=0
+ObjFlags=1
+
+[1200sub2]
+ParameterName=SDO COB-ID Server->Client (tx)
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=ro
+DefaultValue=$NODEID+0x580
+PDOMapping=0
+ObjFlags=1
+
+[1400]
+ParameterName=Receive PDO 1 Parameter
+ObjectType=0x9
+;StorageLocation=RAM
+SubNumber=0x3
+
+[1400sub0]
+ParameterName=Internal Largest SubIndex Supported
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0005
+AccessType=ro
+DefaultValue=2
+PDOMapping=0
+ObjFlags=3
+
+[1400sub1]
+ParameterName=COB-ID used by RxPDO 1
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=$NODEID+0x200
+PDOMapping=0
+
+[1400sub2]
+ParameterName=Transmission Type
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0005
+AccessType=rw
+DefaultValue=0xFF
+PDOMapping=0
+
+[1401]
+ParameterName=Receive PDO 2 Parameter
+ObjectType=0x9
+;StorageLocation=RAM
+SubNumber=0x3
+
+[1401sub0]
+ParameterName=Internal Largest SubIndex Supported
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0005
+AccessType=ro
+DefaultValue=2
+PDOMapping=0
+ObjFlags=3
+
+[1401sub1]
+ParameterName=COB-ID used by RxPDO 2
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=$NODEID+0x0300
+PDOMapping=0
+
+[1401sub2]
+ParameterName=Transmission Type
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0005
+AccessType=rw
+DefaultValue=0xFF
+PDOMapping=0
+
+[1402]
+ParameterName=Receive PDO 3 Parameter
+ObjectType=0x9
+;StorageLocation=RAM
+SubNumber=0x3
+
+[1402sub0]
+ParameterName=Internal Largest SubIndex Supported
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0005
+AccessType=ro
+DefaultValue=2
+PDOMapping=0
+ObjFlags=3
+
+[1402sub1]
+ParameterName=COB-ID used by RxPDO 3
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=$NODEID+0x0400
+PDOMapping=0
+
+[1402sub2]
+ParameterName=Transmission Type
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0005
+AccessType=rw
+DefaultValue=0xFF
+PDOMapping=0
+
+[1403]
+ParameterName=Receive PDO 4 Parameter
+ObjectType=0x9
+;StorageLocation=RAM
+SubNumber=0x3
+
+[1403sub0]
+ParameterName=Internal Largest SubIndex Supported
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0005
+AccessType=ro
+DefaultValue=2
+PDOMapping=0
+ObjFlags=3
+
+[1403sub1]
+ParameterName=COB-ID used by RxPDO 4
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=$NODEID+0x0500
+PDOMapping=0
+
+[1403sub2]
+ParameterName=Transmission Type
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0005
+AccessType=rw
+DefaultValue=0xFF
+PDOMapping=0
+
+[1600]
+ParameterName=Receive PDO 1 Mapping
+ObjectType=0x9
+;StorageLocation=RAM
+SubNumber=0x9
+
+[1600sub0]
+ParameterName=Number of Mapped Application Objects in RxPDO 1
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0005
+AccessType=rw
+HighLimit=8
+LowLimit=0
+DefaultValue=1
+PDOMapping=0
+
+[1600sub1]
+ParameterName=1st Mapped Object in RxPDO 1
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x60400010
+PDOMapping=0
+
+[1600sub2]
+ParameterName=2nd Mapped Object in RxPDO 1
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x00000000
+PDOMapping=0
+
+[1600sub3]
+ParameterName=3rd Mapped Object in RxPDO 1
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x00000000
+PDOMapping=0
+
+[1600sub4]
+ParameterName=4th Mapped Object in RxPDO 1
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x00000000
+PDOMapping=0
+
+[1600sub5]
+ParameterName=5th Mapped Object in RxPDO 1
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x00000000
+PDOMapping=0
+
+[1600sub6]
+ParameterName=6th Mapped Object in RxPDO 1
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x00000000
+PDOMapping=0
+
+[1600sub7]
+ParameterName=7th Mapped Object in RxPDO 1
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x00000000
+PDOMapping=0
+
+[1600sub8]
+ParameterName=8th Mapped Object in RxPDO 1
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x00000000
+PDOMapping=0
+
+[1601]
+ParameterName=Receive PDO 2 Mapping
+ObjectType=0x9
+;StorageLocation=RAM
+SubNumber=0x9
+
+[1601sub0]
+ParameterName=Number of Mapped Application Objects in RxPDO 2
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0005
+AccessType=rw
+HighLimit=8
+LowLimit=0
+DefaultValue=2
+PDOMapping=0
+
+[1601sub1]
+ParameterName=1st Mapped Object in RxPDO 2
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x60400010
+PDOMapping=0
+
+[1601sub2]
+ParameterName=2nd Mapped Object in RxPDO 2
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x60600008
+PDOMapping=0
+
+[1601sub3]
+ParameterName=3rd Mapped Object in RxPDO 2
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x00000000
+PDOMapping=0
+
+[1601sub4]
+ParameterName=4th Mapped Object in RxPDO 2
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x00000000
+PDOMapping=0
+
+[1601sub5]
+ParameterName=5th Mapped Object in RxPDO 2
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x00000000
+PDOMapping=0
+
+[1601sub6]
+ParameterName=6th Mapped Object in RxPDO 2
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x00000000
+PDOMapping=0
+
+[1601sub7]
+ParameterName=7th Mapped Object in RxPDO 2
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x00000000
+PDOMapping=0
+
+[1601sub8]
+ParameterName=8th Mapped Object in RxPDO 2
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x00000000
+PDOMapping=0
+
+[1602]
+ParameterName=Receive PDO 3 Mapping
+ObjectType=0x9
+;StorageLocation=RAM
+SubNumber=0x9
+
+[1602sub0]
+ParameterName=Number of Mapped Application Objects in RxPDO 3
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0005
+AccessType=rw
+HighLimit=8
+LowLimit=0
+DefaultValue=2
+PDOMapping=0
+
+[1602sub1]
+ParameterName=1st Mapped Object in RxPDO 3
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x60400010
+PDOMapping=0
+
+[1602sub2]
+ParameterName=2nd Mapped Object in RxPDO 3
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x607A0020
+PDOMapping=0
+
+[1602sub3]
+ParameterName=3rd Mapped Object in RxPDO 3
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x00000000
+PDOMapping=0
+
+[1602sub4]
+ParameterName=4th Mapped Object in RxPDO 3
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x00000000
+PDOMapping=0
+
+[1602sub5]
+ParameterName=5th Mapped Object in RxPDO 3
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x00000000
+PDOMapping=0
+
+[1602sub6]
+ParameterName=6th Mapped Object in RxPDO 3
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x00000000
+PDOMapping=0
+
+[1602sub7]
+ParameterName=7th Mapped Object in RxPDO 3
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x00000000
+PDOMapping=0
+
+[1602sub8]
+ParameterName=8th Mapped Object in RxPDO 3
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x00000000
+PDOMapping=0
+
+[1603]
+ParameterName=Receive PDO 4 Mapping
+ObjectType=0x9
+;StorageLocation=RAM
+SubNumber=0x9
+
+[1603sub0]
+ParameterName=Number of Mapped Application Objects in RxPDO 4
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0005
+AccessType=rw
+HighLimit=8
+LowLimit=0
+DefaultValue=2
+PDOMapping=0
+
+[1603sub1]
+ParameterName=1st Mapped Object in RxPDO 4
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x60400010
+PDOMapping=0
+
+[1603sub2]
+ParameterName=2nd Mapped Object in RxPDO 4
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x60FF0020
+PDOMapping=0
+
+[1603sub3]
+ParameterName=3rd Mapped Object in RxPDO 4
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x00000000
+PDOMapping=0
+
+[1603sub4]
+ParameterName=4th Mapped Object in RxPDO 4
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x00000000
+PDOMapping=0
+
+[1603sub5]
+ParameterName=5th Mapped Object in RxPDO 4
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x00000000
+PDOMapping=0
+
+[1603sub6]
+ParameterName=6th Mapped Object in RxPDO 4
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x00000000
+PDOMapping=0
+
+[1603sub7]
+ParameterName=7th Mapped Object in RxPDO 4
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x00000000
+PDOMapping=0
+
+[1603sub8]
+ParameterName=8th Mapped Object in RxPDO 4
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x00000000
+PDOMapping=0
+
+[1800]
+ParameterName=Transmit PDO 1 Parameter
+ObjectType=0x9
+;StorageLocation=RAM
+SubNumber=0x4
+
+[1800sub0]
+ParameterName=Internal Largest SubIndex Supported
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0005
+AccessType=ro
+DefaultValue=3
+PDOMapping=0
+ObjFlags=3
+
+[1800sub1]
+ParameterName=COB-ID used by TxPDO 1
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=$NODEID+0x40000180
+PDOMapping=0
+
+[1800sub2]
+ParameterName=Transmission Type
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0005
+AccessType=rw
+DefaultValue=0xFF
+PDOMapping=0
+
+[1800sub3]
+ParameterName=Inhibit Time
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=rw
+DefaultValue=0
+PDOMapping=0
+
+[1801]
+ParameterName=Transmit PDO 2 Parameter
+ObjectType=0x9
+;StorageLocation=RAM
+SubNumber=0x4
+
+[1801sub0]
+ParameterName=Internal Largest SubIndex Supported
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0005
+AccessType=ro
+DefaultValue=3
+PDOMapping=0
+ObjFlags=3
+
+[1801sub1]
+ParameterName=COB-ID used by TxPDO 2
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=$NODEID+0xC0000280
+PDOMapping=0
+
+[1801sub2]
+ParameterName=Transmission Type
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0005
+AccessType=rw
+DefaultValue=0xFF
+PDOMapping=0
+
+[1801sub3]
+ParameterName=Inhibit Time
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=rw
+DefaultValue=0
+PDOMapping=0
+
+[1802]
+ParameterName=Transmit PDO 3 Parameter
+ObjectType=0x9
+;StorageLocation=RAM
+SubNumber=0x4
+
+[1802sub0]
+ParameterName=Internal Largest SubIndex Supported
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0005
+AccessType=ro
+DefaultValue=3
+PDOMapping=0
+ObjFlags=3
+
+[1802sub1]
+ParameterName=COB-ID used by TxPDO 3
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=$NODEID+0xC0000380
+PDOMapping=0
+
+[1802sub2]
+ParameterName=Transmission Type
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0005
+AccessType=rw
+DefaultValue=0xFF
+PDOMapping=0
+
+[1802sub3]
+ParameterName=Inhibit Time
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=rw
+DefaultValue=0
+PDOMapping=0
+
+[1803]
+ParameterName=Transmit PDO 4 Parameter
+ObjectType=0x9
+;StorageLocation=RAM
+SubNumber=0x4
+
+[1803sub0]
+ParameterName=Internal Largest SubIndex Supported
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0005
+AccessType=ro
+DefaultValue=3
+PDOMapping=0
+ObjFlags=3
+
+[1803sub1]
+ParameterName=COB-ID used by TxPDO 4
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=$NODEID+0xC0000480
+PDOMapping=0
+
+[1803sub2]
+ParameterName=Transmission Type
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0005
+AccessType=rw
+DefaultValue=0xFF
+PDOMapping=0
+
+[1803sub3]
+ParameterName=Inhibit Time
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=rw
+DefaultValue=0
+PDOMapping=0
+
+[1A00]
+ParameterName=Transmit PDO 1 Mapping
+ObjectType=0x9
+;StorageLocation=RAM
+SubNumber=0x9
+
+[1A00sub0]
+ParameterName=Number of Mapped Application Objects in TxPDO 1
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0005
+AccessType=rw
+HighLimit=8
+LowLimit=0
+DefaultValue=1
+PDOMapping=0
+
+[1A00sub1]
+ParameterName=1st Mapped Object in TxPDO 1
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x60410010
+PDOMapping=0
+
+[1A00sub2]
+ParameterName=2nd Mapped Object in TxPDO 1
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x00000000
+PDOMapping=0
+
+[1A00sub3]
+ParameterName=3rd Mapped Object in TxPDO 1
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x00000000
+PDOMapping=0
+
+[1A00sub4]
+ParameterName=4th Mapped Object in TxPDO 1
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x00000000
+PDOMapping=0
+
+[1A00sub5]
+ParameterName=5th Mapped Object in TxPDO 1
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x00000000
+PDOMapping=0
+
+[1A00sub6]
+ParameterName=6th Mapped Object in TxPDO 1
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x00000000
+PDOMapping=0
+
+[1A00sub7]
+ParameterName=7th Mapped Object in TxPDO 1
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x00000000
+PDOMapping=0
+
+[1A00sub8]
+ParameterName=8th Mapped Object in TxPDO 1
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x00000000
+PDOMapping=0
+
+[1A01]
+ParameterName=Transmit PDO 2 Mapping
+ObjectType=0x9
+;StorageLocation=RAM
+SubNumber=0x9
+
+[1A01sub0]
+ParameterName=Number of Mapped Application Objects in TxPDO 2
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0005
+AccessType=rw
+HighLimit=8
+LowLimit=0
+DefaultValue=2
+PDOMapping=0
+
+[1A01sub1]
+ParameterName=1st Mapped Object in TxPDO 2
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x60410010
+PDOMapping=0
+
+[1A01sub2]
+ParameterName=2nd Mapped Object in TxPDO 2
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x60610008
+PDOMapping=0
+
+[1A01sub3]
+ParameterName=3rd Mapped Object in TxPDO 2
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x00000000
+PDOMapping=0
+
+[1A01sub4]
+ParameterName=4th Mapped Object in TxPDO 2
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x00000000
+PDOMapping=0
+
+[1A01sub5]
+ParameterName=5th Mapped Object in TxPDO 2
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x00000000
+PDOMapping=0
+
+[1A01sub6]
+ParameterName=6th Mapped Object in TxPDO 2
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x00000000
+PDOMapping=0
+
+[1A01sub7]
+ParameterName=7th Mapped Object in TxPDO 2
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x00000000
+PDOMapping=0
+
+[1A01sub8]
+ParameterName=8th Mapped Object in TxPDO 2
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x00000000
+PDOMapping=0
+
+[1A02]
+ParameterName=Transmit PDO 3 Mapping
+ObjectType=0x9
+;StorageLocation=RAM
+SubNumber=0x9
+
+[1A02sub0]
+ParameterName=Number of Mapped Application Objects in TxPDO 3
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0005
+AccessType=rw
+HighLimit=8
+LowLimit=0
+DefaultValue=2
+PDOMapping=0
+
+[1A02sub1]
+ParameterName=1st Mapped Object in TxPDO 3
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x60410010
+PDOMapping=0
+
+[1A02sub2]
+ParameterName=2nd Mapped Object in TxPDO 3
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x60640020
+PDOMapping=0
+
+[1A02sub3]
+ParameterName=3rd Mapped Object in TxPDO 3
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x00000000
+PDOMapping=0
+
+[1A02sub4]
+ParameterName=4th Mapped Object in TxPDO 3
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x00000000
+PDOMapping=0
+
+[1A02sub5]
+ParameterName=5th Mapped Object in TxPDO 3
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x00000000
+PDOMapping=0
+
+[1A02sub6]
+ParameterName=6th Mapped Object in TxPDO 3
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x00000000
+PDOMapping=0
+
+[1A02sub7]
+ParameterName=7th Mapped Object in TxPDO 3
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x00000000
+PDOMapping=0
+
+[1A02sub8]
+ParameterName=8th Mapped Object in TxPDO 3
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x00000000
+PDOMapping=0
+
+[1A03]
+ParameterName=Transmit PDO 4 Mapping
+ObjectType=0x9
+;StorageLocation=RAM
+SubNumber=0x9
+
+[1A03sub0]
+ParameterName=Number of Mapped Application Objects in TxPDO 4
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0005
+AccessType=rw
+HighLimit=8
+LowLimit=0
+DefaultValue=2
+PDOMapping=0
+
+[1A03sub1]
+ParameterName=1st Mapped Object in TxPDO 4
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x60410010
+PDOMapping=0
+
+[1A03sub2]
+ParameterName=2nd Mapped Object in TxPDO 4
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x606C0020
+PDOMapping=0
+
+[1A03sub3]
+ParameterName=3rd Mapped Object in TxPDO 4
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x00000000
+PDOMapping=0
+
+[1A03sub4]
+ParameterName=4th Mapped Object in TxPDO 4
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x00000000
+PDOMapping=0
+
+[1A03sub5]
+ParameterName=5th Mapped Object in TxPDO 4
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x00000000
+PDOMapping=0
+
+[1A03sub6]
+ParameterName=6th Mapped Object in TxPDO 4
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x00000000
+PDOMapping=0
+
+[1A03sub7]
+ParameterName=7th Mapped Object in TxPDO 4
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x00000000
+PDOMapping=0
+
+[1A03sub8]
+ParameterName=8th Mapped Object in TxPDO 4
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x00000000
+PDOMapping=0
+
+[6040]
+ParameterName=ControlWord
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=rww
+DefaultValue=
+PDOMapping=1
+ObjFlags=3
+
+[6041]
+ParameterName=StatusWord
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=ro
+DefaultValue=
+PDOMapping=1
+ObjFlags=3
+
+[6060]
+ParameterName=Modes of Operation
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0002
+AccessType=rww
+DefaultValue=1
+PDOMapping=1
+
+[6061]
+ParameterName=Modes of Operation Display
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0002
+AccessType=ro
+DefaultValue=
+PDOMapping=1
+ObjFlags=3
+
+[6062]
+ParameterName=Position Demand Value
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0004
+AccessType=ro
+DefaultValue=
+PDOMapping=1
+ObjFlags=3
+
+[6064]
+ParameterName=Position Actual Value
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0004
+AccessType=ro
+DefaultValue=
+PDOMapping=1
+ObjFlags=3
+
+[6065]
+ParameterName=Max Following Error
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rwr
+DefaultValue=2000
+PDOMapping=1
+
+[6067]
+ParameterName=Position Window
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=4294967295
+PDOMapping=0
+
+[6068]
+ParameterName=Position Window Time
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=rw
+DefaultValue=0
+PDOMapping=0
+
+[6069]
+ParameterName=Velocity Sensor Actual Value
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0004
+AccessType=ro
+DefaultValue=
+PDOMapping=1
+ObjFlags=3
+
+[606B]
+ParameterName=Velocity Demand Value
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0004
+AccessType=ro
+DefaultValue=
+PDOMapping=1
+ObjFlags=3
+
+[606C]
+ParameterName=Velocity Actual Value
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0004
+AccessType=ro
+DefaultValue=
+PDOMapping=1
+ObjFlags=3
+
+[6078]
+ParameterName=Current Actual Value
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0003
+AccessType=ro
+DefaultValue=
+PDOMapping=1
+ObjFlags=3
+
+[607A]
+ParameterName=Target Position
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0004
+AccessType=rww
+DefaultValue=
+PDOMapping=1
+ObjFlags=3
+
+[607C]
+ParameterName=Home Offset
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0004
+AccessType=rwr
+DefaultValue=0
+PDOMapping=1
+
+[607D]
+ParameterName=Software Position Limit
+ObjectType=0x8
+;StorageLocation=RAM
+SubNumber=0x3
+
+[607Dsub0]
+ParameterName=Internal Number of Entries
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0005
+AccessType=ro
+DefaultValue=2
+PDOMapping=0
+ObjFlags=3
+
+[607Dsub1]
+ParameterName=Min Position Limit
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0004
+AccessType=rw
+DefaultValue=-2147483648
+PDOMapping=0
+
+[607Dsub2]
+ParameterName=Max Position Limit
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0004
+AccessType=rw
+DefaultValue=2147483647
+PDOMapping=0
+
+[607F]
+ParameterName=Max Profile Velocity
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+HighLimit=25000
+LowLimit=0
+DefaultValue=25000
+PDOMapping=0
+
+[6081]
+ParameterName=Profile Velocity
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rwr
+DefaultValue=1000
+PDOMapping=1
+
+[6083]
+ParameterName=Profile Acceleration
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rwr
+DefaultValue=10000
+PDOMapping=1
+
+[6084]
+ParameterName=Profile Deceleration
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rwr
+DefaultValue=10000
+PDOMapping=1
+
+[6085]
+ParameterName=QuickStop Deceleration
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rwr
+DefaultValue=10000
+PDOMapping=1
+
+[6086]
+ParameterName=Motion ProfileType
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0003
+AccessType=rwr
+DefaultValue=0
+PDOMapping=1
+
+[6089]
+ParameterName=Position Notation Index
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0002
+AccessType=rw
+DefaultValue=0x00
+PDOMapping=0
+
+[608A]
+ParameterName=Position Dimension Index
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0005
+AccessType=rw
+DefaultValue=0xAC
+PDOMapping=0
+
+[608B]
+ParameterName=Velocity Notation Index
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0002
+AccessType=rw
+DefaultValue=0x00
+PDOMapping=0
+
+[608C]
+ParameterName=Velocity Dimension Index
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0005
+AccessType=rw
+DefaultValue=0xA4
+PDOMapping=0
+
+[608D]
+ParameterName=Acceleration Notation Index
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0002
+AccessType=rw
+DefaultValue=0x00
+PDOMapping=0
+
+[608E]
+ParameterName=Acceleration Dimension Index
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0005
+AccessType=rw
+DefaultValue=0xA4
+PDOMapping=0
+
+[6098]
+ParameterName=Homing Method
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0002
+AccessType=rwr
+DefaultValue=7
+PDOMapping=1
+
+[6099]
+ParameterName=Homing Speeds
+ObjectType=0x8
+;StorageLocation=RAM
+SubNumber=0x3
+
+[6099sub0]
+ParameterName=Internal Number of Entries
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0005
+AccessType=ro
+DefaultValue=2
+PDOMapping=0
+ObjFlags=3
+
+[6099sub1]
+ParameterName=Speed for Switch Search
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rwr
+DefaultValue=100
+PDOMapping=1
+
+[6099sub2]
+ParameterName=Speed for Zero Search
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rwr
+DefaultValue=10
+PDOMapping=1
+
+[609A]
+ParameterName=Homing Acceleration
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rwr
+DefaultValue=1000
+PDOMapping=1
+
+[60F6]
+ParameterName=Torque Control Parameter
+ObjectType=0x9
+;StorageLocation=RAM
+SubNumber=0x3
+
+[60F6sub0]
+ParameterName=Internal Number of Entries
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0005
+AccessType=ro
+DefaultValue=2
+PDOMapping=0
+ObjFlags=3
+
+[60F6sub1]
+ParameterName=Current Regulator P-Gain
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0003
+AccessType=rwr
+DefaultValue=
+PDOMapping=1
+
+[60F6sub2]
+ParameterName=Current Regulator I-Gain
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0003
+AccessType=rwr
+DefaultValue=
+PDOMapping=1
+
+[60F9]
+ParameterName=Speed Control Parameter
+ObjectType=0x8
+;StorageLocation=RAM
+SubNumber=0x3
+
+[60F9sub0]
+ParameterName=Internal Number of Entries
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0005
+AccessType=ro
+DefaultValue=2
+PDOMapping=0
+ObjFlags=3
+
+[60F9sub1]
+ParameterName=Speed Regulator P-Gain
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0003
+AccessType=rwr
+DefaultValue=
+PDOMapping=1
+
+[60F9sub2]
+ParameterName=Speed Regulator I-Gain
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0003
+AccessType=rwr
+DefaultValue=
+PDOMapping=1
+
+[60FB]
+ParameterName=Position Control Parameter
+ObjectType=0x9
+;StorageLocation=RAM
+SubNumber=0x6
+
+[60FBsub0]
+ParameterName=Internal Number of Entries
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0005
+AccessType=ro
+DefaultValue=5
+PDOMapping=0
+ObjFlags=3
+
+[60FBsub1]
+ParameterName=Position Regulator P-Gain
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0003
+AccessType=rwr
+DefaultValue=150
+PDOMapping=1
+
+[60FBsub2]
+ParameterName=Position Regulator I-Gain
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0003
+AccessType=rwr
+DefaultValue=10
+PDOMapping=1
+
+[60FBsub3]
+ParameterName=Position Regulator D-Gain
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0003
+AccessType=rwr
+DefaultValue=200
+PDOMapping=1
+
+[60FBsub4]
+ParameterName=Velocity Feedforward Factor
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=rwr
+DefaultValue=0
+PDOMapping=1
+
+[60FBsub5]
+ParameterName=Acceleration Feedforward Factor
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=rwr
+DefaultValue=0
+PDOMapping=1
+
+[60FF]
+ParameterName=TargetVelocity
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0004
+AccessType=rww
+DefaultValue=
+PDOMapping=1
+ObjFlags=3
+
+[6402]
+ParameterName=MotorType
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=rw
+DefaultValue=
+PDOMapping=0
+
+[6410]
+ParameterName=Motor Data
+ObjectType=0x9
+;StorageLocation=RAM
+SubNumber=0x6
+
+[6410sub0]
+ParameterName=Internal Number of Entries
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0005
+AccessType=ro
+DefaultValue=5
+PDOMapping=0
+ObjFlags=3
+
+[6410sub1]
+ParameterName=Continuous Current Limit
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=rwr
+HighLimit=1000
+LowLimit=0
+DefaultValue=
+PDOMapping=1
+
+[6410sub2]
+ParameterName=Output Current Limit
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=rwr
+HighLimit=2000
+LowLimit=0
+DefaultValue=
+PDOMapping=1
+
+[6410sub3]
+ParameterName=PolePair Number
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0005
+AccessType=rw
+DefaultValue=1
+PDOMapping=0
+
+[6410sub4]
+ParameterName=Maximal Speed in CurrentMode
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=rwr
+DefaultValue=30000
+PDOMapping=1
+
+[6410sub5]
+ParameterName=Thermal Time Constant Winding
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=rw
+HighLimit=1440
+LowLimit=1
+DefaultValue=
+PDOMapping=0
+
+[6502]
+ParameterName=Supported Drive Modes
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=const
+DefaultValue=
+PDOMapping=0
+ObjFlags=1
+
+[ManufacturerObjects]
+Supported Objects=51
+1=0x2000
+2=0x2001
+3=0x2002
+4=0x2003
+5=0x2004
+6=0x2005
+7=0x2008
+8=0x2009
+9=0x200C
+10=0x2010
+11=0x2011
+12=0x2012
+13=0x2013
+14=0x2014
+15=0x2015
+16=0x2016
+17=0x2017
+18=0x2018
+19=0x2019
+20=0x201A
+21=0x201B
+22=0x2020
+23=0x2021
+24=0x2022
+25=0x2023
+26=0x2024
+27=0x2025
+28=0x2026
+29=0x2027
+30=0x2028
+31=0x2029
+32=0x202A
+33=0x202B
+34=0x202C
+35=0x202D
+36=0x202E
+37=0x2030
+38=0x2062
+39=0x206B
+40=0x2070
+41=0x2071
+42=0x2074
+43=0x2078
+44=0x2079
+45=0x207C
+46=0x2080
+47=0x2081
+48=0x20F4
+49=0x2210
+50=0x2300
+51=0x2FFF
+
+[2000]
+ParameterName=Node ID
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0005
+AccessType=rw
+DefaultValue=$NODEID+0x00
+PDOMapping=0
+
+[2001]
+ParameterName=CAN Bitrate
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=rw
+HighLimit=6
+LowLimit=0
+DefaultValue=0
+PDOMapping=0
+
+[2002]
+ParameterName=RS232 Baudrate
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=rw
+HighLimit=5
+LowLimit=0
+DefaultValue=3
+PDOMapping=0
+
+[2003]
+ParameterName=Version Numbers
+ObjectType=0x9
+;StorageLocation=RAM
+SubNumber=0x6
+
+[2003sub0]
+ParameterName=Internal Number of Entries
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0005
+AccessType=ro
+DefaultValue=5
+PDOMapping=0
+ObjFlags=3
+
+[2003sub1]
+ParameterName=Software Version
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=ro
+DefaultValue=
+PDOMapping=0
+ObjFlags=1
+
+[2003sub2]
+ParameterName=Hardware Version
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=ro
+DefaultValue=
+PDOMapping=0
+ObjFlags=1
+
+[2003sub3]
+ParameterName=Application Number
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=ro
+DefaultValue=
+PDOMapping=0
+ObjFlags=1
+
+[2003sub4]
+ParameterName=Application Version
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=ro
+DefaultValue=
+PDOMapping=0
+ObjFlags=1
+
+[2003sub5]
+ParameterName=Basesector Version
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=ro
+DefaultValue=
+PDOMapping=0
+ObjFlags=1
+
+[2004]
+ParameterName=Serial Number
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x001B
+AccessType=const
+DefaultValue=
+PDOMapping=0
+ObjFlags=1
+
+[2005]
+ParameterName=RS232 Frame Timeout
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=rw
+DefaultValue=500
+PDOMapping=0
+
+[2008]
+ParameterName=Miscellaneous Configuration
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=rw
+DefaultValue=0x0000
+PDOMapping=0
+
+[2009]
+ParameterName=Internal Dip Switch State
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=ro
+DefaultValue=
+PDOMapping=0
+ObjFlags=3
+
+[200C]
+ParameterName=Custom persistent memory
+ObjectType=0x9
+;StorageLocation=RAM
+SubNumber=0x5
+
+[200Csub0]
+ParameterName=Internal Number of Entries
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0005
+AccessType=ro
+DefaultValue=4
+PDOMapping=0
+ObjFlags=3
+
+[200Csub1]
+ParameterName=Custom persistent memory 1
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x00000000
+PDOMapping=0
+
+[200Csub2]
+ParameterName=Custom persistent memory 2
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x00000000
+PDOMapping=0
+
+[200Csub3]
+ParameterName=Custom persistent memory 3
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x00000000
+PDOMapping=0
+
+[200Csub4]
+ParameterName=Custom persistent memory4
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x00000000
+PDOMapping=0
+
+[2010]
+ParameterName=Internal DataRecorder Control
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=rw
+DefaultValue=
+PDOMapping=0
+ObjFlags=3
+
+[2011]
+ParameterName=Internal DataRecorder Configuration
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=rw
+DefaultValue=
+PDOMapping=0
+
+[2012]
+ParameterName=Internal DataRecorder Sampling Period
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=rw
+DefaultValue=
+PDOMapping=0
+
+[2013]
+ParameterName=Internal DataRecorder Number of Preceding Samples
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=rw
+DefaultValue=
+PDOMapping=0
+
+[2014]
+ParameterName=Internal DataRecorder Number of Sampling Variables
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=rw
+DefaultValue=
+PDOMapping=0
+
+[2015]
+ParameterName=DataRecorder Index of Variables
+ObjectType=0x9
+;StorageLocation=RAM
+SubNumber=0x5
+
+[2015sub0]
+ParameterName=Internal Number of Entries
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0005
+AccessType=ro
+DefaultValue=4
+PDOMapping=0
+ObjFlags=3
+
+[2015sub1]
+ParameterName=Internal DataRecorder Index of Variable 1
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=rw
+DefaultValue=
+PDOMapping=0
+
+[2015sub2]
+ParameterName=Internal DataRecorder Index of Variable 2
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=rw
+DefaultValue=
+PDOMapping=0
+
+[2015sub3]
+ParameterName=Internal DataRecorder Index of Variable 3
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=rw
+DefaultValue=
+PDOMapping=0
+
+[2015sub4]
+ParameterName=Internal DataRecorder Index of Variable 4
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=rw
+DefaultValue=
+PDOMapping=0
+
+[2016]
+ParameterName=Internal DataRecorder SubIndex of Variables
+ObjectType=0x9
+;StorageLocation=RAM
+SubNumber=0x5
+
+[2016sub0]
+ParameterName=Internal Number of Entries
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0005
+AccessType=ro
+DefaultValue=4
+PDOMapping=0
+ObjFlags=3
+
+[2016sub1]
+ParameterName=Internal DataRecorder SubIndex of Variable 1
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=rw
+DefaultValue=
+PDOMapping=0
+
+[2016sub2]
+ParameterName=Internal DataRecorder SubIndex of Variable 2
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=rw
+DefaultValue=
+PDOMapping=0
+
+[2016sub3]
+ParameterName=Internal DataRecorder SubIndex of Variable 3
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=rw
+DefaultValue=
+PDOMapping=0
+
+[2016sub4]
+ParameterName=Internal DataRecorder SubIndex of Variable 4
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=rw
+DefaultValue=
+PDOMapping=0
+
+[2017]
+ParameterName=Internal DataRecorder Status
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=ro
+DefaultValue=
+PDOMapping=0
+ObjFlags=3
+
+[2018]
+ParameterName=Internal DataRecorder Max Number of Samples
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=ro
+DefaultValue=
+PDOMapping=0
+ObjFlags=3
+
+[2019]
+ParameterName=Internal DataRecorder Number of Recorded Samples
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=ro
+DefaultValue=
+PDOMapping=0
+ObjFlags=3
+
+[201A]
+ParameterName=Internal DataRecorder Vector Start Offset
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=ro
+DefaultValue=
+PDOMapping=0
+ObjFlags=3
+
+[201B]
+ParameterName=Internal DataRecorder Data Buffer
+ObjectType=0x2
+;StorageLocation=RAM
+ObjFlags=3
+
+[2020]
+ParameterName=Encoder Counter
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=ro
+DefaultValue=
+PDOMapping=1
+ObjFlags=3
+
+[2021]
+ParameterName=Encoder Counter at Index Pulse
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=ro
+DefaultValue=
+PDOMapping=1
+ObjFlags=3
+
+[2022]
+ParameterName=Hallsensor Pattern
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=ro
+DefaultValue=
+PDOMapping=1
+ObjFlags=3
+
+[2023]
+ParameterName=Internal Object Demand Rotor Angle
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=rw
+DefaultValue=
+PDOMapping=0
+ObjFlags=3
+
+[2024]
+ParameterName=Internal System State
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=ro
+DefaultValue=
+PDOMapping=0
+ObjFlags=3
+
+[2025]
+ParameterName=Internal Object Reserved
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=wo
+DefaultValue=
+PDOMapping=0
+ObjFlags=3
+
+[2026]
+ParameterName=Internal Object ProcessMemory
+ObjectType=0x9
+;StorageLocation=RAM
+SubNumber=0x3
+
+[2026sub0]
+ParameterName=Internal Object Number of Entries
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0005
+AccessType=ro
+DefaultValue=2
+PDOMapping=0
+ObjFlags=3
+
+[2026sub1]
+ParameterName=Internal Object MemoryAddress
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=rw
+DefaultValue=
+PDOMapping=0
+ObjFlags=3
+
+[2026sub2]
+ParameterName=Internal Object MemoryValue
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=rw
+DefaultValue=
+PDOMapping=0
+ObjFlags=3
+
+[2027]
+ParameterName=Current Actual Value Averaged
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0003
+AccessType=ro
+DefaultValue=
+PDOMapping=1
+ObjFlags=3
+
+[2028]
+ParameterName=Velocity Actual Value Averaged
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0004
+AccessType=ro
+DefaultValue=
+PDOMapping=1
+ObjFlags=3
+
+[2029]
+ParameterName=Internal Object Actual Rotor Angle
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=ro
+DefaultValue=
+PDOMapping=0
+ObjFlags=3
+
+[202A]
+ParameterName=Internal Object NTC Temperatur Sensor Value
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=ro
+DefaultValue=
+PDOMapping=0
+ObjFlags=3
+
+[202B]
+ParameterName=Internal Object Motor Phase Current U
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0003
+AccessType=ro
+DefaultValue=
+PDOMapping=0
+ObjFlags=3
+
+[202C]
+ParameterName=Internal Object Motor Phase Current V
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0003
+AccessType=ro
+DefaultValue=
+PDOMapping=0
+ObjFlags=3
+
+[202D]
+ParameterName=Internal Object Measured Angle Difference
+ObjectType=0x9
+;StorageLocation=RAM
+SubNumber=0x6
+
+[202Dsub0]
+ParameterName=Internal Object Number of Entries
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0005
+AccessType=ro
+DefaultValue=5
+PDOMapping=0
+ObjFlags=3
+
+[202Dsub1]
+ParameterName=Internal Object Maximal Measured Angle Difference
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0003
+AccessType=ro
+DefaultValue=
+PDOMapping=0
+ObjFlags=3
+
+[202Dsub2]
+ParameterName=Internal Object Minimal Measured Angle Difference
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0003
+AccessType=ro
+DefaultValue=
+PDOMapping=0
+ObjFlags=3
+
+[202Dsub3]
+ParameterName=Internal Object Angle Error Counter
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=ro
+DefaultValue=
+PDOMapping=0
+ObjFlags=3
+
+[202Dsub4]
+ParameterName=Internal Object Angle Factor for 2 Pole Motor
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=rw
+DefaultValue=
+PDOMapping=0
+ObjFlags=3
+
+[202Dsub5]
+ParameterName=Internal Object Angle Factor for N Pole Motor
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=rw
+DefaultValue=
+PDOMapping=0
+ObjFlags=3
+
+[202E]
+ParameterName=Trajectory Profile Time
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=ro
+DefaultValue=
+PDOMapping=1
+ObjFlags=3
+
+[2030]
+ParameterName=CurrentMode Setting Value
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0003
+AccessType=rww
+DefaultValue=
+PDOMapping=1
+ObjFlags=3
+
+[2062]
+ParameterName=PositionMode Setting Value
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0004
+AccessType=rww
+DefaultValue=
+PDOMapping=1
+ObjFlags=3
+
+[206B]
+ParameterName=VelocityMode Setting Value
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0004
+AccessType=rww
+DefaultValue=
+PDOMapping=1
+ObjFlags=3
+
+[2070]
+ParameterName=Configuration Digital Inputs
+ObjectType=0x9
+;StorageLocation=RAM
+SubNumber=0x7
+
+[2070sub0]
+ParameterName=Internal Number of Entries
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0005
+AccessType=ro
+DefaultValue=6
+PDOMapping=0
+ObjFlags=3
+
+[2070sub1]
+ParameterName=Configuration of Digital Input1
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=rw
+DefaultValue=15
+PDOMapping=0
+
+[2070sub2]
+ParameterName=Configuration of Digital Input2
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=rw
+DefaultValue=14
+PDOMapping=0
+
+[2070sub3]
+ParameterName=Configuration of Digital Input3
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=rw
+DefaultValue=13
+PDOMapping=0
+
+[2070sub4]
+ParameterName=Configuration of Digital Input4
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=rw
+DefaultValue=2
+PDOMapping=0
+
+[2070sub5]
+ParameterName=Configuration of Digital Input5
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=rw
+DefaultValue=1
+PDOMapping=0
+
+[2070sub6]
+ParameterName=Configuration of Digital Input6
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=rw
+DefaultValue=0
+PDOMapping=0
+
+[2071]
+ParameterName=Digital Input Funtionalities
+ObjectType=0x9
+;StorageLocation=RAM
+SubNumber=0x5
+
+[2071sub0]
+ParameterName=Internal Number of Entries
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0005
+AccessType=ro
+DefaultValue=4
+PDOMapping=0
+ObjFlags=3
+
+[2071sub1]
+ParameterName=Digital Input Functionalities State
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=ro
+DefaultValue=
+PDOMapping=1
+ObjFlags=3
+
+[2071sub2]
+ParameterName=Digital Input Functionalities Mask
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=rw
+DefaultValue=0xE007
+PDOMapping=0
+
+[2071sub3]
+ParameterName=Digital Input Functionalities Polarity
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=rw
+DefaultValue=0x0000
+PDOMapping=0
+
+[2071sub4]
+ParameterName=Digital Input Functionalities Execution Mask
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=rw
+DefaultValue=0x0008
+PDOMapping=0
+
+[2074]
+ParameterName=Position Marker
+ObjectType=0x9
+;StorageLocation=RAM
+SubNumber=0x7
+
+[2074sub0]
+ParameterName=Internal Number of Entries
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0005
+AccessType=ro
+DefaultValue=6
+PDOMapping=0
+ObjFlags=3
+
+[2074sub1]
+ParameterName=Position Marker Captured Position
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0004
+AccessType=ro
+DefaultValue=
+PDOMapping=1
+ObjFlags=3
+
+[2074sub2]
+ParameterName=Position Marker Edge Type
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0005
+AccessType=rw
+DefaultValue=0
+PDOMapping=0
+
+[2074sub3]
+ParameterName=Position Marker Mode
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0005
+AccessType=rw
+DefaultValue=0
+PDOMapping=0
+
+[2074sub4]
+ParameterName=Position Marker Counter
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=rw
+DefaultValue=
+PDOMapping=0
+ObjFlags=3
+
+[2074sub5]
+ParameterName=Position Marker History (1)
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0004
+AccessType=ro
+DefaultValue=
+PDOMapping=0
+ObjFlags=3
+
+[2074sub6]
+ParameterName=Position Marker History (2)
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0004
+AccessType=ro
+DefaultValue=
+PDOMapping=0
+ObjFlags=3
+
+[2078]
+ParameterName=Digital Output Funtionalities
+ObjectType=0x9
+;StorageLocation=RAM
+SubNumber=0x4
+
+[2078sub0]
+ParameterName=Internal Number of Entries
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0005
+AccessType=ro
+DefaultValue=3
+PDOMapping=0
+ObjFlags=3
+
+[2078sub1]
+ParameterName=Digital Output State
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=rww
+DefaultValue=
+PDOMapping=1
+ObjFlags=3
+
+[2078sub2]
+ParameterName=Digital Output Mask
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=rw
+DefaultValue=0x0
+PDOMapping=0
+
+[2078sub3]
+ParameterName=Digital Output Polarity
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=rw
+DefaultValue=0x0
+PDOMapping=0
+
+[2079]
+ParameterName=Configuration Digital Outputs
+ObjectType=0x9
+;StorageLocation=RAM
+SubNumber=0x3
+
+[2079sub0]
+ParameterName=Internal Number of Entries
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0005
+AccessType=ro
+DefaultValue=4
+PDOMapping=0
+ObjFlags=3
+
+[2079sub3]
+ParameterName=Configuration of Digital Output3
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=rw
+DefaultValue=13
+PDOMapping=0
+
+[2079sub4]
+ParameterName=Configuration of Digital Output4
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=rw
+DefaultValue=12
+PDOMapping=0
+
+[207C]
+ParameterName=Analog Inputs
+ObjectType=0x9
+;StorageLocation=RAM
+SubNumber=0x3
+
+[207Csub0]
+ParameterName=Internal Number of Entries
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0005
+AccessType=ro
+DefaultValue=2
+PDOMapping=0
+ObjFlags=3
+
+[207Csub1]
+ParameterName=Analog Input 1
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0003
+AccessType=ro
+DefaultValue=
+PDOMapping=1
+ObjFlags=3
+
+[207Csub2]
+ParameterName=Analog Input 2
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0003
+AccessType=ro
+DefaultValue=
+PDOMapping=1
+ObjFlags=3
+
+[2080]
+ParameterName=Current Threshold for Homing Mode
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=rwr
+DefaultValue=500
+PDOMapping=1
+
+[2081]
+ParameterName=Home Position
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0004
+AccessType=rwr
+DefaultValue=0
+PDOMapping=1
+
+[20F4]
+ParameterName=Following Error Actual Value
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0003
+AccessType=ro
+DefaultValue=
+PDOMapping=1
+ObjFlags=3
+
+[2210]
+ParameterName=Sensor Configuration
+ObjectType=0x9
+;StorageLocation=RAM
+SubNumber=0x5
+
+[2210sub0]
+ParameterName=Internal Number of Entries
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0005
+AccessType=ro
+DefaultValue=4
+PDOMapping=0
+ObjFlags=3
+
+[2210sub1]
+ParameterName=Encoder Pulse Number
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=rw
+HighLimit=7500
+LowLimit=16
+DefaultValue=500
+PDOMapping=0
+
+[2210sub2]
+ParameterName=Position Sensor Type
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=rw
+DefaultValue=1
+PDOMapping=0
+
+[2210sub3]
+ParameterName=Internal Absolute Position Offset
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=rw
+DefaultValue=0
+PDOMapping=0
+
+[2210sub4]
+ParameterName=Position Sensor Polarity
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=rw
+DefaultValue=0x0000
+PDOMapping=0
+
+[2300]
+ParameterName=Digital Position Input
+ObjectType=0x9
+;StorageLocation=RAM
+SubNumber=0x5
+
+[2300sub0]
+ParameterName=Internal Number of Entries
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0005
+AccessType=ro
+DefaultValue=4
+PDOMapping=0
+ObjFlags=3
+
+[2300sub1]
+ParameterName=Digital Position Desired Value
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0004
+AccessType=ro
+DefaultValue=
+PDOMapping=0
+ObjFlags=3
+
+[2300sub2]
+ParameterName=Digital Position Scaling Numerator
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=rw
+DefaultValue=1
+PDOMapping=0
+
+[2300sub3]
+ParameterName=Digital Position Scaling Denominator
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=rw
+DefaultValue=1
+PDOMapping=0
+
+[2300sub4]
+ParameterName=Digital Position Polarity
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0005
+AccessType=rw
+DefaultValue=0
+PDOMapping=0
+
+[2FFF]
+ParameterName=Internal Object Download Area
+ObjectType=0x9
+;StorageLocation=RAM
+SubNumber=0x2
+
+[2FFFsub0]
+ParameterName=Internal Object Number of Entries
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0005
+AccessType=ro
+DefaultValue=5
+PDOMapping=0
+ObjFlags=3
+
+[2FFFsub1]
+ParameterName=Internal Object Download Start
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=
+PDOMapping=0
+ObjFlags=3
+
