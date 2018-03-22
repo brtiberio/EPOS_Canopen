@@ -371,8 +371,8 @@ class Epos:
             	ID = 11
             	return ID
             
-            # in case of unknown state
-            return -1
+        # in case of unknown state or fail
+        return -1
 
     def printEposState (self):
         ID = self.checkEposState()
@@ -380,6 +380,34 @@ class Epos:
             print('[Epos:{0}] Error: Unknown state\n'.format(sys._getframe().f_code.co_name))
         else:
             print('[Epos:{0}] Current state [ID]:{1}[{2}]\n'.format( sys._getframe().f_code.co_name, self.state[ID], ID))
+        return
+
+    def printStatusWord(self):
+        statusword, Ok = self.readStatusWord()
+        if not Ok:
+            print('[Epos:{0}] Failed to retreive statusword\n'.format(sys._getframe().f_code.co_name))
+            return
+        else:
+            statusword = int.from_bytes(statusword, 'little')
+            print("[Epos:{1}] The statusword is Hex={0:#06X} Bin={0:#018b}\n".format(
+            statusword, sys._getframe().f_code.co_name))
+            print('Bit 15: position referenced to home position:                  {0}\n'.format(statusword & (1 << 15)))
+            print('Bit 14: refresh cycle of power stage:                          {0}\n'.format(statusword & (1 << 14)))
+            print('Bit 13: OpMode specific, some error: [Following|Homing]        {0}\n'.format(statusword & (1 << 13)))
+            print('Bit 12: OpMode specific: [Set-point ack|Speed|Homing attained] {0}\n'.format(statusword & (1 << 12)))
+            print('Bit 11: Internal limit active:                                 {0}\n'.format(statusword & (1 << 11)))
+            print('Bit 10: Target reached:                                        {0}\n'.format(statusword & (1 << 10)))
+            print('Bit 09: Remote (NMT Slave State Operational):                  {0}\n'.format(statusword & (1 << 9 )))
+            print('Bit 08: Offset current measured:                               {0}\n'.format(statusword & (1 << 8 )))
+            print('Bit 07: not used (Warning):                                    {0}\n'.format(statusword & (1 << 7 )))
+            print('Bit 06: Switch on disable:                                     {0}\n'.format(statusword & (1 << 6 )))
+            print('Bit 05: Quick stop:                                            {0}\n'.format(statusword & (1 << 5 )))
+            print('Bit 04: Voltage enabled (power stage on):                      {0}\n'.format(statusword & (1 << 4 )))
+            print('Bit 03: Fault:                                                 {0}\n'.format(statusword & (1 << 3 )))
+            print('Bit 02: Operation enable:                                      {0}\n'.format(statusword & (1 << 2 )))
+            print('Bit 01: Switched on:                                           {0}\n'.format(statusword & (1 << 1 )))
+            print('Bit 00: Ready to switch on:                                    {0}\n'.format(statusword & 1))
+        return
 
 def main():
 
@@ -428,6 +456,9 @@ def main():
         print("The statusword is \n Hex={0:#06X} Bin={0:#018b}".format(
             int.from_bytes(statusword, 'little')))
 
+    # test printStatusWord and state
+    epos.printEposState
+    epos.printStatusWord
     # try to read controlword using hex codes
     controlword = epos.readObject(0x6040, 0)
     if not controlword:
