@@ -134,7 +134,7 @@ class Epos:
                    'MotorType': 0x6402,
                    'Motor Data': 0x6410,
                    'Supported Drive Modes': 0x6502}
-    #: CANopen defined error codes and Maxon codes also
+    # CANopen defined error codes and Maxon codes also
     errorIndex = {0x00000000:  'Error code: no error',
                   0x06020000:  'Error code: object does not exist',
                   0x06090011:  'Error code: subindex does not exist',
@@ -160,12 +160,12 @@ class Epos:
                   0x0f00ffbc:  'Error code: device not in service mode',
                   0x0f00ffB9:  'Error code: error in Node-ID'
                   }
-    #: dictionary describing opMode
+    # dictionary describing opMode
     opModes = {6: 'Homing Mode', 3: 'Profile Velocity Mode', 1: 'Profile Position Mode', 
 			  -1: 'Position Mode', -2: 'Velocity Mode', -3:'Current Mode', -4: 'Diagnostic Mode',
               -5: 'MasterEncoder Mode', -6: 'Step/Direction Mode'}
     node = []
-    #: dictionary object to describe state of EPOS device
+    # dictionary object to describe state of EPOS device
     state = {0: 'start', 1: 'not ready to switch on', 2: 'switch on disable',
              3: 'ready to switch on', 4: 'switched on', 5: 'refresh',
              6: 'measure init', 7: 'operation enable', 8: 'quick stop active',
@@ -197,7 +197,7 @@ class Epos:
             bustype (optional):   Port type used. Default socketcan.
             objectDictionary (optional):   Name of EDS file, if any available.
         Return:
-            Ok:        A boolean if all went ok.
+            bool: A boolean if all went ok.
         '''
         try:
             self.node = self.network.add_node(
@@ -214,8 +214,9 @@ class Epos:
     def disconnect(self):
         self.network.disconnect
         return
-
+    #--------------------------------------------------------------
     # Basic set of functions
+    #--------------------------------------------------------------
     def readObject(self, index, subindex):
         '''Reads an object
 
@@ -225,7 +226,7 @@ class Epos:
              index:     reference of dictionary object index
              subindex:  reference of dictionary object subindex
          Returns:
-             answer:  message returned by EPOS or empty if unsucessfull
+             bytes:  message returned by EPOS or empty if unsucessfull
         '''
         if self._connected:
             try:
@@ -249,7 +250,7 @@ class Epos:
              subindex:  reference of dictionary object subindex
              data:      data to be stored
          Returns:
-             OK:      boolean if all went ok or not
+             bool:      boolean if all went ok or not
         '''
         if self._connected:
             try:
@@ -279,8 +280,10 @@ class Epos:
         Request current statusword from device.
 
         Returns:
-            statusword: the current controlword or None if any error.
-            Ok: A boolean if all went ok.
+            tupple: A tupple containing:
+
+            :statusword:  the current controlword or None if any error.
+            :Ok: A boolean if all went ok.
         '''
         index = self.objectIndex['StatusWord']
         subindex = 0
@@ -302,8 +305,10 @@ class Epos:
         Request current controlword from device.
 
         Returns:
-            controlword: the current controlword or None if any error.
-            Ok: A boolean if all went ok.
+            tupple: A tupple containing:
+
+            :controlword: the current controlword or None if any error.
+            :Ok: A boolean if all went ok.
         '''
         index = self.objectIndex['ControlWord']
         subindex = 0
@@ -325,7 +330,7 @@ class Epos:
             controlword: word to be sent.
         
         Returns:
-            Ok: a boolean if all went ok. 
+            bool: a boolean if all went ok. 
         '''
         # sending new controlword
         self.logger.debug('[EPOS:{0}] Sending controlword Hex={1:#06X} Bin={1:#018b}'.format(
@@ -336,41 +341,40 @@ class Epos:
     def checkEposState(self):
         '''Check current state of Epos
 
-         Ask the StatusWord of EPOS and parse it to return the current state of
-		 EPOS.
+        Ask the StatusWord of EPOS and parse it to return the current state of EPOS.
 
-         +---------------------------------+-----+---------------------+
-		 |State                            | ID  | Statusword [binary] |
-		 +=================================+=====+=====================+
-		 | Start                           | 0   | x0xx xxx0  x000 0000|
-		 +---------------------------------+-----+---------------------+
-		 | Not Ready to Switch On          | 1   | x0xx xxx1  x000 0000|
-		 +---------------------------------+-----+---------------------+
-		 |Switch on disabled               | 2   | x0xx xxx1  x100 0000|
-		 +---------------------------------+-----+---------------------+
-		 |ready to switch on               | 3   | x0xx xxx1  x010 0001|
-		 +---------------------------------+-----+---------------------+
-		 |switched on                      | 4   | x0xx xxx1  x010 0011|
-		 +---------------------------------+-----+---------------------+
-		 |refresh                          | 5   | x1xx xxx1  x010 0011|
-		 +---------------------------------+-----+---------------------+
-		 |measure init                     | 6   | x1xx xxx1  x011 0011|
-		 +---------------------------------+-----+---------------------+
-		 |operation enable                 | 7   | x0xx xxx1  x011 0111|
-		 +---------------------------------+-----+---------------------+
-		 |quick stop active                | 8   | x0xx xxx1  x001 0111|
-		 +---------------------------------+-----+---------------------+
-		 |fault reaction active (disabled) | 9   | x0xx xxx1  x000 1111|
-		 +---------------------------------+-----+---------------------+
-		 |fault reaction active (enabled)  | 10  | x0xx xxx1  x001 1111|
-		 +---------------------------------+-----+---------------------+
-		 |Fault                            | 11  | x0xx xxx1  x000 1000|
-		 +---------------------------------+-----+---------------------+
-		 see section 8.1.1 of firmware manual for more details.
+        +----------------------------------+-----+---------------------+
+        | State                            | ID  | Statusword [binary] |
+        +==================================+=====+=====================+
+        | Start                            | 0   | x0xx xxx0  x000 0000|
+        +----------------------------------+-----+---------------------+
+        | Not Ready to Switch On           | 1   | x0xx xxx1  x000 0000|
+        +----------------------------------+-----+---------------------+
+        | Switch on disabled               | 2   | x0xx xxx1  x100 0000|
+        +----------------------------------+-----+---------------------+
+        | ready to switch on               | 3   | x0xx xxx1  x010 0001|
+        +----------------------------------+-----+---------------------+
+        | switched on                      | 4   | x0xx xxx1  x010 0011|
+        +----------------------------------+-----+---------------------+
+        | refresh                          | 5   | x1xx xxx1  x010 0011|
+        +----------------------------------+-----+---------------------+
+        | measure init                     | 6   | x1xx xxx1  x011 0011|
+        +----------------------------------+-----+---------------------+
+        | operation enable                 | 7   | x0xx xxx1  x011 0111|
+        +----------------------------------+-----+---------------------+
+        | quick stop active                | 8   | x0xx xxx1  x001 0111|
+        +----------------------------------+-----+---------------------+
+        | fault reaction active (disabled) | 9   | x0xx xxx1  x000 1111|
+        +----------------------------------+-----+---------------------+
+        | fault reaction active (enabled)  | 10  | x0xx xxx1  x001 1111|
+        +----------------------------------+-----+---------------------+
+        | Fault                            | 11  | x0xx xxx1  x000 1000|
+        +----------------------------------+-----+---------------------+
 
-		 Returns:
-		     ID:    numeric identification of the state or -1 in case of
-                    fail.
+        see section 8.1.1 of firmware manual for more details.
+
+        Returns:
+            int: numeric identification of the state or -1 in case of fail.
 		'''
         statusword, ok = self.readStatusWord()
         if not ok:
@@ -537,8 +541,10 @@ class Epos:
         not, an answer will be empty
 		
         Returns:
-            position: the demanded position value.
-            OK:       A boolean if all requests went ok or not.
+            tupple: A tupple containing:
+
+            :position: the demanded position value.
+            :OK:       A boolean if all requests went ok or not.
         '''
         index = self.objectIndex['PositionMode Setting Value']
         subindex = 0
@@ -558,7 +564,7 @@ class Epos:
         Ask Epos device to define position mode setting object.
 
         Returns:
-            OK: A boolean if all requests went ok or not.
+            bool: A boolean if all requests went ok or not.
         '''
         index = self.objectIndex['PositionMode Setting Value']
         subindex = 0
@@ -575,8 +581,10 @@ class Epos:
         Asks EPOS for the desired velocity value in velocity control mode
 
         Returns:
-            velocity: Value setted or None if any error.
-            Ok: A boolean if sucessfull or not.
+            tupple: A tupple containing:
+            
+            :velocity: Value setted or None if any error.
+            :Ok: A boolean if sucessfull or not.
         '''
         index = self.objectIndex['VelocityMode Setting Value']
         subindex = 0
@@ -598,7 +606,7 @@ class Epos:
         Args:
             velocity: value to be setted.
         Returns:
-            Ok: a boolean if sucessfull or not.
+            bool: a boolean if sucessfull or not.
         '''
         index = self.objectIndex['VelocityMode Setting Value']
         subindex = 0
@@ -615,8 +623,10 @@ class Epos:
         Asks EPOS for the current value setted in current control mode.
 
         Returns:
-            current: value setted.
-            Ok:      a boolean if sucessfull or not.
+            tupple: A tupple containing:
+            
+            :current: value setted.
+            :Ok:      a boolean if sucessfull or not.
         '''
         index = self.objectIndex['CurrentMode Setting Value']
         subindex = 0
@@ -639,7 +649,7 @@ class Epos:
             current: the value to be set [mA]
         
         Returns:
-            Ok: a boolean if sucessfull or not
+            bool: a boolean if sucessfull or not
         '''
         index = self.objectIndex['CurrentMode Setting Value']
         subindex = 0
@@ -654,8 +664,10 @@ class Epos:
         '''Read current operation mode
 
         Returns:
-            opMode: current opMode or None if request fails
-            Ok:     A boolean if sucessfull or not
+            tupple: A tupple containing:
+            
+            :opMode: current opMode or None if request fails
+            :Ok:     A boolean if sucessfull or not
         '''
         index = self.objectIndex['Modes of Operation']
         subindex = 0
@@ -699,7 +711,7 @@ class Epos:
         Args:
             opMode: the desired opMode.
         Returns:
-            OK:     A boolean if all requests went ok or not.
+            bool:     A boolean if all requests went ok or not.
         '''
         index = self.objectIndex['Modes of Operation']
         subindex = 0
@@ -721,7 +733,7 @@ class Epos:
             return
         else:
             print('Current operation mode is \"{}\"'.format(self.opModes[opMode]))
-            return
+        return
 
     def changeEposState(self, newState):
         '''Change EPOS state
@@ -730,23 +742,24 @@ class Epos:
 
         To change Epos state, a write to controlWord object is made.
         The bit change in controlWord is made as shown in the following table:
-        +-----------------+--------------------------------+
-        |State            | LowByte of Controlword [binary]|
-        +=================+================================+
-        |shutdown         | 0xxx x110                      |
-        +-----------------+--------------------------------+
-        |switch on        | 0xxx x111                      |
-        +-----------------+--------------------------------+
-        |disable voltage  | 0xxx xx0x                      |
-        +-----------------+--------------------------------+
-        |quick stop       | 0xxx x01x                      |
-        +-----------------+--------------------------------+
-        |disable operation| 0xxx 0111                      |
-        +-----------------+--------------------------------+
-        |enable operation | 0xxx 1111                      |
-        +-----------------+--------------------------------+
-        |fault reset      | 1xxx xxxx                      |
-        +-----------------+--------------------------------+
+
+        +-------------------+--------------------------------+
+        | State             | LowByte of Controlword [binary]|
+        +===================+================================+
+        | shutdown          | 0xxx x110                      |
+        +-------------------+--------------------------------+
+        | switch on         | 0xxx x111                      |
+        +-------------------+--------------------------------+
+        | disable voltage   | 0xxx xx0x                      |
+        +-------------------+--------------------------------+
+        | quick stop        | 0xxx x01x                      |
+        +-------------------+--------------------------------+
+        | disable operation | 0xxx 0111                      |
+        +-------------------+--------------------------------+
+        | enable operation  | 0xxx 1111                      |
+        +-------------------+--------------------------------+
+        | fault reset       | 1xxx xxxx                      |
+        +-------------------+--------------------------------+
 
         see section 8.1.3 of firmware for more information
 
@@ -754,7 +767,7 @@ class Epos:
             newState: string with state witch user want to switch.
 
         Returns:
-            OK: boolean if all went ok and no error was received.
+            bool: boolean if all went ok and no error was received.
         '''
         stateOrder = ['shutdown', 'switch on', 'disable voltage', 'quick stop',
                       'disable operation', 'enable operation', 'fault reset']
@@ -832,15 +845,15 @@ class Epos:
 
         Sets the configuration of the motor parameters. The valid motor type is:
 
-        +-----------------------+------+--------------------------+
-        |motorType              | value| Description              |
-        +=======================+======+==========================+
-        |DC motor               | 1    | brushed DC motor         |
-        +-----------------------+------+--------------------------+
-        |Sinusoidal PM BL motor | 10   | EC motor sinus commutated|
-        +-----------------------+------+--------------------------+
-        |Trapezoidal PM BL motor| 11   | EC motor block commutated|
-        +-----------------------+------+--------------------------+
+        +-------------------------+-------+---------------------------+
+        | motorType               | value | Description               |
+        +=========================+=======+===========================+
+        | DC motor                | 1     | brushed DC motor          |
+        +-------------------------+-------+---------------------------+
+        | Sinusoidal PM BL motor  | 10    | EC motor sinus commutated |
+        +-------------------------+-------+---------------------------+
+        | Trapezoidal PM BL motor | 11    | EC motor block commutated |
+        +-------------------------+-------+---------------------------+
 
         The current limit is the current limit is the maximal permissible
         continuous current of the motor in mA.
@@ -863,7 +876,7 @@ class Epos:
             maximumSpeed:   max allowed speed in current mode [rpm].
             polePairNumber: number of pole pairs for brushless DC motors.
         Returns:
-            OK:     A boolean if all requests went ok or not.
+            bool:     A boolean if all requests went ok or not.
         '''
         #------------------------------------------------------------------------
         # check values of input
@@ -924,8 +937,279 @@ class Epos:
         if not Ok:
             logging.info('[EPOS:{0}] Failed to set maximum speed: {1}'.format(sys._getframe().f_code.co_name, maximumSpeed))
             return Ok
+        
+    def readMotorConfig(self):
+        '''Read motor configuration
+
+        Read the current motor configuration
+
+        Requests from EPOS the current motor type and motor data.
+        The motorConfig is a dictionary containing the following information:
+
+        * **motorType** describes the type of motor.
+        * **currentLimit** - describes the maximum continuous current limit.
+        * **maxCurrentLimit** - describes the maximum allowed current limit.
+          Usually is set as two times the continuous current limit.
+        * **polePairNumber** - describes the pole pair number of the rotor of
+          the brushless DC motor.
+        * **maximumSpeed** - describes the maximum allowed speed in current mode.
+        * **thermalTimeConstant** - describes the thermal time constant of motor
+          winding is used to calculate the time how long the maximal output
+          current is allowed for the connected motor [100 ms].
+
+        If unable to request the configuration or unsucessfull, None and false is 
+        returned .
+        
+        Returns: 
+            tupple: A tupple with:
+
+            :motorConfig: A structure with the current configuration of motor
+            :OK:          A boolean if all went as expected or not.
+        '''
+        motorConfig = {} # dictionary to store config
+        #------------------------------------------------------------------------
+        # store motorType
+        #------------------------------------------------------------------------
+        index = self.objectIndex['MotorType']
+        subindex = 0
+        value, Ok = self.readObject(index, subindex)
+        if not Ok:
+            logging.info('[EPOS:{0}] Failed to get motorType'.format(sys._getframe().f_code.co_name))
+            return None, Ok
+        motorConfig.update({'motorType': int.from_bytes(value, 'little')})  # append motorType to dict
+        #------------------------------------------------------------------------
+        # store motorData
+        #------------------------------------------------------------------------
+        index = self.objectIndex['Motor Data']
+        value, Ok = self.readObject(index, 1)
+        if not Ok:
+            logging.info('[EPOS:{0}] Failed to get currentLimit'.format(sys._getframe().f_code.co_name))
+            return None, Ok
+        motorConfig.update({'currentLimit': int.from_bytes(value, 'little')})
+        # output current limit has subindex 2 and is recommended to
+        # be the double of constant current limit
+        value, Ok = self.readObject(index, 2)
+        if not Ok:
+            logging.info('[EPOS:{0}] Failed to get maxCurrentLimit'.format(sys._getframe().f_code.co_name))
+            return None, Ok
+        motorConfig.update({'maxCurrentLimit': int.from_bytes(value, 'little')})
+        # pole pair number has subindex 3
+        value, Ok = self.readObject(index, 3)
+        if not Ok:
+            logging.info('[EPOS:{0}] Failed to get polePairNumber'.format(sys._getframe().f_code.co_name))
+            return None, Ok
+        motorConfig.update({'polePairNumber': int.from_bytes(value, 'little')})
+        # maxSpeed has subindex 4
+        value, Ok = self.readObject(index, 4)
+        if not Ok:
+            logging.info('[EPOS:{0}] Failed to get maximumSpeed'.format(sys._getframe().f_code.co_name))
+            return None, Ok
+        motorConfig.update({'maximumSpeed': int.from_bytes(value, 'little')})
+        # thermal time constant has index 5
+        value, Ok = self.readObject(index, 5)
+        if not Ok:
+            logging.info('[EPOS:{0}] Failed to get thermalTimeConstant'.format(sys._getframe().f_code.co_name))
+            return None, Ok
+        motorConfig.update({'thermalTimeConstant': int.from_bytes(value, 'little')})
+        # no fails, return dict and ok
+        return motorConfig, Ok
+
+
+    def printMotorConfig(self):
+        '''Print current motor config
+
+        Request current motor config and print it
+        '''
+        motorConfig, Ok = self.readMotorConfig()
+        for key, value in self.motorType.items():    # for name, age in list.items():  (for Python 3.x)
+            if value == motorConfig['motorType']:
+                break
+        
+        if not Ok:
+            print('[EPOS:{0}] Failed to request current motor configuration'.format(sys._getframe().f_code.co_name))
+            return
+        print('--------------------------------------------------------------')
+        print('Current motor configuration:')
+        print('--------------------------------------------------------------')
+        print('Motor Type is {0}'.format(key))
+        print('Motor constant current limit {0}[mA]'.format(motorConfig['currentLimit']))
+        print('Motor maximum current limit {0}[mA]'.format(motorConfig['maxCurrentLimit']))
+        print('Motor maximum speed in current mode {0}[rpm]'.format(motorConfig['maximumSpeed']))
+        print('Motor number of pole pairs {0}'.format(motorConfig['polePairNumber']))
+        print('Motor thermal time constant {0}[s]'.format(motorConfig['currentLimit']/10.0))
+        print('--------------------------------------------------------------')
+        return
+
+    def setSensorConfig(self, pulseNumber, sensorType, sensorPolarity):
+        '''Change sensor configuration
+
+        Change the sensor configuration of motor. **Only possible if in disable state**
+        The encoder pulse number should be set to number of counts per
+        revolution of the connected incremental encoder.
+        range : [16 - 7500]
+
+        sensor type is described as:
+
+        +-------+--------------------------------------------------+
+        | value | description                                      |
+        +=======+==================================================+
+        | 1     | Incremental Encoder with index (3-channel)       |
+        +-------+--------------------------------------------------+
+        | 2     | Incremental Encoder without index (2-channel)    |
+        +-------+--------------------------------------------------+
+        | 3     | Hall Sensors (Remark: consider worse resolution) |
+        +-------+--------------------------------------------------+
+
+        sensor polarity is set by setting the corresponding bit from the word:
+
+        +------+--------------------------------------------------------+
+        | Bit  | description                                            |
+        +======+========================================================+
+        | 15-2 | Reserved (0)                                           |
+        +------+--------------------------------------------------------+
+        | 1    | Hall sensors polarity 0: normal / 1: inverted          |
+        +------+--------------------------------------------------------+
+        | 0    | | Encoder polarity 0: normal                           |
+        |      | | 1: inverted (or encoder mounted on motor shaft side) |
+        +------+--------------------------------------------------------+
+
+        Args:
+            pulseNumber:    Number of pulses per revolution.
+            sensorType:     1,2 or 3 according to the previous table.
+            sensorPolarity: a value between 0 and 3 describing the polarity
+                              of sensors as stated before.
+        Returns:
+            bool: A boolean if all went as expected or not.
+        '''
+        # validate attributes first
+        if(pulseNumber < 16 or pulseNumber > 7500):
+            logging.info('[Epos:{0}] Error pulseNumber out of range: {1}'.format(
+                sys._getframe().f_code.co_name,
+                pulseNumber))
+            return False
+        if not (sensorType in [1, 2, 3]):
+            logging.info('[Epos:{0}] Error sensorType not valid: {1}'.format(
+                sys._getframe().f_code.co_name,
+                sensorType))
+            return False
+        if not (sensorPolarity in [0, 1, 2, 3]):
+            logging.info('[Epos:{0}] Error sensorPolarity not valid: {1}'.format(
+                sys._getframe().f_code.co_name,
+                sensorPolarity))
+            return False
+        # change epos state first to shutdown state
+        # or it will fail
+        Ok = self.changeEposState('shutdown')
+        if not Ok:
+            logging.info('[Epos:{0}] Error failed to change EPOS state into shutdown'.format(
+                sys._getframe().f_code.co_name))
+            return False
+        # get index
+        index = self.objectIndex['Sensor Configuration']
+        # pulseNumber has subindex 1
+        Ok = self.writeObject(index, 1, pulseNumber.to_bytes(2, 'little'))
+        if not Ok:
+            logging.info('[Epos:{0}] Error setting pulseNumber'.format(
+                sys._getframe().f_code.co_name))
+            return False
+        # sensorType has subindex 2
+        Ok = self.writeObject(index, 2, sensorType.to_bytes(2, 'little'))
+        if not Ok:
+            logging.info('[Epos:{0}] Error setting sensorType'.format(
+                sys._getframe().f_code.co_name))
+            return False
+        # sensorPolarity has subindex 4
+        Ok = self.writeObject(index, 4, sensorPolarity.to_bytes(2, 'little'))
+        if not Ok:
+            logging.info('[Epos:{0}] Error setting sensorPolarity'.format(
+                sys._getframe().f_code.co_name))
+            return False
+        return True
+    
+    def readSensorConfig(self):
+        '''Read sensor configuration
+        
+        Requests from EPOS the current sensor configuration.
+        The sensorConfig is an struture containing the following information:
+
+        * sensorType - describes the type of sensor.
+        * pulseNumber - describes the number of pulses per revolution in one channel.
+        * sensorPolarity - describes the of each sensor.
+
+        If unable to request the configuration or unsucessfull, an empty
+        structure is returned. Any error inside any field requests are marked
+        with 'error'.
+        
+        Returns: 
+            tupple: A tupple containing:
+            
+            :sensorConfig: A structure with the current configuration of the sensor
+            :OK: A boolean if all went as expected or not.
+        '''
+        sensorConfig = {}
+        # get index
+        index = self.objectIndex['Sensor Configuration']
+        # pulseNumber has subindex 1
+        value, Ok = self.readObject(index, 1)
+        if not Ok:
+            logging.info('[Epos:{0}] Error getting pulseNumber'.format(
+                sys._getframe().f_code.co_name))
+            return None, False
+        sensorConfig.update({'pulseNumber': int.from_bytes(value, 'little')})
+        # sensorType has subindex 2
+        value, Ok = self.readObject(index, 2)
+        if not Ok:
+            logging.info('[Epos:{0}] Error getting sensorType'.format(
+                sys._getframe().f_code.co_name))
+            return None, False
+        sensorConfig.update({'sensorType': int.from_bytes(value, 'little')})
+        # sensorPolarity has subindex 4
+        value, Ok = self.readObject(index, 4)
+        if not Ok:
+            logging.info('[Epos:{0}] Error getting sensorPolarity'.format(
+                sys._getframe().f_code.co_name))
+            return None, False
+        sensorConfig.update({'sensorPolarity': int.from_bytes(value, 'little')})      
+        return sensorConfig, True
+
+    def printSensorConfig(self):
+        '''Print current sensor configuration
+        '''
+        sensorConfig, Ok = self.readSensorConfig()
+        # to adjust indexes ignore use a dummy first element
+        sensorType = ['', 'Incremental Encoder with index (3-channel)',
+                      'Incremental Encoder without index (2-channel)',
+                      'Hall Sensors (Remark: consider worse resolution)']
+        if not Ok:
+            print('[EPOS:{0}] Failed to request current sensor configuration'.format(sys._getframe().f_code.co_name))
+            return
+        print('--------------------------------------------------------------')
+        print('Current sensor configuration:')
+        print('--------------------------------------------------------------')
+        print('Sensor pulse Number is {0}'.format(sensorConfig['pulseNumber']))
+        print('Sensor type is {0}'.format(sensorType[sensorConfig['sensorType']]))
+        value = sensorConfig['sensorPolarity']
+        if (value & 1<<1) >> 1:
+            print('Hall sensor polarity inverted')
+        else:
+            print('Hall sensor polarity normal')
+        if (value & 1):
+            print('Encoder polarity inverted')
+        else:
+            print('Encoder polarity normal')
+        print('--------------------------------------------------------------')
+        return
+
+
 
 def main():
+    '''Test EPOS CANopen communication with some examples.
+
+    Use a few examples to test communication with Epos device using
+    a few functions. Also resets the fault error if present.
+    
+    Show sample using also the EDS file.
+    '''
 
     import argparse
     if (sys.version_info < (3, 0)):
