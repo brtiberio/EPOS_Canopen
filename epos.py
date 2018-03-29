@@ -161,7 +161,7 @@ class Epos:
                   0x0f00ffB9:  'Error code: error in Node-ID'
                   }
     # dictionary describing opMode
-    opModes = {6: 'Homing Mode', 3: 'Profile Velocity Mode', 1: 'Profile Position Mode', 
+    opModes = {6: 'Homing Mode', 3: 'Profile Velocity Mode', 1: 'Profile Position Mode',
 			  -1: 'Position Mode', -2: 'Velocity Mode', -3:'Current Mode', -4: 'Diagnostic Mode',
               -5: 'MasterEncoder Mode', -6: 'Step/Direction Mode'}
     node = []
@@ -179,7 +179,7 @@ class Epos:
             self.network = canopen.Network()
         else:
             self.network = _network
-        
+
         self.logger = logging.getLogger('EPOS')
         if debug:
             self.logger.setLevel(logging.DEBUG)
@@ -232,7 +232,7 @@ class Epos:
             try:
                 return self.node.sdo.upload(index, subindex)
             except Exception as e:
-                self.logger.INFO('[Epos:{0}] Exception caught:{1}\n'.format(
+                self.logger.info('[Epos:{0}] Exception caught:{1}\n'.format(
                     sys._getframe().f_code.co_name, str(e)))
                 return None
         else:
@@ -276,7 +276,7 @@ class Epos:
 
     def readStatusWord(self):
         '''Read StatusWord
-        
+
         Request current statusword from device.
 
         Returns:
@@ -297,11 +297,11 @@ class Epos:
         # return statusword as an int type
         statusword = int.from_bytes(statusword, 'little')
         return statusword, True
-            
+
 
     def readControlWord(self):
         '''Read ControlWord
-        
+
         Request current controlword from device.
 
         Returns:
@@ -318,7 +318,7 @@ class Epos:
             logging.info("[EPOS:{0}] Error trying to read EPOS controlword".format(
             sys._getframe().f_code.co_name))
             return controlword, False
-        
+
         # return controlword as an int type
         controlword = int.from_bytes(controlword, 'little')
         return controlword, True
@@ -328,16 +328,16 @@ class Epos:
 
         Args:
             controlword: word to be sent.
-        
+
         Returns:
-            bool: a boolean if all went ok. 
+            bool: a boolean if all went ok.
         '''
         # sending new controlword
         self.logger.debug('[EPOS:{0}] Sending controlword Hex={1:#06X} Bin={1:#018b}'.format(
             sys._getframe().f_code.co_name, controlword))
         controlword = controlword.to_bytes(2, 'little')
         return self.writeObject(0x6040, 0, controlword)
-        
+
     def checkEposState(self):
         '''Check current state of Epos
 
@@ -510,36 +510,35 @@ class Epos:
 
         Args:
             controlword (optional): If None, request the controlword of device.
-             
+
         '''
         if not controlword:
             controlword, Ok = self.readControlWord()
             if not Ok:
                 print('[Epos:{0}] Failed to retreive controlword\n'.format(sys._getframe().f_code.co_name))
                 return
-        else:
-            print("[Epos:{1}] The controlword is Hex={0:#06X} Bin={0:#018b}\n".format(
+        print("[Epos:{1}] The controlword is Hex={0:#06X} Bin={0:#018b}\n".format(
             controlword, sys._getframe().f_code.co_name))
-            # Bit 15 to 11 not used, 10 to 9 reserved
-            print('Bit 08: Halt:                                                                   {0}'.format((controlword & (1 << 8 ))>>8))
-            print('Bit 07: Fault reset:                                                            {0}'.format((controlword & (1 << 7 ))>>7))
-            print('Bit 06: Operation mode specific:[Abs=0|rel=1]                                   {0}'.format((controlword & (1 << 6 ))>>6))
-            print('Bit 05: Operation mode specific:[Change set immediately]                        {0}'.format((controlword & (1 << 5 ))>>5))
-            print('Bit 04: Operation mode specific:[New set-point|reserved|Homing operation start] {0}'.format((controlword & (1 << 4 ))>>4))
-            print('Bit 03: Enable operation:                                                       {0}'.format((controlword & (1 << 3 ))>>3))
-            print('Bit 02: Quick stop:                                                             {0}'.format((controlword & (1 << 2 ))>>2))
-            print('Bit 01: Enable voltage:                                                         {0}'.format((controlword & (1 << 1 ))>>1))
-            print('Bit 00: Switch on:                                                              {0}'.format(controlword & 1))
+        # Bit 15 to 11 not used, 10 to 9 reserved
+        print('Bit 08: Halt:                                                                   {0}'.format((controlword & (1 << 8 ))>>8))
+        print('Bit 07: Fault reset:                                                            {0}'.format((controlword & (1 << 7 ))>>7))
+        print('Bit 06: Operation mode specific:[Abs=0|rel=1]                                   {0}'.format((controlword & (1 << 6 ))>>6))
+        print('Bit 05: Operation mode specific:[Change set immediately]                        {0}'.format((controlword & (1 << 5 ))>>5))
+        print('Bit 04: Operation mode specific:[New set-point|reserved|Homing operation start] {0}'.format((controlword & (1 << 4 ))>>4))
+        print('Bit 03: Enable operation:                                                       {0}'.format((controlword & (1 << 3 ))>>3))
+        print('Bit 02: Quick stop:                                                             {0}'.format((controlword & (1 << 2 ))>>2))
+        print('Bit 01: Enable voltage:                                                         {0}'.format((controlword & (1 << 1 ))>>1))
+        print('Bit 00: Switch on:                                                              {0}'.format(controlword & 1))
         return
 
 
     def readPositionModeSetting(self):
         '''Reads the setted desired Position
-		
+
         Ask Epos device for demand position object. If a correct
         request is made, the position is placed in answer. If
         not, an answer will be empty
-		
+
         Returns:
             tupple: A tupple containing:
 
@@ -582,7 +581,7 @@ class Epos:
 
         Returns:
             tupple: A tupple containing:
-            
+
             :velocity: Value setted or None if any error.
             :Ok: A boolean if sucessfull or not.
         '''
@@ -624,7 +623,7 @@ class Epos:
 
         Returns:
             tupple: A tupple containing:
-            
+
             :current: value setted.
             :Ok:      a boolean if sucessfull or not.
         '''
@@ -639,7 +638,7 @@ class Epos:
         # return value as signed int
         current = int.from_bytes(current, 'little', signed=True)
         return current, True
-    
+
     def setCurrentModeSetting(self, current):
         '''Set disered current
 
@@ -647,7 +646,7 @@ class Epos:
 
         Args:
             current: the value to be set [mA]
-        
+
         Returns:
             bool: a boolean if sucessfull or not
         '''
@@ -665,7 +664,7 @@ class Epos:
 
         Returns:
             tupple: A tupple containing:
-            
+
             :opMode: current opMode or None if request fails
             :Ok:     A boolean if sucessfull or not
         '''
@@ -720,7 +719,7 @@ class Epos:
             return False
         opMode = opMode.to_bytes(1, 'little', signed=True)
         return self.writeObject(index, subindex, opMode)
-    
+
     def printOpMode(self):
         '''Print current operation mode
         '''
@@ -771,7 +770,7 @@ class Epos:
         '''
         stateOrder = ['shutdown', 'switch on', 'disable voltage', 'quick stop',
                       'disable operation', 'enable operation', 'fault reset']
-        
+
         if not (newState in stateOrder):
             logging.info('[EPOS:{0}] Unkown state: {1}'.format(sys._getframe().f_code.co_name, newState))
             return False
@@ -780,7 +779,7 @@ class Epos:
             if not Ok:
                 logging.info('[EPOS:{0}] Failed to retreive controlword'.format(sys._getframe().f_code.co_name))
                 return False
-            # shutdown  0xxx x110  
+            # shutdown  0xxx x110
             if newState == 'shutdown':
                 # clear bits
                 mask = not ( 1<<7 | 1<<0 )
@@ -789,7 +788,7 @@ class Epos:
                 mask  = ( 1<< 2 | 1<<1 )
                 controlword = controlword | mask
                 return self.writeControlWord(controlword)
-            # switch on 0xxx x111 
+            # switch on 0xxx x111
             if newState == 'switch on':
                 # clear bits
                 mask = not ( 1<<7 )
@@ -937,7 +936,7 @@ class Epos:
         if not Ok:
             logging.info('[EPOS:{0}] Failed to set maximum speed: {1}'.format(sys._getframe().f_code.co_name, maximumSpeed))
             return Ok
-        
+
     def readMotorConfig(self):
         '''Read motor configuration
 
@@ -957,10 +956,10 @@ class Epos:
           winding is used to calculate the time how long the maximal output
           current is allowed for the connected motor [100 ms].
 
-        If unable to request the configuration or unsucessfull, None and false is 
+        If unable to request the configuration or unsucessfull, None and false is
         returned .
-        
-        Returns: 
+
+        Returns:
             tupple: A tupple with:
 
             :motorConfig: A structure with the current configuration of motor
@@ -972,47 +971,47 @@ class Epos:
         #------------------------------------------------------------------------
         index = self.objectIndex['MotorType']
         subindex = 0
-        value, Ok = self.readObject(index, subindex)
-        if not Ok:
+        value = self.readObject(index, subindex)
+        if value is None:
             logging.info('[EPOS:{0}] Failed to get motorType'.format(sys._getframe().f_code.co_name))
-            return None, Ok
+            return None, False
         motorConfig.update({'motorType': int.from_bytes(value, 'little')})  # append motorType to dict
         #------------------------------------------------------------------------
         # store motorData
         #------------------------------------------------------------------------
         index = self.objectIndex['Motor Data']
-        value, Ok = self.readObject(index, 1)
-        if not Ok:
+        value = self.readObject(index, 1)
+        if value is None:
             logging.info('[EPOS:{0}] Failed to get currentLimit'.format(sys._getframe().f_code.co_name))
-            return None, Ok
+            return None, False
         motorConfig.update({'currentLimit': int.from_bytes(value, 'little')})
         # output current limit has subindex 2 and is recommended to
         # be the double of constant current limit
-        value, Ok = self.readObject(index, 2)
-        if not Ok:
+        value = self.readObject(index, 2)
+        if value is None:
             logging.info('[EPOS:{0}] Failed to get maxCurrentLimit'.format(sys._getframe().f_code.co_name))
-            return None, Ok
+            return None, False
         motorConfig.update({'maxCurrentLimit': int.from_bytes(value, 'little')})
         # pole pair number has subindex 3
-        value, Ok = self.readObject(index, 3)
-        if not Ok:
+        value = self.readObject(index, 3)
+        if value is None:
             logging.info('[EPOS:{0}] Failed to get polePairNumber'.format(sys._getframe().f_code.co_name))
-            return None, Ok
+            return None, False
         motorConfig.update({'polePairNumber': int.from_bytes(value, 'little')})
         # maxSpeed has subindex 4
-        value, Ok = self.readObject(index, 4)
-        if not Ok:
+        value = self.readObject(index, 4)
+        if value is None:
             logging.info('[EPOS:{0}] Failed to get maximumSpeed'.format(sys._getframe().f_code.co_name))
-            return None, Ok
+            return None, False
         motorConfig.update({'maximumSpeed': int.from_bytes(value, 'little')})
         # thermal time constant has index 5
-        value, Ok = self.readObject(index, 5)
-        if not Ok:
+        value = self.readObject(index, 5)
+        if value is None:
             logging.info('[EPOS:{0}] Failed to get thermalTimeConstant'.format(sys._getframe().f_code.co_name))
-            return None, Ok
+            return None, False
         motorConfig.update({'thermalTimeConstant': int.from_bytes(value, 'little')})
         # no fails, return dict and ok
-        return motorConfig, Ok
+        return motorConfig, True
 
 
     def printMotorConfig(self):
@@ -1024,7 +1023,7 @@ class Epos:
         for key, value in self.motorType.items():    # for name, age in list.items():  (for Python 3.x)
             if value == motorConfig['motorType']:
                 break
-        
+
         if not Ok:
             print('[EPOS:{0}] Failed to request current motor configuration'.format(sys._getframe().f_code.co_name))
             return
@@ -1125,10 +1124,10 @@ class Epos:
                 sys._getframe().f_code.co_name))
             return False
         return True
-    
+
     def readSensorConfig(self):
         '''Read sensor configuration
-        
+
         Requests from EPOS the current sensor configuration.
         The sensorConfig is an struture containing the following information:
 
@@ -1139,10 +1138,10 @@ class Epos:
         If unable to request the configuration or unsucessfull, an empty
         structure is returned. Any error inside any field requests are marked
         with 'error'.
-        
-        Returns: 
+
+        Returns:
             tupple: A tupple containing:
-            
+
             :sensorConfig: A structure with the current configuration of the sensor
             :OK: A boolean if all went as expected or not.
         '''
@@ -1150,26 +1149,26 @@ class Epos:
         # get index
         index = self.objectIndex['Sensor Configuration']
         # pulseNumber has subindex 1
-        value, Ok = self.readObject(index, 1)
-        if not Ok:
+        value = self.readObject(index, 1)
+        if value is None:
             logging.info('[Epos:{0}] Error getting pulseNumber'.format(
                 sys._getframe().f_code.co_name))
             return None, False
         sensorConfig.update({'pulseNumber': int.from_bytes(value, 'little')})
         # sensorType has subindex 2
-        value, Ok = self.readObject(index, 2)
-        if not Ok:
+        value = self.readObject(index, 2)
+        if value is None:
             logging.info('[Epos:{0}] Error getting sensorType'.format(
                 sys._getframe().f_code.co_name))
             return None, False
         sensorConfig.update({'sensorType': int.from_bytes(value, 'little')})
         # sensorPolarity has subindex 4
-        value, Ok = self.readObject(index, 4)
-        if not Ok:
+        value = self.readObject(index, 4)
+        if value is None:
             logging.info('[Epos:{0}] Error getting sensorPolarity'.format(
                 sys._getframe().f_code.co_name))
             return None, False
-        sensorConfig.update({'sensorPolarity': int.from_bytes(value, 'little')})      
+        sensorConfig.update({'sensorPolarity': int.from_bytes(value, 'little')})
         return sensorConfig, True
 
     def printSensorConfig(self):
@@ -1207,7 +1206,7 @@ def main():
 
     Use a few examples to test communication with Epos device using
     a few functions. Also resets the fault error if present.
-    
+
     Show sample using also the EDS file.
     '''
 
@@ -1230,9 +1229,9 @@ def main():
                         type=str, help='Object dictionary file', dest='objDict')
     args = parser.parse_args()
 
-    
+
     # set up logging to file - see previous section for more details
-    logging.basicConfig(level=logging.DEBUG,
+    logging.basicConfig(level=logging.INFO,
                     format='[%(asctime)s.%(msecs)03d] [%(name)-12s]: %(levelname)-8s %(message)s',
                     datefmt='%d-%m-%Y %H:%M:%S',
                     filename='epos.log',
@@ -1249,12 +1248,12 @@ def main():
 
     # instanciate object
     epos = Epos()
-    
+
     if not (epos.begin(args.nodeID, objectDictionary=args.objDict)):
         logging.info('Failed to begin connection with EPOS device')
         logging.info('Exiting now')
         return
-    
+
     # check if EDS file is supplied and print it
     if args.objDict:
         print('----------------------------------------------------------', flush=True)
@@ -1271,14 +1270,15 @@ def main():
         # Iterate over arrays or record
         for error in error_log.values():
             print("Error 0x%X was found in the log" % error.raw)
-        
+
         print('----------------------------------------------------------', flush=True)
 
     # use simple hex values
     # try to read status word
-    statusword, ok = epos.readObject(0x6041, 0)
-    if not ok:
+    statusword = epos.readObject(0x6041, 0)
+    if not statusword:
         print("[EPOS] Error trying to read EPOS statusword\n")
+        return
     else:
         print('----------------------------------------------------------', flush=True)
         print("The statusword is \n Hex={0:#06X} Bin={0:#018b}".format(
@@ -1311,7 +1311,9 @@ def main():
         controlword = controlword.to_bytes(2, 'little')
         epos.writeObject(0x6040, 0, controlword)
         # check led status to see if it is green and blinking
-    
+
+    epos.printMotorConfig()
+    epos.printSensorConfig()
     epos.disconnect()
     return
 

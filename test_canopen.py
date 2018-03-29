@@ -15,7 +15,7 @@ time.sleep(0.05)
 for node_id in network.scanner.nodes:
     print("Found node %d!" % node_id)
 
-node = network.add_node(1)
+node = network.add_node(2)
 
 # # This will attempt to read an SDO from nodes 1 - 127
 # network.scanner.search()
