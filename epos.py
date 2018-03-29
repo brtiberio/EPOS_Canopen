@@ -1199,6 +1199,13 @@ class Epos:
         print('--------------------------------------------------------------')
         return
 
+    def saveConfig(self):
+        self.node.store
+        return
+    
+    def loadConfig(self):
+        self.node.restore
+        return
 
 
 def main():
