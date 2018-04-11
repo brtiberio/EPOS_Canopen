@@ -1,3 +1,26 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+# The MIT License (MIT)
+# Copyright (c) 2018 Bruno Tibério
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 import canopen
 import logging
 import sys
@@ -202,17 +225,23 @@ class Epos:
         try:
             self.node = self.network.add_node(
                 nodeID, object_dictionary=objectDictionary)
-            self.network.connect(channel=_channel, bustype=_bustype)
-            self._connected = True
+            # in not connected?
+            if not self.network.bus:
+                # so try to connect
+                self.network.connect(channel=_channel, bustype=_bustype)
         except Exception as e:
             self.logger.info('[Epos:{0}] Exception caught:{1}\n'.format(
                 sys._getframe().f_code.co_name, str(e)))
-            self._connected = False
         finally:
+            # check if is connected
+            if not self.network.bus:
+                self._connected = False
+            else:
+                self._connected = True
             return self._connected
 
     def disconnect(self):
-        self.network.disconnect
+        self.network.disconnect()
         return
     #--------------------------------------------------------------
     # Basic set of functions
@@ -282,7 +311,7 @@ class Epos:
         Returns:
             tupple: A tupple containing:
 
-            :statusword:  the current controlword or None if any error.
+            :statusword:  the current statusword or None if any error.
             :Ok: A boolean if all went ok.
         '''
         index = self.objectIndex['StatusWord']
@@ -908,7 +937,7 @@ class Epos:
         #------------------------------------------------------------------------
         index = self.objectIndex['Motor Data']
         # check if it was passed a float
-        if (type(currentLimit) == type(1.0)):
+        if isinstance(currentLimit, float):
             # if true trunc to closes int, similar to floor
             currentLimit=currentLimit.__trunc__
         # constant current limit has subindex 1
@@ -929,13 +958,15 @@ class Epos:
             return Ok
         # maxSpeed has subindex 4
         # check if it was passed a float
-        if (type(maximumSpeed) == type(1.0)):
+        if isinstance(maximumSpeed, float):
             # if true trunc to closes int, similar to floor
             maximumSpeed=maximumSpeed.__trunc__
         Ok = self.writeObject(index, 4, maximumSpeed.to_bytes(2, 'little'))
         if not Ok:
             logging.info('[EPOS:{0}] Failed to set maximum speed: {1}'.format(sys._getframe().f_code.co_name, maximumSpeed))
             return Ok
+        # no fails, return True
+        return True
 
     def readMotorConfig(self):
         '''Read motor configuration
@@ -975,7 +1006,8 @@ class Epos:
         if value is None:
             logging.info('[EPOS:{0}] Failed to get motorType'.format(sys._getframe().f_code.co_name))
             return None, False
-        motorConfig.update({'motorType': int.from_bytes(value, 'little')})  # append motorType to dict
+        # append motorType to dict
+        motorConfig.update({'motorType': int.from_bytes(value, 'little')})  
         #------------------------------------------------------------------------
         # store motorData
         #------------------------------------------------------------------------
@@ -1020,7 +1052,7 @@ class Epos:
         Request current motor config and print it
         '''
         motorConfig, Ok = self.readMotorConfig()
-        for key, value in self.motorType.items():    # for name, age in list.items():  (for Python 3.x)
+        for key, value in self.motorType.items():    # dict.items():  (for Python 3.x)
             if value == motorConfig['motorType']:
                 break
 
@@ -1142,7 +1174,7 @@ class Epos:
         Returns:
             tupple: A tupple containing:
 
-            :sensorConfig: A structure with the current configuration of the sensor
+            :sensorConfig: A dictionary with the current configuration of the sensor
             :OK: A boolean if all went as expected or not.
         '''
         sensorConfig = {}
@@ -1199,12 +1231,635 @@ class Epos:
         print('--------------------------------------------------------------')
         return
 
+    def setCurrentControlParameters(self, pGain, iGain):
+        '''Set the PI gains used in current control mode
+		
+        Args:
+		    pGain: Proportional gain.
+		    iGain: Integral gain.
+		Returns:
+		    bool: A boolean if all went as expected or not.
+		'''
+        #: TODO
+        pass
+    
+    def readCurrentControlParameters(self):
+        '''Read the PI gains used in  current control mode
+
+        Returns:
+            tupple: A tupple containing:
+
+            :gains: A dictionary with the current pGain and iGain
+            :OK: A boolean if all went as expected or not.
+        '''
+        #: TODO
+        pass
+    
+    def printCurrentControlParameters(self):
+        '''Print the current mode control PI gains
+
+        Request current mode control parameter gains from device and print.
+        '''
+        #: TODO
+        pass
+
+    def setSoftwarePosLimit(self, minPos, maxPos):
+        '''Set the software position limits
+
+        Use encoder readings as limit position for extremes
+        range = [-2147483648 | 2147483647]
+
+        Args:
+            minPos: minimum possition limit
+            maxPos: maximum possition limit
+        Return:
+            bool: A boolean if all went as expected or not.
+        '''
+        # validate attributes
+        if not (isinstance(minPos, int) and isinstance(maxPos, int)):
+            logging.info('[Epos:{0}] Error input values must be int'.format(
+                sys._getframe().f_code.co_name))
+            return False
+        if (minPos < -2**31 or minPos > 2**31-1):
+            logging.info('[Epos:{0}] Error minPos out of range'.format(
+                sys._getframe().f_code.co_name))
+            return False
+        if (maxPos < -2**31 or maxPos > 2**31-1):
+            logging.info('[Epos:{0}] Error maxPos out of range'.format(
+                sys._getframe().f_code.co_name))
+            return False
+        index = self.objectIndex['Software Position Limit']
+        # minPos has subindex 1
+        ok = self.writeObject(index, 0x1, minPos.to_bytes(4, 'little'))
+        if not ok:
+            logging.info('[Epos:{0}] Error setting minPos'.format(
+                sys._getframe().f_code.co_name))
+            return False
+        # maxPos has subindex 2
+        ok = self.writeObject(index, 0x2, maxPos.to_bytes(4, 'little'))
+        if not ok:
+            logging.info('[Epos:{0}] Error setting maxPos'.format(
+                sys._getframe().f_code.co_name))
+            return False
+        return True
+
+    def readSoftwarePosLimit(self):
+        '''Read the software position limit
+
+        Return:
+            tupple: A tupple containing:
+
+            :limits: a dictionary containing minPos and maxPos
+            :OK: A boolean if all went as expected or not.
+        '''
+        limits = {}
+        index = self.objectIndex['Software Position Limit']
+        # min has subindex 1
+        value, ok = self.readObject(index, 0x1)
+        if not ok:
+            logging.info('[Epos:{0}] Failed to read min position'.format(
+                sys._getframe().f_code.co_name))
+            return None, False
+        limits.update({'minPos': int.from_bytes(value, 'little')})
+        # max has subindex 2
+        value, ok = self.readObject(index, 0x2)
+        if not ok:
+            logging.info('[Epos:{0}] Failed to read max position'.format(
+                sys._getframe().f_code.co_name))
+            return None, False
+        limits.update({'maxPos': int.from_bytes(value, 'little')})
+
+        return limits, True
+
+    
+    def printSoftwarePosLimit(self):
+        ''' Print current software position limits
+        '''
+        limits, ok = self.readSoftwarePosLimit()
+        if not ok:
+            print('[Epos:{0}] Failed to request software position limits'.format(
+                sys._getframe().f_code.co_name))
+            return
+        print('--------------------------------------------------------------')
+        print('Software Position limits:')
+        print('--------------------------------------------------------------')
+        print('Minimum [qc]: {0}'.format(limits['minPos']))
+        print('Maximum [qc]: {0}'.format(limits['maxPos']))
+        print('--------------------------------------------------------------')
+        
+
+    def setQuickStopDeceleration(self, quickstopDeceleration):
+        '''Set the quick stop deceleration.
+
+        The quick stop deceleration defines the deceleration 
+        during a fault reaction.
+
+        Args:
+            quicstopDeceleration: the value of deceleration in rpm/s
+        Return:
+            bool: A boolean if all went as expected or not.
+        '''
+        # validate attributes
+        if not isinstance(quickstopDeceleration, int):
+            logging.info('[Epos:{0}] Error input value must be int'.format(
+                sys._getframe().f_code.co_name))
+            return False
+        if (quickstopDeceleration < 1 or quickstopDeceleration > 2**32-1):
+            logging.info('[Epos:{0}] Error quick stop deceleration out of range'.format(
+                sys._getframe().f_code.co_name))
+            return False
+        index = self.objectIndex['QuickStop Deceleration']
+        ok = self.writeObject(index, 0x0, quickstopDeceleration.to_bytes(4, 'little'))
+        if not ok:
+            logging.info('[Epos:{0}] Error setting quick stop deceleration'.format(
+                sys._getframe().f_code.co_name))
+            return False
+        return True
+
+    def readQuickStopDeceleratio(self):
+        ''' Read the quick stop deceleration.
+
+        Read deceleration used in fault reaction state.
+
+        Returns:
+            tupple: A tupple containing:
+
+            :quickstopDeceleration: The value of deceleration in rpm/s.
+            :OK: A boolean if all went as expected or not.  
+        '''
+        index = self.objectIndex['QuickStop Deceleration']
+        deceleration, ok = self.readObject(index, 0x0)
+        if not ok:
+            logging.info('[Epos:{0}] Failed to read quick stop deceleration value'.format(
+                sys._getframe().f_code.co_name))
+            return None, False
+        return deceleration, True
+
+    def readPositionControlParameters(self):
+        ''' Read position mode control parameters
+        
+        Read position mode control PID gains and and feedfoward
+        and acceleration values
+
+        Returns: 
+            tupple: A tupple containing:
+
+            :posModeParameters: a dictionary containg pGain, 
+                iGain, dGain, vFeed and aFeed.
+            :OK: A boolean if all went as expected or not.
+        '''
+        index = self.objectIndex['Position Control Parameter']
+        posModeParameters = {}
+        # pGain has subindex 1
+        value = self.readObject(index, 1)
+        if value is None:
+            logging.info('[Epos:{0}] Error getting pGain'.format(
+                sys._getframe().f_code.co_name))
+            return None, False
+        # can not be less than zero, but is considered signed!
+        posModeParameters.update({'pGain': int.from_bytes(value, 'little', signed=True)})
+
+        # iGain has subindex 2
+        value = self.readObject(index, 2)
+        if value is None:
+            logging.info('[Epos:{0}] Error getting iGain'.format(
+                sys._getframe().f_code.co_name))
+            return None, False
+        posModeParameters.update({'iGain': int.from_bytes(value, 'little', signed=True)})
+
+        # dGain has subindex 3
+        value = self.readObject(index, 3)
+        if value is None:
+            logging.info('[Epos:{0}] Error getting dGain'.format(
+                sys._getframe().f_code.co_name))
+            return None, False
+        posModeParameters.update({'dGain': int.from_bytes(value, 'little', signed=True)})
+
+        # vFeedFoward has subindex 4
+        value = self.readObject(index, 4)
+        if value is None:
+            logging.info('[Epos:{0}] Error getting vFeed'.format(
+                sys._getframe().f_code.co_name))
+            return None, False
+        # these are not considered signed!
+        posModeParameters.update({'vFeed': int.from_bytes(value, 'little')})
+
+        # aFeedFoward has subindex 5
+        value = self.readObject(index, 5)
+        if value is None:
+            logging.info('[Epos:{0}] Error getting aFeed'.format(
+                sys._getframe().f_code.co_name))
+            return None, False
+        posModeParameters.update({'aFeed': int.from_bytes(value, 'little')})
+        return posModeParameters, True
+    
+    def setPositionControlParameters(self, pGain, iGain, dGain, vFeed=0, aFeed=0):
+        '''Set position mode control parameters
+
+        Set position control PID gains and feedfoward velocity and
+		acceleration values.
+		
+		**Feedback and Feed Forward**
+		
+		*PID feedback amplification*
+		
+		PID stands for Proportional, Integral and Derivative control parameters.
+		They describe how the error signal e is amplified in order to
+		produce an appropriate correction. The goal is to reduce this error, i.e.
+		the deviation between the set (or demand) value and the measured (or
+		actual) value. Low values of control parameters will usually result in a
+		sluggish control behavior. High values will lead to a stiffer control with the
+		risk of overshoot and at too high an amplification, the system may start
+		oscillating.
+		
+		*Feed-forward*
+		
+		With the PID algorithms, corrective action only occurs if there is
+		a deviation between the set and actual values. For positioning
+		systems, this means that there always is â€“ in fact, there has to
+		be a position error while in motion. This is called following
+		error. The objective of the feedforward control is to minimize
+		this following error by taking into account the set value changes
+		in advance. Energy is provided in an open-loop controller set-up
+		to compensate friction and for the purpose of mass inertia acceleration.
+		Generally, there are two parameters available in feed-forward.
+		They have to be determined for the specific application and motion
+		task:
+		* Speed feed-forward gain: This component is multiplied by the
+		  demanded speed and compensates for speed-proportional friction.
+		* Acceleration feed-forward correction: This component is related
+		  to the mass inertia of the system and provides sufficient current
+		  to accelerate this inertia.
+		Incorporating the feed forward features reduces the average following
+		error when accelerating and decelerating. By combining a feed-forward
+		control and PID, the PID controller only has to correct the
+		residual error remaining after feed-forward, thereby improving the
+		system response and allowing very stiff control behavior.
+		
+		Args:
+		    pGain: Proportional gain value
+		    iGain: Integral gain value
+		    dGain: Derivative gain value
+		    vFeed: velocity feed foward gain value. Default to 0
+		    aFeed: acceleration feed foward gain value. Default to 0
+		
+		Returns:
+		    OK: A boolean if all requests went ok or not
+        '''
+        # validate attributes first
+        # any float?
+        if (isinstance(pGain, float) or isinstance(iGain, float) or 
+            isinstance(dGain, float) or isinstance(vFeed, float) or 
+            isinstance(aFeed, float)):
+            logging.info('[Epos:{0}] Error all values must be int, not floats'.format(
+                sys._getframe().f_code.co_name))
+            return False
+        # any out of range?
+        if(pGain < 0 or pGain > 2**15-1):
+            logging.info('[Epos:{0}] Error pGain out of range: {1}'.format(
+                sys._getframe().f_code.co_name,
+                pGain))
+            return False
+        if (iGain < 0 or iGain > 2**15-1):
+            logging.info('[Epos:{0}] Error iGain out of range: {1}'.format(
+                sys._getframe().f_code.co_name,
+                iGain))
+            return False
+        if (dGain < 0 or dGain > 2**15-1):
+            logging.info('[Epos:{0}] Error dGain out of range: {1}'.format(
+                sys._getframe().f_code.co_name,
+                dGain))
+            return False
+        if (iGain < 0 or iGain > 2**15-1):
+            logging.info('[Epos:{0}] Error iGain out of range: {1}'.format(
+                sys._getframe().f_code.co_name,
+                pGain))
+            return False
+        if (vFeed < 0 or vFeed > 2**16-1):
+            logging.info('[Epos:{0}] Error vFeed out of range: {1}'.format(
+                sys._getframe().f_code.co_name,
+                vFeed))
+            return False
+        if (aFeed < 0 or aFeed > 2**16-1):
+            logging.info('[Epos:{0}] Error aFeed out of range: {1}'.format(
+                sys._getframe().f_code.co_name,
+                aFeed))
+            return False
+        # all ok. Proceed
+        index = self.objectIndex['Position Control Parameter']
+        # pGain has subindex 1
+        Ok = self.writeObject(index, 1, pGain.to_bytes(2, 'little', True))
+        if not Ok:
+            logging.info('[Epos:{0}] Error setting pGain'.format(
+                sys._getframe().f_code.co_name))
+            return False
+        # iGain has subindex 2
+        Ok = self.writeObject(index, 2, iGain.to_bytes(2, 'little', True))
+        if not Ok:
+            logging.info('[Epos:{0}] Error setting iGain'.format(
+                sys._getframe().f_code.co_name))
+            return False
+        # dGain has subindex 3
+        Ok = self.writeObject(index, 3, dGain.to_bytes(2, 'little', True))
+        if not Ok:
+            logging.info('[Epos:{0}] Error setting dGain'.format(
+                sys._getframe().f_code.co_name))
+            return False
+        # vFeed has subindex 4
+        Ok = self.writeObject(index, 4, vFeed.to_bytes(2, 'little'))
+        if not Ok:
+            logging.info('[Epos:{0}] Error setting vFeed'.format(
+                sys._getframe().f_code.co_name))
+            return False
+        # pGain has subindex 5
+        Ok = self.writeObject(index, 5, aFeed.to_bytes(2, 'little'))
+        if not Ok:
+            logging.info('[Epos:{0}] Error setting aFeed'.format(
+                sys._getframe().f_code.co_name))
+            return False
+        # all ok, return True
+        return True
+
+    def printPositionControlParameters(self):
+        '''Print position control mode parameters
+
+        Request device for the position control mode parameters
+        and prints it.
+        '''
+        posModeParameters, ok = self.readPositionControlParameters()
+        if not ok:
+            print('[Epos:{0}] Error requesting Position mode control parameters'.format(
+                sys._getframe().f_code.co_name))
+            return
+        print('--------------------------------------------------------------')
+        print('Current Position mode control parameters:')
+        print('--------------------------------------------------------------')
+        for key, value in posModeParameters:
+            print('{0}: {1}'.format(key, value))
+        print('--------------------------------------------------------------')
+
+    def readFollowingError(self):
+        '''Returns the current following error
+	    
+        Read the current following error value which is the difference
+	    between atual value and desired value.
+		
+        Returns:
+            tupple: a tupple containing:
+
+		    :followingError: value of actual following error.
+		    :OK: A boolean if all requests went ok or not.
+        '''
+        index = self.objectIndex['Following Error Actual Value']
+        followingError = self.readObject(index, 0x0)
+        if not followingError:
+            logging.info('[Epos:{0}] Error getting Following Error Actual Value'.format(
+                sys._getframe().f_code.co_name))
+            return None, False
+        return followingError, True
+
+    def readMaxFollowingError(self):
+        '''Read the Max following error
+	    
+        Read the max following error value which is the maximum allowed difference
+	    between atual value and desired value in modulus.
+		
+        Returns:
+            tupple: a tupple containing:
+
+		    :maxFollowingError: value of max following error.
+		    :OK: A boolean if all requests went ok or not.
+        '''
+        index = self.objectIndex['Max Following Error']
+        maxFollowingError = self.readObject(index, 0x0)
+        if not maxFollowingError:
+            logging.info('[Epos:{0}] Error getting Max Following Error Value'.format(
+                sys._getframe().f_code.co_name))
+            return None, False
+        return maxFollowingError, True
+    
+    def setMaxFollowingError(self, maxFollowingError):
+        '''Set the Max following error
+	    
+        The Max Following Error is the maximum permissible difference
+		between demanded and actual position at any time of evaluation.
+		It serves as a safety and motion-supervising feature.
+		If the following error becomes too high, this is a sign of something
+		going wrong: Either the drive cannot reach the required speed
+		or it is even blocked.
+		
+		Args:
+		    maxFollowingError: The value of maximum following error.
+	    Returns:
+	        bool: A boolean if all requests went ok or not.
+        '''
+        # validate attributes
+        if not isinstance(maxFollowingError, int):
+            logging.info('[Epos:{0}] Error input value must be int'.format(
+                sys._getframe().f_code.co_name))
+            return False
+        if (maxFollowingError < 0 or maxFollowingError > 2**32-1 ):
+            logging.info('[Epos:{0}] Error Max Following error out of range'.format(
+                sys._getframe().f_code.co_name))
+            return False
+        
+        index = self.objectIndex['Max Following Error']
+        ok = self.writeObject(index, 0x0, maxFollowingError.to_bytes(4,'little'))
+        if not ok:
+            logging.info('[Epos:{0}] Error setting Max Following Error Value'.format(
+                sys._getframe().f_code.co_name))
+            return False
+        return True
+
+    def readPositionValue(self):
+        '''Read current position value
+
+        Returns:
+            tupple: a tupple containing:
+
+            :position: current position in quadrature counts.
+            :Ok: A boolean if all requests went ok or not.
+        '''
+        index = self.objectIndex['Position Actual Value']
+        position, ok = self.readObject(index, 0x0)
+        if not ok:
+            logging.info('[Epos:{0}] Failed to read current position value'.format(
+                sys._getframe().f_code.co_name))
+            return None, False
+        return position, True
+
+    def readPositionWindow(self):
+        '''Read current position Window value.
+
+        Position window is the modulus threashold value in which the output
+	    is considerated to be achieved.
+
+        Returns:
+            tupple: a tupple containing:
+
+            :postionWindow: current position window in quadrature counts.
+            :Ok: A boolean if all requests went ok or not.
+        '''
+        index = self.objectIndex['Position Window']
+        positionWindow, ok = self.readObject(index, 0x0)
+        if not ok:
+            logging.info('[Epos:{0}] Failed to read current position window'.format(
+                sys._getframe().f_code.co_name))
+            return None, False
+        return positionWindow, True
+    
+    def setPositionWindow(self, positionWindow):
+        '''Set position Window value
+		
+		Position window is the modulos threashold value in which the output
+		is considerated to be achieved.
+		
+		Args:
+		    positionWindow: position window in quadrature counts
+		Returns:
+		    bool: A boolean if all requests went ok or not.
+        '''
+        # validate attributes
+        if not isinstance(positionWindow, int):
+            logging.info('[Epos:{0}] Error input value must be int'.format(
+                sys._getframe().f_code.co_name))
+            return False
+        if (positionWindow < 0 or positionWindow > 2**32-1 ):
+            logging.info('[Epos:{0}] Error position window out of range'.format(
+                sys._getframe().f_code.co_name))
+            return False
+        index = self.objectIndex['Position Window']
+        ok = self.writeObject(index, 0x0, positionWindow.to_bytes(4,'little'))
+        if not ok:
+            logging.info('[Epos:{0}] Failed to set current position window'.format(
+                sys._getframe().f_code.co_name))
+            return None, False
+        return True
+    
+    def readPositionWindowTime(self):
+        '''Read current position Window time value.
+
+        Position window time is the minimum time in milliseconds in which
+		the output must be inside the position window for the target is
+		considerated to have been reached.
+
+        Returns:
+            tupple: a tupple containing:
+
+            :postionWindowTime: current position window time in milliseconds.
+            :Ok: A boolean if all requests went ok or not.
+        '''
+        index = self.objectIndex['Position Window Time']
+        positionWindowTime, ok = self.readObject(index, 0x0)
+        if not ok:
+            logging.info('[Epos:{0}] Failed to read current position window time'.format(
+                sys._getframe().f_code.co_name))
+            return None, False
+        return positionWindowTime, True
+    
+    def setPositionWindowTime(self, positionWindowTime):
+        '''Set position Window Time value
+		
+		Position window time is the minimum time in milliseconds in which
+		the output must be inside the position window for the target is
+		considerated to have been reached.
+		
+		Args:
+		    positionWindowTime: position window time in milliseconds.
+		Returns:
+		    bool: A boolean if all requests went ok or not.
+        '''
+        # validate attributes
+        if not isinstance(positionWindowTime, int):
+            logging.info('[Epos:{0}] Error input value must be int'.format(
+                sys._getframe().f_code.co_name))
+            return False
+        if (positionWindowTime < 0 or positionWindowTime > 2**16-1 ):
+            logging.info('[Epos:{0}] Error position window time out of range'.format(
+                sys._getframe().f_code.co_name))
+            return False
+        index = self.objectIndex['Position Window Time']
+        ok = self.writeObject(index, 0x0, positionWindowTime.to_bytes(2,'little'))
+        if not ok:
+            logging.info('[Epos:{0}] Failed to set current position window time'.format(
+                sys._getframe().f_code.co_name))
+            return None, False
+        return True
+
+    def readVelocityValue(self):
+        '''Read current velocity value
+
+        Returns:
+            tupple: a tupple containing:
+
+            :velocity: current velocity in rpm.
+            :Ok: A boolean if all requests went ok or not.
+        '''
+        index = self.objectIndex['Velocity Actual Value']
+        velocity, ok = self.readObject(index, 0x0)
+        if not ok:
+            logging.info('[Epos:{0}] Failed to read current velocity value'.format(
+                sys._getframe().f_code.co_name))
+            return None, False
+        return velocity, True
+    
+    def readVelocityValueAveraged(self):
+        '''Read current velocity averaged value
+
+        Returns:
+            tupple: a tupple containing:
+
+            :velocity: current velocity in rpm.
+            :Ok: A boolean if all requests went ok or not.
+        '''
+        index = self.objectIndex['Velocity Actual Value Averaged']
+        velocity, ok = self.readObject(index, 0x0)
+        if not ok:
+            logging.info('[Epos:{0}] Failed to read current velocity averaged value'.format(
+                sys._getframe().f_code.co_name))
+            return None, False
+        return velocity, True
+    
+    def readCurrentValue(self):
+        '''Read current value
+
+        Returns:
+            tupple: a tupple containing:
+
+            :current: current in mA.
+            :Ok: A boolean if all requests went ok or not.
+        '''
+        index = self.objectIndex['Current Actual Value']
+        current, ok = self.readObject(index, 0x0)
+        if not ok:
+            logging.info('[Epos:{0}] Failed to read current value'.format(
+                sys._getframe().f_code.co_name))
+            return None, False
+        return current, True
+    
+    def readCurrentValueAveraged(self):
+        '''Read current averaged value
+
+        Returns:
+            tupple: a tupple containing:
+
+            :current: current averaged in mA.
+            :Ok: A boolean if all requests went ok or not.
+        '''
+        index = self.objectIndex['Current Actual Value Averaged']
+        current, ok = self.readObject(index, 0x0)
+        if not ok:
+            logging.info('[Epos:{0}] Failed to read current averaged value'.format(
+                sys._getframe().f_code.co_name))
+            return None, False
+        return current, True
+
     def saveConfig(self):
-        self.node.store
+        self.node.store()
         return
     
     def loadConfig(self):
-        self.node.restore
+        self.node.restore()
         return
 
 

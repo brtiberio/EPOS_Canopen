@@ -10,6 +10,7 @@ def gotMessage(EmcyError):
     logging.info('[{0}] Got an EMCY message: {1}'.format(sys._getframe().f_code.co_name, EmcyError))
     return
 
+
 def main():
     if (sys.version_info < (3, 0)):
         print("Please use python version 3")
@@ -45,6 +46,8 @@ def main():
     # instanciate object
 
     network = canopen.Network()
+    network.connect(channel=args.channel, bustype=args.bus)
+
     epos = Epos(_network=network)
     if not (epos.begin(args.nodeID, objectDictionary=args.objDict)):
         logging.info('Failed to begin connection with EPOS device')
