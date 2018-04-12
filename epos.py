@@ -1007,7 +1007,7 @@ class Epos:
             logging.info('[EPOS:{0}] Failed to get motorType'.format(sys._getframe().f_code.co_name))
             return None, False
         # append motorType to dict
-        motorConfig.update({'motorType': int.from_bytes(value, 'little')})  
+        motorConfig.update({'motorType': int.from_bytes(value, 'little')})
         #------------------------------------------------------------------------
         # store motorData
         #------------------------------------------------------------------------
@@ -1233,7 +1233,7 @@ class Epos:
 
     def setCurrentControlParameters(self, pGain, iGain):
         '''Set the PI gains used in current control mode
-		
+
         Args:
 		    pGain: Proportional gain.
 		    iGain: Integral gain.
@@ -1242,7 +1242,7 @@ class Epos:
 		'''
         #: TODO
         pass
-    
+
     def readCurrentControlParameters(self):
         '''Read the PI gains used in  current control mode
 
@@ -1254,7 +1254,7 @@ class Epos:
         '''
         #: TODO
         pass
-    
+
     def printCurrentControlParameters(self):
         '''Print the current mode control PI gains
 
@@ -1331,7 +1331,7 @@ class Epos:
 
         return limits, True
 
-    
+
     def printSoftwarePosLimit(self):
         ''' Print current software position limits
         '''
@@ -1346,12 +1346,12 @@ class Epos:
         print('Minimum [qc]: {0}'.format(limits['minPos']))
         print('Maximum [qc]: {0}'.format(limits['maxPos']))
         print('--------------------------------------------------------------')
-        
+
 
     def setQuickStopDeceleration(self, quickstopDeceleration):
         '''Set the quick stop deceleration.
 
-        The quick stop deceleration defines the deceleration 
+        The quick stop deceleration defines the deceleration
         during a fault reaction.
 
         Args:
@@ -1385,7 +1385,7 @@ class Epos:
             tupple: A tupple containing:
 
             :quickstopDeceleration: The value of deceleration in rpm/s.
-            :OK: A boolean if all went as expected or not.  
+            :OK: A boolean if all went as expected or not.
         '''
         index = self.objectIndex['QuickStop Deceleration']
         deceleration, ok = self.readObject(index, 0x0)
@@ -1397,14 +1397,14 @@ class Epos:
 
     def readPositionControlParameters(self):
         ''' Read position mode control parameters
-        
+
         Read position mode control PID gains and and feedfoward
         and acceleration values
 
-        Returns: 
+        Returns:
             tupple: A tupple containing:
 
-            :posModeParameters: a dictionary containg pGain, 
+            :posModeParameters: a dictionary containg pGain,
                 iGain, dGain, vFeed and aFeed.
             :OK: A boolean if all went as expected or not.
         '''
@@ -1452,17 +1452,17 @@ class Epos:
             return None, False
         posModeParameters.update({'aFeed': int.from_bytes(value, 'little')})
         return posModeParameters, True
-    
+
     def setPositionControlParameters(self, pGain, iGain, dGain, vFeed=0, aFeed=0):
         '''Set position mode control parameters
 
         Set position control PID gains and feedfoward velocity and
 		acceleration values.
-		
+
 		**Feedback and Feed Forward**
-		
+
 		*PID feedback amplification*
-		
+
 		PID stands for Proportional, Integral and Derivative control parameters.
 		They describe how the error signal e is amplified in order to
 		produce an appropriate correction. The goal is to reduce this error, i.e.
@@ -1471,9 +1471,9 @@ class Epos:
 		sluggish control behavior. High values will lead to a stiffer control with the
 		risk of overshoot and at too high an amplification, the system may start
 		oscillating.
-		
+
 		*Feed-forward*
-		
+
 		With the PID algorithms, corrective action only occurs if there is
 		a deviation between the set and actual values. For positioning
 		systems, this means that there always is â€“ in fact, there has to
@@ -1495,21 +1495,21 @@ class Epos:
 		control and PID, the PID controller only has to correct the
 		residual error remaining after feed-forward, thereby improving the
 		system response and allowing very stiff control behavior.
-		
+
 		Args:
 		    pGain: Proportional gain value
 		    iGain: Integral gain value
 		    dGain: Derivative gain value
 		    vFeed: velocity feed foward gain value. Default to 0
 		    aFeed: acceleration feed foward gain value. Default to 0
-		
+
 		Returns:
 		    OK: A boolean if all requests went ok or not
         '''
         # validate attributes first
         # any float?
-        if (isinstance(pGain, float) or isinstance(iGain, float) or 
-            isinstance(dGain, float) or isinstance(vFeed, float) or 
+        if (isinstance(pGain, float) or isinstance(iGain, float) or
+            isinstance(dGain, float) or isinstance(vFeed, float) or
             isinstance(aFeed, float)):
             logging.info('[Epos:{0}] Error all values must be int, not floats'.format(
                 sys._getframe().f_code.co_name))
@@ -1600,10 +1600,10 @@ class Epos:
 
     def readFollowingError(self):
         '''Returns the current following error
-	    
+
         Read the current following error value which is the difference
 	    between atual value and desired value.
-		
+
         Returns:
             tupple: a tupple containing:
 
@@ -1620,10 +1620,10 @@ class Epos:
 
     def readMaxFollowingError(self):
         '''Read the Max following error
-	    
+
         Read the max following error value which is the maximum allowed difference
 	    between atual value and desired value in modulus.
-		
+
         Returns:
             tupple: a tupple containing:
 
@@ -1637,17 +1637,17 @@ class Epos:
                 sys._getframe().f_code.co_name))
             return None, False
         return maxFollowingError, True
-    
+
     def setMaxFollowingError(self, maxFollowingError):
         '''Set the Max following error
-	    
+
         The Max Following Error is the maximum permissible difference
 		between demanded and actual position at any time of evaluation.
 		It serves as a safety and motion-supervising feature.
 		If the following error becomes too high, this is a sign of something
 		going wrong: Either the drive cannot reach the required speed
 		or it is even blocked.
-		
+
 		Args:
 		    maxFollowingError: The value of maximum following error.
 	    Returns:
@@ -1662,7 +1662,7 @@ class Epos:
             logging.info('[Epos:{0}] Error Max Following error out of range'.format(
                 sys._getframe().f_code.co_name))
             return False
-        
+
         index = self.objectIndex['Max Following Error']
         ok = self.writeObject(index, 0x0, maxFollowingError.to_bytes(4,'little'))
         if not ok:
@@ -1707,13 +1707,13 @@ class Epos:
                 sys._getframe().f_code.co_name))
             return None, False
         return positionWindow, True
-    
+
     def setPositionWindow(self, positionWindow):
         '''Set position Window value
-		
+
 		Position window is the modulos threashold value in which the output
 		is considerated to be achieved.
-		
+
 		Args:
 		    positionWindow: position window in quadrature counts
 		Returns:
@@ -1735,7 +1735,7 @@ class Epos:
                 sys._getframe().f_code.co_name))
             return None, False
         return True
-    
+
     def readPositionWindowTime(self):
         '''Read current position Window time value.
 
@@ -1756,14 +1756,14 @@ class Epos:
                 sys._getframe().f_code.co_name))
             return None, False
         return positionWindowTime, True
-    
+
     def setPositionWindowTime(self, positionWindowTime):
         '''Set position Window Time value
-		
+
 		Position window time is the minimum time in milliseconds in which
 		the output must be inside the position window for the target is
 		considerated to have been reached.
-		
+
 		Args:
 		    positionWindowTime: position window time in milliseconds.
 		Returns:
@@ -1802,7 +1802,7 @@ class Epos:
                 sys._getframe().f_code.co_name))
             return None, False
         return velocity, True
-    
+
     def readVelocityValueAveraged(self):
         '''Read current velocity averaged value
 
@@ -1819,7 +1819,7 @@ class Epos:
                 sys._getframe().f_code.co_name))
             return None, False
         return velocity, True
-    
+
     def readCurrentValue(self):
         '''Read current value
 
@@ -1836,7 +1836,7 @@ class Epos:
                 sys._getframe().f_code.co_name))
             return None, False
         return current, True
-    
+
     def readCurrentValueAveraged(self):
         '''Read current averaged value
 
@@ -1857,7 +1857,7 @@ class Epos:
     def saveConfig(self):
         self.node.store()
         return
-    
+
     def loadConfig(self):
         self.node.restore()
         return
