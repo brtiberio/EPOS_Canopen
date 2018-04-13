@@ -39,11 +39,11 @@ class Scope(object):
 
     def update(self, y):
         lastt = self.tdata[-1]
-        if lastt > self.tdata[0] + self.maxt:  # reset the arrays
-            self.tdata = [self.tdata[-1]]
-            self.ydata = [self.ydata[-1]]
-            self.ydata2 = [self.ydata2[-1]]
-            self.ax.set_xlim(self.tdata[0], self.tdata[0] + self.maxt)
+        # if lastt > self.tdata[0] + self.maxt:  # reset the arrays
+        #     self.tdata = [self.tdata[-1]]
+        #     self.ydata = [self.ydata[-1]]
+        #     self.ydata2 = [self.ydata2[-1]]
+        #     self.ax.set_xlim(self.tdata[0], self.tdata[0] + self.maxt)
 
         t = self.tdata[-1] + self.dt
         self.tdata.append(t)
@@ -51,7 +51,9 @@ class Scope(object):
         self.ydata2.append(2*y)
         self.line.set_data(self.tdata, self.ydata)
         self.line2.set_data(self.tdata, self.ydata2)
-        return self.line,
+        self.ax.set_xlim(self.tdata[0], self.tdata[-1])
+        self.ax.set_ylim(min([min(self.ydata), min(self.ydata2)]), max([max(self.ydata), max(self.ydata2)]))
+
 
 
 def emitter(p=0.03):

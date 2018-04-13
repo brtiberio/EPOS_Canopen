@@ -1,4 +1,4 @@
-import canopen
+
 
 import argparse
 import logging
@@ -17,7 +17,6 @@ from matplotlib.lines import Line2D
 
 # load epos file from base dir
 sys.path.append('../../')
-from epos import Epos
 
 figClosed = False
 
@@ -34,7 +33,6 @@ class Plotter():
         # create axis
         self.posAx  = self.fig.add_subplot(2, 1, 1)
         self.errorAx = self.fig.add_subplot(2, 1, 2)
-        plt.tight_layout()
         # create vectors
         self.tdata = [0]
         self.ref = [0]
@@ -53,6 +51,7 @@ class Plotter():
         self.errorAx.set_xlabel('Time [s]')
 
 
+
     def update (self, tIn, tOut, yRef, yOut, ref_error):
         self.lineRef.set_xdata(tIn)
         self.lineRef.set_ydata(yRef)
@@ -69,7 +68,7 @@ class Plotter():
         self.fig.canvas.draw()
         self.fig.canvas.flush_events()
 
-def moveToPosition(pFinal, epos):
+def moveToPosition(pFinal, pStart):
     # constants
 
     # Tmax = 1.7 seems to be the limit before oscillations.
@@ -106,18 +105,13 @@ def moveToPosition(pFinal, epos):
     # max error in quadrature counters
     MAXERROR = 5000
 
-    pStart, OK = epos.readPositionValue()
-    if not OK:
-        logging.info('({0}) Failed to request current position'.format(
-            sys._getframe().f_code.co_name))
-        return
+
     #---------------------------------------------------------------------------
     # Find remaining constants
     #---------------------------------------------------------------------------
     # absolute of displacement
     l = abs(pFinal - pStart)
     if l is 0:
-        # already in final point
         return
     # do we need  a constant velocity phase?
     if(l>maxL13):
@@ -144,15 +138,19 @@ def moveToPosition(pFinal, epos):
     tout = np.array([], dtype='int32')
     ref_error = np.array([], dtype='int32')
 
+    plotter = Plotter()
+    time.sleep(0.01)
+    plt.show(block=False)
 
     flag = True
     pi = np.pi
     cos = np.cos
-    plotter = Plotter()
-    plt.show(block=False)
-    time.sleep(0.01)
 
     t0 = time.monotonic()
+
+
+
+
     while flag:
         # request current time
         tin = np.append(tin,[time.monotonic()-t0])
@@ -160,12 +158,7 @@ def moveToPosition(pFinal, epos):
         if tin[-1] > t3:
             flag = False
             inVar= np.append(inVar, [pFinal])
-            epos.setPositionModeSetting(pFinal)
-            aux, OK = epos.readPositionValue()
-            if not OK:
-                logging.info('({0}) Failed to request current position'.format(
-                    sys._getframe().f_code.co_name))
-                return
+            aux = 0.99*inVar[-1]
             outVar = np.append(outVar, [aux])
             tout = np.append(tout,[time.monotonic()-t0])
             ref_error = np.append(ref_error, [inVar[-1]-outVar[-1]])
@@ -189,26 +182,17 @@ def moveToPosition(pFinal, epos):
             aux = round(aux)
             # append to array and send to device
             inVar = np.append(inVar, [aux])
-            OK = epos.setPositionModeSetting(np.int32(inVar[-1]).item())
-            if not OK:
-                logging.info('({0}) Failed to set target position'.format(
-                    sys._getframe().f_code.co_name))
-                return
-            aux, OK = epos.readPositionValue()
-            if not OK:
-                logging.info('({0}) Failed to request current position'.format(
-                    sys._getframe().f_code.co_name))
-                return
+            aux = 0.99*inVar[-1]
             outVar = np.append(outVar, [aux])
             tout = np.append(tout,[time.monotonic()-t0])
             ref_error = np.append(ref_error, [inVar[-1]-outVar[-1]])
             if(abs(ref_error[-1])> MAXERROR):
-                epos.changeEposState('shutdown')
                 print('Something seems wrong, error is growing to mutch!!!')
                 return
+            sleepVal = 0.1*np.random.rand(1)
+            time.sleep(sleepVal)
         plotter.update(tin, tout, inVar, outVar, ref_error)
-        # require sleep?
-        time.sleep(0.001)
+    time.sleep(0.001)
 
 def gotMessage(EmcyError):
     logging.info('[{0}] Got an EMCY message: {1}'.format(sys._getframe().f_code.co_name, EmcyError))
@@ -249,58 +233,17 @@ def main():
     logging.getLogger('').addHandler(console)
     # instanciate object
 
-    network = canopen.Network()
-    network.connect(channel=args.channel, bustype=args.bus)
 
-    epos = Epos(_network=network)
-    if not (epos.begin(args.nodeID, objectDictionary=args.objDict)):
-        logging.info('Failed to begin connection with EPOS device')
-        logging.info('Exiting now')
-        return
-
-    # emcy messages handles
-    epos.node.emcy.add_callback(gotMessage)
-
-    # get current state of epos
-    state = epos.checkEposState()
-    if state is -1:
-        logging.info('[Epos:{0}] Error: Unknown state\n'.format(sys._getframe().f_code.co_name))
-        return
-
-    if state is 11:
-        # perform fault reset
-        ok = epos.changeEposState('fault reset')
-        if not ok:
-            logging.info('[Epos:{0}] Error: Failed to change state to fault reset\n'.format(sys._getframe().f_code.co_name))
-            return
-
-    # shutdown
-    if not epos.changeEposState('shutdown'):
-	    logging.info('Failed to change Epos state to shutdown')
-	    return
-    # switch on
-    if not epos.changeEposState('switch on'):
-	    logging.info('Failed to change Epos state to switch on')
-	    return
-    if not epos.changeEposState('enable operation'):
-	    logging.info('Failed to change Epos state to enable operation')
-	    return
     try:
         while (1):
             x = int(input("Enter desired position [qc]: "))
             print('-----------------------------------------------------------')
             print('Moving to position {0:+16,}'.format(x))
-            moveToPosition(x, epos)
+            moveToPosition(x, 0)
             print('done')
             print('-----------------------------------------------------------')
     except KeyboardInterrupt as e:
         print('Got execption {0}\nexiting now'.format(e))
-
-    if not epos.changeEposState('shutdown'):
-        logging.info('Failed to change Epos state to shutdown')
-        return
-    network.disconnect()
-
 
 if __name__ == '__main__':
     main()
