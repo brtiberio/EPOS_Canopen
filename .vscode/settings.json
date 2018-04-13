@@ -1,6 +1,0 @@
-{
-    "python.pythonPath": "${workspaceFolder}\\Scripts\\python.exe",
-    "python.linting.pylintEnabled": true,
-    "python.linting.enabled": true,
-    "files.autoSave": "afterDelay"
-}
