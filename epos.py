@@ -1315,20 +1315,19 @@ class Epos:
         limits = {}
         index = self.objectIndex['Software Position Limit']
         # min has subindex 1
-        value, ok = self.readObject(index, 0x1)
-        if not ok:
+        value= self.readObject(index, 0x1)
+        if value is None:
             logging.info('[Epos:{0}] Failed to read min position'.format(
                 sys._getframe().f_code.co_name))
             return None, False
         limits.update({'minPos': int.from_bytes(value, 'little')})
         # max has subindex 2
-        value, ok = self.readObject(index, 0x2)
-        if not ok:
+        value = self.readObject(index, 0x2)
+        if value is None:
             logging.info('[Epos:{0}] Failed to read max position'.format(
                 sys._getframe().f_code.co_name))
             return None, False
         limits.update({'maxPos': int.from_bytes(value, 'little')})
-
         return limits, True
 
 
@@ -1376,7 +1375,7 @@ class Epos:
             return False
         return True
 
-    def readQuickStopDeceleratio(self):
+    def readQuickStopDeceleration(self):
         ''' Read the quick stop deceleration.
 
         Read deceleration used in fault reaction state.
@@ -1388,11 +1387,12 @@ class Epos:
             :OK: A boolean if all went as expected or not.
         '''
         index = self.objectIndex['QuickStop Deceleration']
-        deceleration, ok = self.readObject(index, 0x0)
-        if not ok:
+        deceleration = self.readObject(index, 0x0)
+        if deceleration is None:
             logging.info('[Epos:{0}] Failed to read quick stop deceleration value'.format(
                 sys._getframe().f_code.co_name))
             return None, False
+        deceleration = int.from_bytes(deceleration, 'little')
         return deceleration, True
 
     def readPositionControlParameters(self):
@@ -1594,7 +1594,7 @@ class Epos:
         print('--------------------------------------------------------------')
         print('Current Position mode control parameters:')
         print('--------------------------------------------------------------')
-        for key, value in posModeParameters:
+        for key, value in posModeParameters.items():
             print('{0}: {1}'.format(key, value))
         print('--------------------------------------------------------------')
 
@@ -1616,6 +1616,7 @@ class Epos:
             logging.info('[Epos:{0}] Error getting Following Error Actual Value'.format(
                 sys._getframe().f_code.co_name))
             return None, False
+        followingError = int.from_bytes(followingError, 'little',signed=True)
         return followingError, True
 
     def readMaxFollowingError(self):
@@ -1636,6 +1637,7 @@ class Epos:
             logging.info('[Epos:{0}] Error getting Max Following Error Value'.format(
                 sys._getframe().f_code.co_name))
             return None, False
+        maxFollowingError = int.from_bytes(maxFollowingError, 'little')
         return maxFollowingError, True
 
     def setMaxFollowingError(self, maxFollowingError):
@@ -1681,11 +1683,12 @@ class Epos:
             :Ok: A boolean if all requests went ok or not.
         '''
         index = self.objectIndex['Position Actual Value']
-        position, ok = self.readObject(index, 0x0)
-        if not ok:
+        position = self.readObject(index, 0x0)
+        if position is None:
             logging.info('[Epos:{0}] Failed to read current position value'.format(
                 sys._getframe().f_code.co_name))
             return None, False
+        position = int.from_bytes(position, 'little', signed=True)
         return position, True
 
     def readPositionWindow(self):

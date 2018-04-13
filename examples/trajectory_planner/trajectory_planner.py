@@ -46,15 +46,17 @@ class Plotter():
         self.posAx.add_line(self.lineOut)
         self.posAx.legend(['Ref', 'Out'], loc='upper right')
         self.posAx.set_ylabel('Position [qc]')
-        self.posAx.set_xlabel('Time [s]')
+        self.errorAx.set_xlabel('Time [s]')
 
 
-    def update (self, XData, yRef, yOut):
-        self.lineRef.set_xdata(XData)
+    def update (self, tIn, tOut, yRef, yOut):
+        self.lineRef.set_xdata(tIn)
         self.lineRef.set_ydata(yRef)
-        self.lineOut.set_xdata(XData)
+        self.lineOut.set_xdata(tOut)
         self.lineOut.set_ydata(yOut)
         # require autoscale?
+        self.fig.canvas.draw()
+        self.fig.canvas.flush_events()
 
 def moveToPosition(pFinal, epos):
     # constants
@@ -84,11 +86,11 @@ def moveToPosition(pFinal, epos):
     maxAcceleration = 6000.0  # [qc]/s^2
 
     # maximum interval for both the accelleration  and deceleration phase are:
-    T1max = 2 * maxSpeed/maxAcceleration
+    T1max = 2.0 * maxSpeed/maxAcceleration
 
     # the max distance covered by these two phase (assuming acceleration equal
     # deceleration) is 2* 1/4 * Amax * T1max^2 = 1/2 * Amax * T1max^2 = 2Vmax^2/Amax
-    maxL13 = 2* maxSpeed^2/maxAcceleration
+    maxL13 = 2.0 * maxSpeed**2/maxAcceleration
 
     # max error in quadrature counters
     MAXERROR = 5000
@@ -121,29 +123,23 @@ def moveToPosition(pFinal, epos):
     # determine the sign of movement
     moveUp_or_down = pFinal-pStart > 0
 
-    # figure()
-    # # plot for inVar;
-    # h1 = plot(0,y0)
-    # xlabel('Time[s]')
-    # ylabel('Position[qc]')
-    # title('Position Follow test')
-    # ylim(1.1*sort([y0 yf]))
-    # hold on
-    # # plot for outVar
-    # h2 = plot(0,y0,'g')
-
     # allocate vars
-    inVar = np.array([])
-    outVar = np.array([])
-    tin = np.array([])
-    tout = np.array([])
-    ref_error = np.array([])
+    inVar = np.array([], dtype='int32')
+    outVar = np.array([], dtype='int32')
+    tin = np.array([], dtype='int32')
+    tout = np.array([], dtype='int32')
+    ref_error = np.array([], dtype='int32')
 
     t0 = time.monotonic()
     flag = True
 
     pi = np.pi
     cos = np.cos
+
+    plotter = Plotter()
+    plt.show(block=False)
+    
+    time.sleep(0.01)
 
     while flag:
         # request current time
@@ -161,6 +157,8 @@ def moveToPosition(pFinal, epos):
             outVar = np.append(outVar, [aux])
             tout = np.append(tout,[time.monotonic()-t0])
             ref_error = np.append(ref_error, [inVar[-1]-outVar[-1]])
+            # update plot
+            plotter.update(tin, tout, inVar, outVar)
         # not finished
         else:
             # get reference position for that time
@@ -176,9 +174,10 @@ def moveToPosition(pFinal, epos):
                     aux = pStart + moveUp_or_down * (1/4.0 * maxAcceleration * T1**2\
                      + 1/2.0 * maxAcceleration * T1*T2 + maxAcceleration/2.0 * (T1/(2.0*pi))**2 \
                      * ((2.0*pi)**2 * (tin[-1]-t2)/T1 -1/2.0*(2.0*pi/T1 *(tin[-1]-t2))**2 + (1.0 - cos(2.0*pi/T1*(tin[-1]-t2)))))
+            aux = round(aux)
             # append to array and send to device
             inVar = np.append(inVar, [aux])
-            OK = epos.setPositionModeSetting(inVar[-1])
+            OK = epos.setPositionModeSetting(np.int32(inVar[-1]).item())
             if not OK:
                 logging.info('({0}) Failed to set target position'.format(
                     sys._getframe().f_code.co_name))
@@ -195,23 +194,9 @@ def moveToPosition(pFinal, epos):
                 epos.changeEposState('shutdown')
                 print('Something seems wrong, error is growing to mutch!!!')
                 return
-        # update plot
-        # h1.XData = tin;
-	    # h1.YData = inVar;
-	    # h2.XData = tout;
-	    # h2.YData = outVar;
-	    # drawnow limitrate nocallbacks;
-        # to be done
-    # end of while loop
-    # axis auto
-    # legend('reference','output')
-    # drawnow
-    OK = epos.changeEposState('shutdown')
-    if not OK:
-        logging.info('({0}) Failed to shutdown Epos device'.format(
-            sys._getframe().f_code.co_name))
-        return
-
+            
+            time.sleep(0.001)
+    # plotter.update(tin, tout, inVar, outVar)
 
 def gotMessage(EmcyError):
     logging.info('[{0}] Got an EMCY message: {1}'.format(sys._getframe().f_code.co_name, EmcyError))
@@ -263,6 +248,31 @@ def main():
 
     # emcy messages handles
     epos.node.emcy.add_callback(gotMessage)
+    
+    # get current state of epos
+    state = epos.checkEposState()
+    if state is -1:
+        logging.info('[Epos:{0}] Error: Unknown state\n'.format(sys._getframe().f_code.co_name))
+        return
+    
+    if state is 11:
+        # perform fault reset
+        ok = epos.changeEposState('fault reset')
+        if not ok:
+            logging.info('[Epos:{0}] Error: Failed to change state to fault reset\n'.format(sys._getframe().f_code.co_name))
+            return
+    
+    # shutdown
+    if not epos.changeEposState('shutdown'):
+	    logging.info('Failed to change Epos state to shutdown')
+	    return
+    # switch on
+    if not epos.changeEposState('switch on'):
+	    logging.info('Failed to change Epos state to switch on')
+	    return
+    if not epos.changeEposState('enable operation'):
+	    logging.info('Failed to change Epos state to enable operation')
+	    return
     try:
         while (1):
             x = int(input("Enter desired position [qc]: "))
@@ -274,6 +284,9 @@ def main():
     except KeyboardInterrupt as e:
         print('Got execption {0}\nexiting now'.format(e))
 
+    if not epos.changeEposState('shutdown'):
+        logging.info('Failed to change Epos state to shutdown')
+        return
     network.disconnect()
 
 
