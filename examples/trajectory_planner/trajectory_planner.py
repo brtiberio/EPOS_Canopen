@@ -208,7 +208,7 @@ def moveToPosition(pFinal, epos):
                 return
         plotter.update(tin, tout, inVar, outVar, ref_error)
         # require sleep?
-        time.sleep(0.001)
+        #time.sleep(0.001)
 
 def gotMessage(EmcyError):
     logging.info('[{0}] Got an EMCY message: {1}'.format(sys._getframe().f_code.co_name, EmcyError))
