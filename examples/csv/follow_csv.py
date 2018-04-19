@@ -19,7 +19,6 @@ sys.path.append('../../')
 from epos import Epos
 import csv
 
-fileName = 'table2.csv'
 figClosed = False
 # nSteps represent the number of points to skip before updating figure
 nSteps = 10
@@ -44,7 +43,7 @@ class Plotter():
         self.diff = [0]
         # create lines to for reference and output values
         self.lineRef = Line2D(self.tRef, self.yRef, color=blueColor)
-        self.lineOut =Line2D(self.tdata, self.out, color=redColor, linestyle='None', marker='o')
+        self.lineOut =Line2D(self.tdata, self.out, color=redColor, linestyle='None', marker='o', markersize=1)
         self.lineDiff = Line2D(self.tdata, self.diff, color=yellowColor)
         self.posAx.add_line(self.lineRef)
         self.posAx.add_line(self.lineOut)
@@ -110,6 +109,8 @@ def main():
                         help='Node ID [ must be between 1- 127]', dest='nodeID')
     parser.add_argument('--objDict', action='store', default=None,
                         type=str, help='Object dictionary file', dest='objDict')
+    parser.add_argument('--file', '-f', action='store', default='table1.csv',
+                        type=str, help='csv file name to be used', dest='file')
     args = parser.parse_args()
     # set up logging to file - see previous section for more details
     logging.basicConfig(level=logging.INFO,
@@ -166,6 +167,7 @@ def main():
 	    return
 
     # load datafile
+    fileName = args.file
     with open(fileName) as csvfile:
         reader = csv.DictReader(csvfile, delimiter=';')
         data = {}
@@ -237,13 +239,17 @@ def main():
             sys._getframe().f_code.co_name))
         return
     out=np.append(out, aux)
-    diff = np.append(diff,data['position'][I]-out[-1])
+    diff = np.append(diff,data['position'][I-1]-out[-1])
     t = np.append(t, time.monotonic()-t0)
     plotter.update(t, out, diff, True)
+    if not epos.changeEposState('shutdown'):
+        logging.info('Failed to change Epos state to shutdown')
+        return
+    print('Close figure to exit')
     while( not figClosed):
         time.sleep(0.01)
         plotter.fig.canvas.flush_events()
-        print('Close figure to exit')
+        
 
 if __name__ == '__main__':
     main()
