@@ -150,7 +150,7 @@ class Epos:
                    'Homing Method': 0x6098,
                    'Homing Speeds': 0x6099,
                    'Homing Acceleration': 0x609A,
-                   'Torque Control Parameter': 0x60F6,
+                   'Current Control Parameter': 0x60F6,
                    'Speed Control Parameter': 0x60F9,
                    'Position Control Parameter': 0x60FB,
                    'TargetVelocity': 0x60FF,
@@ -185,7 +185,7 @@ class Epos:
                   }
     # dictionary describing opMode
     opModes = {6: 'Homing Mode', 3: 'Profile Velocity Mode', 1: 'Profile Position Mode',
-			  -1: 'Position Mode', -2: 'Velocity Mode', -3:'Current Mode', -4: 'Diagnostic Mode',
+              -1: 'Position Mode', -2: 'Velocity Mode', -3:'Current Mode', -4: 'Diagnostic Mode',
               -5: 'MasterEncoder Mode', -6: 'Step/Direction Mode'}
     node = []
     # dictionary object to describe state of EPOS device
@@ -404,7 +404,7 @@ class Epos:
 
         Returns:
             int: numeric identification of the state or -1 in case of fail.
-		'''
+        '''
         statusword, ok = self.readStatusWord()
         if not ok:
             self.logger.info('[Epos:{0}] Failed to request StatusWord\n'.format(
@@ -412,87 +412,87 @@ class Epos:
         else:
 
             # state 'start' (0)
-			# statusWord == x0xx xxx0  x000 0000
+            # statusWord == x0xx xxx0  x000 0000
             bitmask = 0b0100000101111111
             if(bitmask & statusword == 0):
                 ID = 0
                 return ID
 
-		# state 'not ready to switch on' (1)
-		# statusWord == x0xx xxx1  x000 0000
+        # state 'not ready to switch on' (1)
+        # statusWord == x0xx xxx1  x000 0000
             bitmask = 0b0100000101111111
             if (bitmask & statusword == 256):
-            	ID = 1
-            	return ID
+                ID = 1
+                return ID
 
             # state 'switch on disabled' (2)
             # statusWord == x0xx xxx1  x100 0000
             bitmask = 0b0100000101111111
             if(bitmask & statusword == 320):
-            	ID = 2
-            	return ID
+                ID = 2
+                return ID
 
             # state 'ready to switch on' (3)
             # statusWord == x0xx xxx1  x010 0001
             bitmask = 0b0100000101111111
             if(bitmask & statusword == 289):
-            	ID = 3
-            	return ID
+                ID = 3
+                return ID
 
             # state 'switched on' (4)
             # statusWord == x0xx xxx1  x010 0011
             bitmask = 0b0000000101111111
             if(bitmask & statusword == 291):
-            	ID = 4
-            	return ID
+                ID = 4
+                return ID
 
             # state 'refresh' (5)
             # statusWord == x1xx xxx1  x010 0011
             bitmask = 0b0100000101111111
             if(bitmask & statusword == 16675):
-            	ID = 5
-            	return ID
+                ID = 5
+                return ID
 
             # state 'measure init' (6)
             # statusWord == x1xx xxx1  x011 0011
             bitmask = 0b0100000101111111
             if(bitmask & statusword == 16691):
-            	ID = 6
-            	return ID
+                ID = 6
+                return ID
             # state 'operation enable' (7)
             # statusWord == x0xx xxx1  x011 0111
             bitmask = 0b0100000101111111
             if(bitmask & statusword == 311):
-            	ID = 7
-            	return ID
+                ID = 7
+                return ID
 
             # state 'Quick Stop Active' (8)
             # statusWord == x0xx xxx1  x001 0111
             bitmask = 0b0100000101111111
             if(bitmask & statusword == 279):
-            	ID = 8
-            	return ID
+                ID = 8
+                return ID
 
             # state 'fault reaction active (disabled)' (9)
             # statusWord == x0xx xxx1  x000 1111
             bitmask = 0b0100000101111111
             if(bitmask & statusword == 271):
-            	ID = 9
-            	return ID
+                ID = 9
+                return ID
 
             # state 'fault reaction active (enabled)' (10)
             # statusWord == x0xx xxx1  x001 1111
             bitmask = 0b0100000101111111
             if(bitmask & statusword == 287):
-            	ID = 10
-            	return ID
+                ID = 10
+                return ID
 
             # state 'fault' (11)
             # statusWord == x0xx xxx1  x000 1000
             bitmask = 0b0100000101111111
             if(bitmask & statusword == 264):
-            	ID = 11
-            	return ID
+                ID = 11
+                return ID
 
         # in case of unknown state or fail
         return -1
@@ -669,13 +669,12 @@ class Epos:
         return current, True
 
     def setCurrentModeSetting(self, current):
-        '''Set disered current
+        '''Set desired current
 
         Set the value for desired current in current control mode
 
         Args:
             current: the value to be set [mA]
-
         Returns:
             bool: a boolean if sucessfull or not
         '''
@@ -1235,13 +1234,45 @@ class Epos:
         '''Set the PI gains used in current control mode
 
         Args:
-		    pGain: Proportional gain.
-		    iGain: Integral gain.
-		Returns:
-		    bool: A boolean if all went as expected or not.
-		'''
-        #: TODO
-        pass
+            pGain: Proportional gain.
+            iGain: Integral gain.
+        Returns:
+            bool: A boolean if all went as expected or not.
+        '''
+        # any float?
+        if (isinstance(pGain, float) or isinstance(iGain, float)):
+            logging.info('[Epos:{0}] Error all values must be int, not floats'.format(
+                sys._getframe().f_code.co_name))
+            return False
+        # any out of range?
+        # validate attributes first
+        if(pGain < 0 or pGain > 2**15-1):
+            logging.info('[Epos:{0}] Error pGain out of range: {1}'.format(
+                sys._getframe().f_code.co_name,
+                pGain))
+            return False
+        if(iGain < 0 or iGain > 2**15-1):
+            logging.info('[Epos:{0}] Error iGain out of range: {1}'.format(
+                sys._getframe().f_code.co_name,
+                iGain))
+            return False
+        # all ok. Proceed
+        index = self.objectIndex['Current Control Parameter']
+        # pGain has subindex 1
+        Ok = self.writeObject(index, 1, pGain.to_bytes(2, 'little', True))
+        if not Ok:
+            logging.info('[Epos:{0}] Error setting pGain'.format(
+                sys._getframe().f_code.co_name))
+            return False
+        # iGain has subindex 2
+        Ok = self.writeObject(index, 2, iGain.to_bytes(2, 'little', True))
+        if not Ok:
+            logging.info('[Epos:{0}] Error setting iGain'.format(
+                sys._getframe().f_code.co_name))
+            return False
+        # all ok, return True
+        return True
+
 
     def readCurrentControlParameters(self):
         '''Read the PI gains used in  current control mode
@@ -1252,16 +1283,42 @@ class Epos:
             :gains: A dictionary with the current pGain and iGain
             :OK: A boolean if all went as expected or not.
         '''
-        #: TODO
-        pass
+        index = self.objectIndex['Current Control Parameter']
+        currModeParameters = {}
+        # pGain has subindex 1
+        value = self.readObject(index, 1)
+        if value is None:
+            logging.info('[Epos:{0}] Error getting pGain'.format(
+                sys._getframe().f_code.co_name))
+            return None, False
+        # can not be less than zero, but is considered signed!
+        currModeParameters.update({'pGain': int.from_bytes(value, 'little', signed=True)})
+
+        # iGain has subindex 2
+        value = self.readObject(index, 2)
+        if value is None:
+            logging.info('[Epos:{0}] Error getting iGain'.format(
+                sys._getframe().f_code.co_name))
+            return None, False
+        currModeParameters.update({'iGain': int.from_bytes(value, 'little', signed=True)})
+        return currModeParameters, True
 
     def printCurrentControlParameters(self):
         '''Print the current mode control PI gains
 
         Request current mode control parameter gains from device and print.
         '''
-        #: TODO
-        pass
+        currModeParameters, ok = self.readCurrentControlParameters()
+        if not ok:
+            print('[Epos:{0}] Error requesting Position mode control parameters'.format(
+                sys._getframe().f_code.co_name))
+            return
+        print('--------------------------------------------------------------')
+        print('Current Position mode control parameters:')
+        print('--------------------------------------------------------------')
+        for key, value in currModeParameters.items():
+            print('{0}: {1}'.format(key, value))
+        print('--------------------------------------------------------------')
 
     def setSoftwarePosLimit(self, minPos, maxPos):
         '''Set the software position limits
@@ -1457,54 +1514,63 @@ class Epos:
         '''Set position mode control parameters
 
         Set position control PID gains and feedfoward velocity and
-		acceleration values.
+        acceleration values.
 
-		**Feedback and Feed Forward**
+        **Feedback and Feed Forward**
 
-		*PID feedback amplification*
+        *PID feedback amplification*
 
-		PID stands for Proportional, Integral and Derivative control parameters.
-		They describe how the error signal e is amplified in order to
-		produce an appropriate correction. The goal is to reduce this error, i.e.
-		the deviation between the set (or demand) value and the measured (or
-		actual) value. Low values of control parameters will usually result in a
-		sluggish control behavior. High values will lead to a stiffer control with the
-		risk of overshoot and at too high an amplification, the system may start
-		oscillating.
+        PID stands for Proportional, Integral and Derivative control parameters.
+        They describe how the error signal e is amplified in order to
+        produce an appropriate correction. The goal is to reduce this error, i.e.
+        the deviation between the set (or demand) value and the measured (or
+        actual) value. Low values of control parameters will usually result in a
+        sluggish control behavior. High values will lead to a stiffer control with the
+        risk of overshoot and at too high an amplification, the system may start
+        oscillating.
 
-		*Feed-forward*
+        *Feed-forward*
 
-		With the PID algorithms, corrective action only occurs if there is
-		a deviation between the set and actual values. For positioning
-		systems, this means that there always is â€“ in fact, there has to
-		be a position error while in motion. This is called following
-		error. The objective of the feedforward control is to minimize
-		this following error by taking into account the set value changes
-		in advance. Energy is provided in an open-loop controller set-up
-		to compensate friction and for the purpose of mass inertia acceleration.
-		Generally, there are two parameters available in feed-forward.
-		They have to be determined for the specific application and motion
-		task:
-		* Speed feed-forward gain: This component is multiplied by the
-		  demanded speed and compensates for speed-proportional friction.
-		* Acceleration feed-forward correction: This component is related
-		  to the mass inertia of the system and provides sufficient current
-		  to accelerate this inertia.
-		Incorporating the feed forward features reduces the average following
-		error when accelerating and decelerating. By combining a feed-forward
-		control and PID, the PID controller only has to correct the
-		residual error remaining after feed-forward, thereby improving the
-		system response and allowing very stiff control behavior.
+        With the PID algorithms, corrective action only occurs if there is
+        a deviation between the set and actual values. For positioning
+        systems, this means that there always is â€“ in fact, there has to
+        be a position error while in motion. This is called following
+        error. The objective of the feedforward control is to minimize
+        this following error by taking into account the set value changes
+        in advance. Energy is provided in an open-loop controller set-up
+        to compensate friction and for the purpose of mass inertia acceleration.
+        Generally, there are two parameters available in feed-forward.
+        They have to be determined for the specific application and motion
+        task\:
 
-		Args:
-		    pGain: Proportional gain value
-		    iGain: Integral gain value
-		    dGain: Derivative gain value
-		    vFeed: velocity feed foward gain value. Default to 0
-		    aFeed: acceleration feed foward gain value. Default to 0
+        * Speed feed-forward gain: This component is multiplied by the
+          demanded speed and compensates for speed-proportional friction.
+        * Acceleration feed-forward correction\: This component is related
+          to the mass inertia of the system and provides sufficient current
+          to accelerate this inertia.
 
-		Returns:
-		    OK: A boolean if all requests went ok or not
+        Incorporating the feed forward features reduces the average following
+        error when accelerating and decelerating. By combining a feed-forward
+        control and PID, the PID controller only has to correct the
+        residual error remaining after feed-forward, thereby improving the
+        system response and allowing very stiff control behavior.
+
+        According to `Position Regulation with Feed Forward\
+        <https://www.maxonmotor.com/medias/sys_master/root/8803614294046/\
+        EPOS-Application-Note-Position-Regulation-with-Feed-Forward-En.pdf>`_
+        the acceleration and velocity feed forward take effect in Profile
+        Position Mode and Homing Mode. There is no influence to all the other
+        operation modes like Position Mode, Profile Velocity Mode, Velocity Mode
+        and Current Mode
+
+        Args:
+            pGain: Proportional gain value
+            iGain: Integral gain value
+            dGain: Derivative gain value
+            vFeed: velocity feed foward gain value. Default to 0
+            aFeed: acceleration feed foward gain value. Default to 0
+        Returns:
+            OK: A boolean if all requests went ok or not
         '''
         # validate attributes first
         # any float?
@@ -1571,7 +1637,7 @@ class Epos:
             logging.info('[Epos:{0}] Error setting vFeed'.format(
                 sys._getframe().f_code.co_name))
             return False
-        # pGain has subindex 5
+        # aFeed has subindex 5
         Ok = self.writeObject(index, 5, aFeed.to_bytes(2, 'little'))
         if not Ok:
             logging.info('[Epos:{0}] Error setting aFeed'.format(
@@ -1602,13 +1668,13 @@ class Epos:
         '''Returns the current following error
 
         Read the current following error value which is the difference
-	    between atual value and desired value.
+        between atual value and desired value.
 
         Returns:
             tupple: a tupple containing:
 
-		    :followingError: value of actual following error.
-		    :OK: A boolean if all requests went ok or not.
+            :followingError: value of actual following error.
+            :OK: A boolean if all requests went ok or not.
         '''
         index = self.objectIndex['Following Error Actual Value']
         followingError = self.readObject(index, 0x0)
@@ -1623,13 +1689,13 @@ class Epos:
         '''Read the Max following error
 
         Read the max following error value which is the maximum allowed difference
-	    between atual value and desired value in modulus.
+        between atual value and desired value in modulus.
 
         Returns:
             tupple: a tupple containing:
 
-		    :maxFollowingError: value of max following error.
-		    :OK: A boolean if all requests went ok or not.
+            :maxFollowingError: value of max following error.
+            :OK: A boolean if all requests went ok or not.
         '''
         index = self.objectIndex['Max Following Error']
         maxFollowingError = self.readObject(index, 0x0)
@@ -1644,16 +1710,16 @@ class Epos:
         '''Set the Max following error
 
         The Max Following Error is the maximum permissible difference
-		between demanded and actual position at any time of evaluation.
-		It serves as a safety and motion-supervising feature.
-		If the following error becomes too high, this is a sign of something
-		going wrong: Either the drive cannot reach the required speed
-		or it is even blocked.
+        between demanded and actual position at any time of evaluation.
+        It serves as a safety and motion-supervising feature.
+        If the following error becomes too high, this is a sign of something
+        going wrong. Either the drive cannot reach the required speed
+        or it is even blocked.
 
-		Args:
-		    maxFollowingError: The value of maximum following error.
-	    Returns:
-	        bool: A boolean if all requests went ok or not.
+        Args:
+            maxFollowingError: The value of maximum following error.
+        Returns:
+            bool: A boolean if all requests went ok or not.
         '''
         # validate attributes
         if not isinstance(maxFollowingError, int):
@@ -1695,7 +1761,7 @@ class Epos:
         '''Read current position Window value.
 
         Position window is the modulus threashold value in which the output
-	    is considerated to be achieved.
+        is considerated to be achieved.
 
         Returns:
             tupple: a tupple containing:
@@ -1714,13 +1780,13 @@ class Epos:
     def setPositionWindow(self, positionWindow):
         '''Set position Window value
 
-		Position window is the modulos threashold value in which the output
-		is considerated to be achieved.
+        Position window is the modulos threashold value in which the output
+        is considerated to be achieved.
 
-		Args:
-		    positionWindow: position window in quadrature counts
-		Returns:
-		    bool: A boolean if all requests went ok or not.
+        Args:
+            positionWindow: position window in quadrature counts
+        Returns:
+            bool: A boolean if all requests went ok or not.
         '''
         # validate attributes
         if not isinstance(positionWindow, int):
@@ -1743,8 +1809,8 @@ class Epos:
         '''Read current position Window time value.
 
         Position window time is the minimum time in milliseconds in which
-		the output must be inside the position window for the target is
-		considerated to have been reached.
+        the output must be inside the position window for the target is
+        considerated to have been reached.
 
         Returns:
             tupple: a tupple containing:
@@ -1763,14 +1829,14 @@ class Epos:
     def setPositionWindowTime(self, positionWindowTime):
         '''Set position Window Time value
 
-		Position window time is the minimum time in milliseconds in which
-		the output must be inside the position window for the target is
-		considerated to have been reached.
+        Position window time is the minimum time in milliseconds in which
+        the output must be inside the position window for the target is
+        considerated to have been reached.
 
-		Args:
-		    positionWindowTime: position window time in milliseconds.
-		Returns:
-		    bool: A boolean if all requests went ok or not.
+        Args:
+            positionWindowTime: position window time in milliseconds.
+        Returns:
+            bool: A boolean if all requests went ok or not.
         '''
         # validate attributes
         if not isinstance(positionWindowTime, int):
@@ -1858,10 +1924,14 @@ class Epos:
         return current, True
 
     def saveConfig(self):
+        '''Save all configurrations
+        '''
         self.node.store()
         return
 
     def loadConfig(self):
+        '''Load all configurations
+        '''
         self.node.restore()
         return
 
