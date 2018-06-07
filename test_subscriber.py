@@ -6,8 +6,10 @@ import logging
 import sys
 from time import sleep
 
+
 def gotMessage(EmcyError):
-    logging.info('[{0}] Got an EMCY message: {1}'.format(sys._getframe().f_code.co_name, EmcyError))
+    logging.info('[{0}] Got an EMCY message: {1}'.format(
+        sys._getframe().f_code.co_name, EmcyError))
     return
 
 
@@ -30,7 +32,7 @@ def main():
     args = parser.parse_args()
     # set up logging to file - see previous section for more details
     logging.basicConfig(level=logging.INFO,
-                        format='[%(asctime)s.%(msecs)03d] [%(name)-12s]: %(levelname)-8s %(message)s',
+                        format='[%(asctime)s.%(msecs)03d] [%(name)-20s]: %(levelname)-8s %(message)s',
                         datefmt='%d-%m-%Y %H:%M:%S',
                         filename='epos.log',
                         filemode='w')
@@ -38,7 +40,7 @@ def main():
     console = logging.StreamHandler()
     console.setLevel(logging.INFO)
     # set a format which is simpler for console use
-    formatter = logging.Formatter('%(name)-12s: %(levelname)-8s %(message)s')
+    formatter = logging.Formatter('%(name)-20s: %(levelname)-8s %(message)s')
     # tell the handler to use this format
     console.setFormatter(formatter)
     # add the handler to the root logger

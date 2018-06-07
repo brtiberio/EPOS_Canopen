@@ -27,13 +27,14 @@ blueColor = (0, 0.4470, 0.7410)
 redColor = (0.8500, 0.3250, 0.0980)
 yellowColor = (0.9290, 0.6940, 0.1250)
 
+
 class Plotter():
     def __init__(self):
         # create new figure or use last
         self.fig = plt.figure(1)
         self.fig.clf()
         # create axis
-        self.posAx  = self.fig.add_subplot(2, 1, 1)
+        self.posAx = self.fig.add_subplot(2, 1, 1)
         self.errorAx = self.fig.add_subplot(2, 1, 2)
         # create vectors
         self.tRef = [0]
@@ -43,7 +44,8 @@ class Plotter():
         self.diff = [0]
         # create lines to for reference and output values
         self.lineRef = Line2D(self.tRef, self.yRef, color=blueColor)
-        self.lineOut =Line2D(self.tdata, self.out, color=redColor, linestyle='None', marker='o', markersize=1)
+        self.lineOut = Line2D(self.tdata, self.out, color=redColor,
+                              linestyle='None', marker='o', markersize=1)
         self.lineDiff = Line2D(self.tdata, self.diff, color=yellowColor)
         self.posAx.add_line(self.lineRef)
         self.posAx.add_line(self.lineOut)
@@ -53,8 +55,6 @@ class Plotter():
         self.errorAx.set_ylabel('Position [qc]')
         self.errorAx.set_xlabel('Time [s]')
         self.errorAx.legend(['error'], loc='upper right')
-
-
 
     def begin(self, tRef, yRef):
         self.tRef = tRef
@@ -66,8 +66,7 @@ class Plotter():
         self.fig.canvas.draw()
         self.fig.canvas.flush_events()
 
-
-    def update (self, tOut, yOut, ref_error, draw= False):
+    def update(self, tOut, yOut, ref_error, draw=False):
         self.lineOut.set_xdata(tOut)
         self.lineOut.set_ydata(yOut)
         self.lineDiff.set_xdata(tOut)
@@ -76,12 +75,14 @@ class Plotter():
         if tOut[-1] > self.tRef[-1]:
             self.posAx.set_xlim(self.tRef[0], tOut[-1])
             self.errorAx.set_xlim(self.tRef[0], tOut[-1])
-        self.posAx.set_ylim(min([min(self.yRef), min(yOut)]), max([max(self.yRef), max(yOut)]))
+        self.posAx.set_ylim(min([min(self.yRef), min(yOut)]), max(
+            [max(self.yRef), max(yOut)]))
         self.errorAx.set_ylim(min(ref_error), max(ref_error))
         if draw:
             self.fig.canvas.draw()
             plt.tight_layout()
         self.fig.canvas.flush_events()
+
 
 def handle_close(evt):
     global figClosed
@@ -89,9 +90,12 @@ def handle_close(evt):
     figClosed = True
     return
 
+
 def gotMessage(EmcyError):
-    logging.info('[{0}] Got an EMCY message: {1}'.format(sys._getframe().f_code.co_name, EmcyError))
+    logging.info('[{0}] Got an EMCY message: {1}'.format(
+        sys._getframe().f_code.co_name, EmcyError))
     return
+
 
 def main():
     if (sys.version_info < (3, 0)):
@@ -114,7 +118,7 @@ def main():
     args = parser.parse_args()
     # set up logging to file - see previous section for more details
     logging.basicConfig(level=logging.INFO,
-                        format='[%(asctime)s.%(msecs)03d] [%(name)-12s]: %(levelname)-8s %(message)s',
+                        format='[%(asctime)s.%(msecs)03d] [%(name)-20s]: %(levelname)-8s %(message)s',
                         datefmt='%d-%m-%Y %H:%M:%S',
                         filename='epos.log',
                         filemode='w')
@@ -122,7 +126,7 @@ def main():
     console = logging.StreamHandler()
     console.setLevel(logging.INFO)
     # set a format which is simpler for console use
-    formatter = logging.Formatter('[%(name)-12s] %(message)s')
+    formatter = logging.Formatter('[%(name)-20s] %(message)s')
     # tell the handler to use this format
     console.setFormatter(formatter)
     # add the handler to the root logger
@@ -144,27 +148,29 @@ def main():
     # get current state of epos
     state = epos.checkEposState()
     if state is -1:
-        logging.info('[Epos:{0}] Error: Unknown state\n'.format(sys._getframe().f_code.co_name))
+        logging.info('[Epos:{0}] Error: Unknown state\n'.format(
+            sys._getframe().f_code.co_name))
         return
 
     if state is 11:
         # perform fault reset
         ok = epos.changeEposState('fault reset')
         if not ok:
-            logging.info('[Epos:{0}] Error: Failed to change state to fault reset\n'.format(sys._getframe().f_code.co_name))
+            logging.info('[Epos:{0}] Error: Failed to change state to fault reset\n'.format(
+                sys._getframe().f_code.co_name))
             return
 
     # shutdown
     if not epos.changeEposState('shutdown'):
-	    logging.info('Failed to change Epos state to shutdown')
-	    return
+        logging.info('Failed to change Epos state to shutdown')
+        return
     # switch on
     if not epos.changeEposState('switch on'):
-	    logging.info('Failed to change Epos state to switch on')
-	    return
+        logging.info('Failed to change Epos state to switch on')
+        return
     if not epos.changeEposState('enable operation'):
-	    logging.info('Failed to change Epos state to enable operation')
-	    return
+        logging.info('Failed to change Epos state to enable operation')
+        return
 
     # load datafile
     fileName = args.file
@@ -201,7 +207,7 @@ def main():
     updateFlag = False
     # get current time
     t0 = time.monotonic()
-    while( I < maxI):
+    while(I < maxI):
         tOut = time.monotonic()-t0
         # skip to next step?
         if tOut > data['time'][I]:
@@ -220,8 +226,8 @@ def main():
                     logging.info('({0}) Failed to request current position'.format(
                         sys._getframe().f_code.co_name))
                     return
-                out=np.append(out, aux)
-                diff = np.append(diff,data['position'][I]-out[-1])
+                out = np.append(out, aux)
+                diff = np.append(diff, data['position'][I]-out[-1])
                 t = np.append(t, time.monotonic()-t0)
                 # update only every n steps
                 if (I % nSteps == 0) or (I == 0):
@@ -231,25 +237,26 @@ def main():
                 # use sleep?
                 time.sleep(0.005)
 
-    print('Time to process all vars was {0} seconds'.format(time.monotonic()-t0))
+    print('Time to process all vars was {0} seconds'.format(
+        time.monotonic()-t0))
     # request one last time
     aux, OK = epos.readPositionValue()
     if not OK:
         logging.info('({0}) Failed to request current position'.format(
             sys._getframe().f_code.co_name))
         return
-    out=np.append(out, aux)
-    diff = np.append(diff,data['position'][I-1]-out[-1])
+    out = np.append(out, aux)
+    diff = np.append(diff, data['position'][I-1]-out[-1])
     t = np.append(t, time.monotonic()-t0)
     plotter.update(t, out, diff, True)
     if not epos.changeEposState('shutdown'):
         logging.info('Failed to change Epos state to shutdown')
         return
     print('Close figure to exit')
-    while( not figClosed):
+    while(not figClosed):
         time.sleep(0.01)
         plotter.fig.canvas.flush_events()
-        
+
 
 if __name__ == '__main__':
     main()
