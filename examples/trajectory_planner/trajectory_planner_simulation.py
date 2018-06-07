@@ -76,19 +76,19 @@ def moveToPosition(pFinal, pStart):
     Tmax = 1.7 # max period for 1 rotation;
     # 1 rev = 3600*4 [qc]
     countsPerRev = 3600*4
-    '''
-     1Hz = 60rpm = 360degrees/s
 
-     360 degrees = sensor resolution * 4
+    # 1Hz = 60rpm = 360degrees/s
+    #
+    # 360 degrees = sensor resolution * 4
+    #
+    # this yields: 1Hz = (sensor resolution * 4)/s
+    #
+    # Fmax = 1 / Tmax;
+    #
+    # maxSpeed = 60 rpm/Tmax [rpm]=
+    #          = 360degrees/Tmax [degrees/s]=
+    #          = (sensor resolution *4)/Tmax [qc/s]
 
-    this yields: 1Hz = (sensor resolution * 4)/s
-
-    Fmax = 1 / Tmax;
-
-    maxSpeed = 60 rpm/Tmax [rpm]=
-             = 360degrees/Tmax [degrees/s]=
-             = (sensor resolution *4)/Tmax [qc/s]
-    '''
     maxSpeed = countsPerRev/Tmax # degrees per sec
 
     # max acceleration must be experimental obtained.
