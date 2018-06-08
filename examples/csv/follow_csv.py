@@ -175,7 +175,7 @@ def main():
     # load datafile
     fileName = args.file
     with open(fileName) as csvfile:
-        reader = csv.DictReader(csvfile, delimiter=';')
+        reader = csv.DictReader(csvfile, delimiter=',')
         data = {}
         for row in reader:
             for header, value in row.items():
