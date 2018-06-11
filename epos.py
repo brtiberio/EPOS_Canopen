@@ -1337,13 +1337,13 @@ class Epos:
         # all ok. Proceed
         index = self.objectIndex['Current Control Parameter']
         # pGain has subindex 1
-        Ok = self.writeObject(index, 1, pGain.to_bytes(2, 'little', True))
+        Ok = self.writeObject(index, 1, pGain.to_bytes(2, 'little', signed=True))
         if not Ok:
             logging.info('[Epos:{0}] Error setting pGain'.format(
                 sys._getframe().f_code.co_name))
             return False
         # iGain has subindex 2
-        Ok = self.writeObject(index, 2, iGain.to_bytes(2, 'little', True))
+        Ok = self.writeObject(index, 2, iGain.to_bytes(2, 'little', signed=True))
         if not Ok:
             logging.info('[Epos:{0}] Error setting iGain'.format(
                 sys._getframe().f_code.co_name))
@@ -1695,19 +1695,19 @@ class Epos:
         # all ok. Proceed
         index = self.objectIndex['Position Control Parameter']
         # pGain has subindex 1
-        Ok = self.writeObject(index, 1, pGain.to_bytes(2, 'little', True))
+        Ok = self.writeObject(index, 1, pGain.to_bytes(2, 'little', signed=True))
         if not Ok:
             logging.info('[Epos:{0}] Error setting pGain'.format(
                 sys._getframe().f_code.co_name))
             return False
         # iGain has subindex 2
-        Ok = self.writeObject(index, 2, iGain.to_bytes(2, 'little', True))
+        Ok = self.writeObject(index, 2, iGain.to_bytes(2, 'little', signed=True))
         if not Ok:
             logging.info('[Epos:{0}] Error setting iGain'.format(
                 sys._getframe().f_code.co_name))
             return False
         # dGain has subindex 3
-        Ok = self.writeObject(index, 3, dGain.to_bytes(2, 'little', True))
+        Ok = self.writeObject(index, 3, dGain.to_bytes(2, 'little', signed=True))
         if not Ok:
             logging.info('[Epos:{0}] Error setting dGain'.format(
                 sys._getframe().f_code.co_name))
