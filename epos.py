@@ -246,8 +246,7 @@ class Epos:
                 # so try to connect
                 self.network.connect(channel=_channel, bustype=_bustype)
         except Exception as e:
-            self.logger.info('[Epos:{0}] Exception caught:{1}\n'.format(
-                sys._getframe().f_code.co_name, str(e)))
+            self.logInfo('Exception caught:{0}'.format(str(e)))
         finally:
             # check if is connected
             if not self.network.bus:
@@ -262,6 +261,48 @@ class Epos:
     # --------------------------------------------------------------
     # Basic set of functions
     # --------------------------------------------------------------
+
+    def logInfo(self, message=None):
+        ''' Log a message
+
+        A wrap around logging.
+        The log message will have the following structure\:
+        [class name \: function name ] message
+
+        Args:
+            message: a string with the message.
+        '''
+        if message is None:
+            # do nothing
+            return
+        self.logger.info('[{0}:{1}] {2}'.format(
+            self.__class__.__name__,
+            sys._getframe(1).f_code.co_name,
+            message))
+        return
+
+    def logDebug(self, message=None):
+        ''' Log a message
+
+        A wrap around logging.
+        The log message will have the following structure\:
+        [class name \: function name ] message
+
+        the function name will be the caller function retrieved automatically 
+        by using sys._getframe(1).f_code.co_name
+
+        Args:
+            message: a string with the message.
+        '''
+        if message is None:
+            # do nothing
+            return
+
+        self.logger.debug('[{0}:{1}] {2}'.format(
+            self.__class__.__name__,
+            sys._getframe(1).f_code.co_name,
+            message))
+        return
 
     def readObject(self, index, subindex):
         '''Reads an object
@@ -278,12 +319,11 @@ class Epos:
             try:
                 return self.node.sdo.upload(index, subindex)
             except Exception as e:
-                self.logger.info('[Epos:{0}] Exception caught:{1}\n'.format(
-                    sys._getframe().f_code.co_name, str(e)))
+                self.logInfo('Exception caught:{0}'.format(str(e)))
                 return None
         else:
-            self.logger.info('[EPOS:{0}] Error: Epos is not connected\n'.format(
-                sys._getframe().f_code.co_name))
+            self.logInfo(' Error: {0} is not connected'.format(
+                self.__class__.__name__))
             return None
 
     def writeObject(self, index, subindex, data):
@@ -306,16 +346,14 @@ class Epos:
                 text = "Code 0x{:08X}".format(e.code)
                 if e.code in self.errorIndex:
                     text = text + ", " + self.errorIndex[e.code]
-                self.logger.info('[EPOS:{0}] SdoAbortedError: '.format(
-                    sys._getframe().f_code.co_name) + text)
+                self.logInfo('SdoAbortedError: ' + text)
                 return False
             except canopen.SdoCommunicationError:
-                self.logger.info('[EPOS:{0}] SdoAbortedError: Timeout or unexpected response'.format(
-                    sys._getframe().f_code.co_name))
+                self.logInfo('SdoAbortedError: Timeout or unexpected response')
                 return False
         else:
-            self.logger.info('[EPOS:{0}] Error: Epos is not connected\n'.format(
-                sys._getframe().f_code.co_name))
+            self.logInfo(' Error: {0} is not connected'.format(
+                self.__class__.__name__))
             return False
 
     ############################################################################
@@ -338,8 +376,8 @@ class Epos:
         statusword = self.readObject(index, subindex)
         # failded to request?
         if not statusword:
-            logging.info("[EPOS:{0}] Error trying to read EPOS statusword".format(
-                sys._getframe().f_code.co_name))
+            self.logInfo('Error trying to read {0} statusword'.format(
+                self.__class__.__name__))
             return statusword, False
 
         # return statusword as an int type
@@ -362,8 +400,8 @@ class Epos:
         controlword = self.readObject(index, subindex)
         # failded to request?
         if not controlword:
-            logging.info("[EPOS:{0}] Error trying to read EPOS controlword".format(
-                sys._getframe().f_code.co_name))
+            self.logInfo('Error trying to read {0} controlword'.format(
+                self.__class__.__name__))
             return controlword, False
 
         # return controlword as an int type
@@ -380,8 +418,8 @@ class Epos:
             bool: a boolean if all went ok.
         '''
         # sending new controlword
-        self.logger.debug('[EPOS:{0}] Sending controlword Hex={1:#06X} Bin={1:#018b}'.format(
-            sys._getframe().f_code.co_name, controlword))
+        self.logDebug(
+            'Sending controlword Hex={0:#06X} Bin={0:#018b}'.format(controlword))
         controlword = controlword.to_bytes(2, 'little')
         return self.writeObject(0x6040, 0, controlword)
 
@@ -425,8 +463,7 @@ class Epos:
         '''
         statusword, ok = self.readStatusWord()
         if not ok:
-            self.logger.info('[Epos:{0}] Failed to request StatusWord\n'.format(
-                sys._getframe().f_code.co_name))
+            self.logInfo('Failed to request StatusWord')
         else:
 
             # state 'start' (0)
@@ -513,27 +550,38 @@ class Epos:
                 return ID
 
         # in case of unknown state or fail
+        # in case of unknown state or fail
+        self.logInfo('Error: Unknown state. Statusword is Bin={0:#018b}'.format(
+            int.from_bytes(statusword, 'little'))
+        )
         return -1
 
     def printEposState(self):
         ID = self.checkEposState()
         if ID is -1:
-            print('[Epos:{0}] Error: Unknown state\n'.format(
+            print('[{0}:{1}] Error: Unknown state\n'.format(
+                self.__class__.__name__,
                 sys._getframe().f_code.co_name))
         else:
-            print('[Epos:{0}] Current state [ID]:{1} [{2}]\n'.format(
-                sys._getframe().f_code.co_name, self.state[ID], ID))
+            print('[{0}:{1}] Current state [ID]:{2} [{3}]\n'.format(
+                self.__class__.__name__,
+                sys._getframe().f_code.co_name,
+                self.state[ID],
+                ID))
         return
 
     def printStatusWord(self):
         statusword, Ok = self.readStatusWord()
         if not Ok:
-            print('[Epos:{0}] Failed to retreive statusword\n'.format(
+            print('[{0}:{1}] Failed to retreive statusword\n'.format(
+                self.__class__.__name__,
                 sys._getframe().f_code.co_name))
             return
         else:
-            print("[Epos:{1}] The statusword is Hex={0:#06X} Bin={0:#018b}\n".format(
-                statusword, sys._getframe().f_code.co_name))
+            print("[{0}:{1}] The statusword is Hex={2:#06X} Bin={2:#018b}\n".format(
+                self.__class__.__name__,
+                sys._getframe().f_code.co_name,
+                statusword))
             print('Bit 15: position referenced to home position:                  {0}'.format(
                 (statusword & (1 << 15)) >> 15))
             print('Bit 14: refresh cycle of power stage:                          {0}'.format(
@@ -581,11 +629,14 @@ class Epos:
         if not controlword:
             controlword, Ok = self.readControlWord()
             if not Ok:
-                print('[Epos:{0}] Failed to retreive controlword\n'.format(
+                print('[{0}:{1}] Failed to retreive controlword\n'.format(
+                    self.__class__.__name__,
                     sys._getframe().f_code.co_name))
                 return
-        print("[Epos:{1}] The controlword is Hex={0:#06X} Bin={0:#018b}\n".format(
-            controlword, sys._getframe().f_code.co_name))
+        print("[{0}:{1}] The controlword is Hex={2:#06X} Bin={2:#018b}\n".format(
+            self.__class__.__name__,
+            sys._getframe().f_code.co_name,
+            controlword))
         # Bit 15 to 11 not used, 10 to 9 reserved
         print('Bit 08: Halt:                                                                   {0}'.format(
             (controlword & (1 << 8)) >> 8))
@@ -1337,13 +1388,15 @@ class Epos:
         # all ok. Proceed
         index = self.objectIndex['Current Control Parameter']
         # pGain has subindex 1
-        Ok = self.writeObject(index, 1, pGain.to_bytes(2, 'little', signed=True))
+        Ok = self.writeObject(
+            index, 1, pGain.to_bytes(2, 'little', signed=True))
         if not Ok:
             logging.info('[Epos:{0}] Error setting pGain'.format(
                 sys._getframe().f_code.co_name))
             return False
         # iGain has subindex 2
-        Ok = self.writeObject(index, 2, iGain.to_bytes(2, 'little', signed=True))
+        Ok = self.writeObject(
+            index, 2, iGain.to_bytes(2, 'little', signed=True))
         if not Ok:
             logging.info('[Epos:{0}] Error setting iGain'.format(
                 sys._getframe().f_code.co_name))
@@ -1695,19 +1748,22 @@ class Epos:
         # all ok. Proceed
         index = self.objectIndex['Position Control Parameter']
         # pGain has subindex 1
-        Ok = self.writeObject(index, 1, pGain.to_bytes(2, 'little', signed=True))
+        Ok = self.writeObject(
+            index, 1, pGain.to_bytes(2, 'little', signed=True))
         if not Ok:
             logging.info('[Epos:{0}] Error setting pGain'.format(
                 sys._getframe().f_code.co_name))
             return False
         # iGain has subindex 2
-        Ok = self.writeObject(index, 2, iGain.to_bytes(2, 'little', signed=True))
+        Ok = self.writeObject(
+            index, 2, iGain.to_bytes(2, 'little', signed=True))
         if not Ok:
             logging.info('[Epos:{0}] Error setting iGain'.format(
                 sys._getframe().f_code.co_name))
             return False
         # dGain has subindex 3
-        Ok = self.writeObject(index, 3, dGain.to_bytes(2, 'little', signed=True))
+        Ok = self.writeObject(
+            index, 3, dGain.to_bytes(2, 'little', signed=True))
         if not Ok:
             logging.info('[Epos:{0}] Error setting dGain'.format(
                 sys._getframe().f_code.co_name))
