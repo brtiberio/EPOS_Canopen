@@ -805,7 +805,7 @@ class Epos:
                 sys._getframe().f_code.co_name))
             return opMode, False
         # change to int value
-        opMode = int.from_bytes(opMode, 'little')
+        opMode = int.from_bytes(opMode, 'little', signed=True)
         return opMode, True
 
     def setOpMode(self, opMode):
