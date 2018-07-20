@@ -69,3 +69,5 @@ test_finally\.py
 
 pip-selfcheck\.json
 
+
+\.idea/
