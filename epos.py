@@ -37,7 +37,7 @@ class Epos:
     motorType = {'DC motor': 1, 'Sinusoidal PM BL motor': 10,
                  'Trapezoidal PM BL motor': 11}
     # If EDS file is present, this is not necessary, all codes can be gotten
-    # from object dicionary.
+    # from object dictionary.
     objectIndex = {'Device Type': 0x1000,
                    'Error Register': 0x1001,
                    'Error History': 0x1003,
@@ -99,7 +99,7 @@ class Epos:
                    'Current Actual Value Averaged': 0x2027,
                    'Velocity Actual Value Averaged': 0x2028,
                    'Internal Object Actual Rotor Angle': 0x2029,
-                   'Internal Object NTC Temperatur Sensor Value': 0x202A,
+                   'Internal Object NTC Temperature Sensor Value': 0x202A,
                    'Internal Object Motor Phase Current U': 0x202B,
                    'Internal Object Motor Phase Current V': 0x202C,
                    'Internal Object Measured Angle Difference': 0x202D,
@@ -160,11 +160,11 @@ class Epos:
     # CANopen defined error codes and Maxon codes also
     errorIndex = {0x00000000:  'Error code: no error',
                   # 0x050x xxxx
-                  0x05030000:  'Error code: toogle bit not alternated',
+                  0x05030000:  'Error code: toggle bit not alternated',
                   0x05040000:  'Error code: SDO protocol timeout',
                   0x05040001:  'Error code: Client/server command specifier not valid or unknown',
-                  0x05040002:  'Error code: invalide block size',
-                  0x05040003:  'Error code: invalide sequence number',
+                  0x05040002:  'Error code: invalid block size',
+                  0x05040003:  'Error code: invalid sequence number',
                   0x05040004:  'Error code: CRC error',
                   0x05040005:  'Error code: out of memory',
                   # 0x060x xxxx
@@ -181,7 +181,7 @@ class Epos:
                   0x06070012:  'Error code: data type does not match, length of service parameter too high',
                   0x06070013:  'Error code: data type does not match, length of service parameter too low',
                   0x06090011:  'Error code: subindex does not exist',
-                  0x06090030:  'Error code: value range of parameter exeeded',
+                  0x06090030:  'Error code: value range of parameter exceeded',
                   0x06090031:  'Error code: value of parameter written is too high',
                   0x06090032:  'Error code: value of parameter written is too low',
                   0x06090036:  'Error code: maximum value is less than minimum value',
@@ -194,7 +194,7 @@ class Epos:
                   0x08000023:  'Error code: Object dictionary dynamic generation failed or no object dictionary present',
                   # Maxon defined error codes
                   0x0f00ffc0:  'Error code: wrong NMT state',
-                  0x0f00ffbf:  'Error code: rs232 command illegeal',
+                  0x0f00ffbf:  'Error code: rs232 command illegal',
                   0x0f00ffbe:  'Error code: password incorrect',
                   0x0f00ffbc:  'Error code: device not in service mode',
                   0x0f00ffB9:  'Error code: error in Node-ID'
@@ -226,7 +226,7 @@ class Epos:
             self.logger.setLevel(logging.INFO)
 
     def begin(self, nodeID, _channel='can0', _bustype='socketcan', objectDictionary=None):
-        '''Initialize Epos device
+        """ Initialize Epos device
 
         Configure and setup Epos device.
 
@@ -237,7 +237,7 @@ class Epos:
             objectDictionary (optional):   Name of EDS file, if any available.
         Return:
             bool: A boolean if all went ok.
-        '''
+        """
         try:
             self.node = self.network.add_node(
                 nodeID, object_dictionary=objectDictionary)
@@ -263,7 +263,7 @@ class Epos:
     # --------------------------------------------------------------
 
     def logInfo(self, message=None):
-        ''' Log a message
+        """ Log a message
 
         A wrap around logging.
         The log message will have the following structure\:
@@ -271,7 +271,7 @@ class Epos:
 
         Args:
             message: a string with the message.
-        '''
+        """
         if message is None:
             # do nothing
             return
@@ -282,7 +282,7 @@ class Epos:
         return
 
     def logDebug(self, message=None):
-        ''' Log a message
+        """ Log a message
 
         A wrap around logging.
         The log message will have the following structure\:
@@ -293,7 +293,7 @@ class Epos:
 
         Args:
             message: a string with the message.
-        '''
+        """
         if message is None:
             # do nothing
             return
@@ -305,7 +305,7 @@ class Epos:
         return
 
     def readObject(self, index, subindex):
-        '''Reads an object
+        """Reads an object
 
          Request a read from dictionary object referenced by index and subindex.
 
@@ -314,7 +314,7 @@ class Epos:
              subindex:  reference of dictionary object subindex
          Returns:
              bytes:  message returned by EPOS or empty if unsucessfull
-        '''
+        """
         if self._connected:
             try:
                 return self.node.sdo.upload(index, subindex)
@@ -327,7 +327,7 @@ class Epos:
             return None
 
     def writeObject(self, index, subindex, data):
-        '''Write an object
+        """Write an object
 
          Request a write to dictionary object referenced by index and subindex.
 
@@ -337,7 +337,7 @@ class Epos:
              data:      data to be stored
          Returns:
              bool:      boolean if all went ok or not
-        '''
+        """
         if self._connected:
             try:
                 self.node.sdo.download(index, subindex, data)
@@ -361,7 +361,7 @@ class Epos:
     ############################################################################
 
     def readStatusWord(self):
-        '''Read StatusWord
+        """Read StatusWord
 
         Request current statusword from device.
 
@@ -370,7 +370,7 @@ class Epos:
 
             :statusword:  the current statusword or None if any error.
             :Ok: A boolean if all went ok.
-        '''
+        """
         index = self.objectIndex['StatusWord']
         subindex = 0
         statusword = self.readObject(index, subindex)
@@ -385,7 +385,7 @@ class Epos:
         return statusword, True
 
     def readControlWord(self):
-        '''Read ControlWord
+        """Read ControlWord
 
         Request current controlword from device.
 
@@ -394,7 +394,7 @@ class Epos:
 
             :controlword: the current controlword or None if any error.
             :Ok: A boolean if all went ok.
-        '''
+        """
         index = self.objectIndex['ControlWord']
         subindex = 0
         controlword = self.readObject(index, subindex)
@@ -409,14 +409,14 @@ class Epos:
         return controlword, True
 
     def writeControlWord(self, controlword):
-        '''Send controlword to device
+        """Send controlword to device
 
         Args:
             controlword: word to be sent.
 
         Returns:
             bool: a boolean if all went ok.
-        '''
+        """
         # sending new controlword
         self.logDebug(
             'Sending controlword Hex={0:#06X} Bin={0:#018b}'.format(controlword))
@@ -424,7 +424,7 @@ class Epos:
         return self.writeObject(0x6040, 0, controlword)
 
     def checkEposState(self):
-        '''Check current state of Epos
+        """Check current state of Epos
 
         Ask the StatusWord of EPOS and parse it to return the current state of EPOS.
 
@@ -460,10 +460,11 @@ class Epos:
 
         Returns:
             int: numeric identification of the state or -1 in case of fail.
-        '''
+        """
         statusword, ok = self.readStatusWord()
         if not ok:
             self.logInfo('Failed to request StatusWord')
+            return -1
         else:
 
             # state 'start' (0)
@@ -617,7 +618,7 @@ class Epos:
         return
 
     def printControlWord(self, controlword=None):
-        '''Print the meaning of controlword
+        """Print the meaning of controlword
 
         Check the meaning of current controlword of device or check the meaning of your own controlword.
         Usefull to check your own controlword before actually sending it to device.
@@ -625,7 +626,7 @@ class Epos:
         Args:
             controlword (optional): If None, request the controlword of device.
 
-        '''
+        """
         if not controlword:
             controlword, Ok = self.readControlWord()
             if not Ok:
@@ -659,7 +660,7 @@ class Epos:
         return
 
     def readPositionModeSetting(self):
-        '''Reads the setted desired Position
+        """Reads the setted desired Position
 
         Ask Epos device for demand position object. If a correct
         request is made, the position is placed in answer. If
@@ -670,7 +671,7 @@ class Epos:
 
             :position: the demanded position value.
             :OK:       A boolean if all requests went ok or not.
-        '''
+        """
         index = self.objectIndex['PositionMode Setting Value']
         subindex = 0
         position = self.readObject(index, subindex)
@@ -684,13 +685,13 @@ class Epos:
         return position, True
 
     def setPositionModeSetting(self, position):
-        '''Sets the desired Position
+        """Sets the desired Position
 
         Ask Epos device to define position mode setting object.
 
         Returns:
             bool: A boolean if all requests went ok or not.
-        '''
+        """
         index = self.objectIndex['PositionMode Setting Value']
         subindex = 0
         if(position < -2**31 or position > 2**31-1):
@@ -702,7 +703,7 @@ class Epos:
         return self.writeObject(index, subindex, position)
 
     def readVelocityModeSetting(self):
-        '''Reads the setted desired velocity
+        """Reads the setted desired velocity
 
         Asks EPOS for the desired velocity value in velocity control mode
 
@@ -711,7 +712,7 @@ class Epos:
 
             :velocity: Value setted or None if any error.
             :Ok: A boolean if sucessfull or not.
-        '''
+        """
         index = self.objectIndex['VelocityMode Setting Value']
         subindex = 0
         velocity = self.readObject(index, subindex)
@@ -725,7 +726,7 @@ class Epos:
         return velocity, True
 
     def setVelocityModeSetting(self, velocity):
-        '''Set desired velocity
+        """Set desired velocity
 
         Set the value for desired velocity in velocity control mode.
 
@@ -733,7 +734,7 @@ class Epos:
             velocity: value to be setted.
         Returns:
             bool: a boolean if sucessfull or not.
-        '''
+        """
         index = self.objectIndex['VelocityMode Setting Value']
         subindex = 0
         if(velocity < -2**31 or velocity > 2**31-1):
@@ -745,7 +746,7 @@ class Epos:
         return self.writeObject(index, subindex, velocity)
 
     def readCurrentModeSetting(self):
-        '''Read current value setted
+        """Read current value setted
 
         Asks EPOS for the current value setted in current control mode.
 
@@ -754,7 +755,7 @@ class Epos:
 
             :current: value setted.
             :Ok:      a boolean if sucessfull or not.
-        '''
+        """
         index = self.objectIndex['CurrentMode Setting Value']
         subindex = 0
         current = self.readObject(index, subindex)
@@ -768,7 +769,7 @@ class Epos:
         return current, True
 
     def setCurrentModeSetting(self, current):
-        '''Set desired current
+        """Set desired current
 
         Set the value for desired current in current control mode
 
@@ -776,7 +777,7 @@ class Epos:
             current: the value to be set [mA]
         Returns:
             bool: a boolean if sucessfull or not
-        '''
+        """
         index = self.objectIndex['CurrentMode Setting Value']
         subindex = 0
         if(current < -2**15 or current > 2**15-1):
@@ -788,14 +789,14 @@ class Epos:
         return self.writeObject(index, subindex, current)
 
     def readOpMode(self):
-        '''Read current operation mode
+        """Read current operation mode
 
         Returns:
             tupple: A tupple containing:
 
             :opMode: current opMode or None if request fails
             :Ok:     A boolean if sucessfull or not
-        '''
+        """
         index = self.objectIndex['Modes of Operation']
         subindex = 0
         opMode = self.readObject(index, subindex)
@@ -805,11 +806,11 @@ class Epos:
                 sys._getframe().f_code.co_name))
             return opMode, False
         # change to int value
-        opMode = int.from_bytes(opMode, 'little')
+        opMode = int.from_bytes(opMode, 'little', signed=True)
         return opMode, True
 
     def setOpMode(self, opMode):
-        '''Set Operation mode
+        """Set Operation mode
 
         Sets the operation mode of Epos. OpMode is described as:
 
@@ -839,7 +840,7 @@ class Epos:
             opMode: the desired opMode.
         Returns:
             bool:     A boolean if all requests went ok or not.
-        '''
+        """
         index = self.objectIndex['Modes of Operation']
         subindex = 0
         if not opMode in self.opModes:
@@ -850,8 +851,8 @@ class Epos:
         return self.writeObject(index, subindex, opMode)
 
     def printOpMode(self):
-        '''Print current operation mode
-        '''
+        """Print current operation mode
+        """
         opMode, Ok = self.readOpMode()
         if not Ok:
             print('Failed to request current operation mode')
@@ -866,7 +867,7 @@ class Epos:
         return
 
     def changeEposState(self, newState):
-        '''Change EPOS state
+        """Change EPOS state
 
         Change Epos state using controlWord object
 
@@ -898,7 +899,7 @@ class Epos:
 
         Returns:
             bool: boolean if all went ok and no error was received.
-        '''
+        """
         stateOrder = ['shutdown', 'switch on', 'disable voltage', 'quick stop',
                       'disable operation', 'enable operation', 'fault reset']
 
@@ -971,7 +972,7 @@ class Epos:
                 return self.writeControlWord(controlword)
 
     def setMotorConfig(self, motorType, currentLimit, maximumSpeed, polePairNumber):
-        '''Set motor configuration
+        """Set motor configuration
 
         Sets the configuration of the motor parameters. The valid motor type is:
 
@@ -1007,7 +1008,7 @@ class Epos:
             polePairNumber: number of pole pairs for brushless DC motors.
         Returns:
             bool:     A boolean if all requests went ok or not.
-        '''
+        """
         # ------------------------------------------------------------------------
         # check values of input
         # ------------------------------------------------------------------------
@@ -1081,7 +1082,7 @@ class Epos:
         return True
 
     def readMotorConfig(self):
-        '''Read motor configuration
+        """Read motor configuration
 
         Read the current motor configuration
 
@@ -1107,7 +1108,7 @@ class Epos:
 
             :motorConfig: A structure with the current configuration of motor
             :OK:          A boolean if all went as expected or not.
-        '''
+        """
         motorConfig = {}  # dictionary to store config
         # ------------------------------------------------------------------------
         # store motorType
@@ -1166,10 +1167,10 @@ class Epos:
         return motorConfig, True
 
     def printMotorConfig(self):
-        '''Print current motor config
+        """Print current motor config
 
         Request current motor config and print it
-        '''
+        """
         motorConfig, Ok = self.readMotorConfig()
         for key, value in self.motorType.items():    # dict.items():  (for Python 3.x)
             if value == motorConfig['motorType']:
@@ -1197,7 +1198,7 @@ class Epos:
         return
 
     def setSensorConfig(self, pulseNumber, sensorType, sensorPolarity):
-        '''Change sensor configuration
+        """Change sensor configuration
 
         Change the sensor configuration of motor. **Only possible if in disable state**
         The encoder pulse number should be set to number of counts per
@@ -1236,7 +1237,7 @@ class Epos:
                               of sensors as stated before.
         Returns:
             bool: A boolean if all went as expected or not.
-        '''
+        """
         # validate attributes first
         if(pulseNumber < 16 or pulseNumber > 7500):
             logging.info('[Epos:{0}] Error pulseNumber out of range: {1}'.format(
@@ -1283,7 +1284,7 @@ class Epos:
         return True
 
     def readSensorConfig(self):
-        '''Read sensor configuration
+        """Read sensor configuration
 
         Requests from EPOS the current sensor configuration.
         The sensorConfig is an struture containing the following information:
@@ -1301,7 +1302,7 @@ class Epos:
 
             :sensorConfig: A dictionary with the current configuration of the sensor
             :OK: A boolean if all went as expected or not.
-        '''
+        """
         sensorConfig = {}
         # get index
         index = self.objectIndex['Sensor Configuration']
@@ -1330,8 +1331,8 @@ class Epos:
         return sensorConfig, True
 
     def printSensorConfig(self):
-        '''Print current sensor configuration
-        '''
+        """Print current sensor configuration
+        """
         sensorConfig, Ok = self.readSensorConfig()
         # to adjust indexes ignore use a dummy first element
         sensorType = ['', 'Incremental Encoder with index (3-channel)',
@@ -1360,14 +1361,14 @@ class Epos:
         return
 
     def setCurrentControlParameters(self, pGain, iGain):
-        '''Set the PI gains used in current control mode
+        """Set the PI gains used in current control mode
 
         Args:
             pGain: Proportional gain.
             iGain: Integral gain.
         Returns:
             bool: A boolean if all went as expected or not.
-        '''
+        """
         # any float?
         if (isinstance(pGain, float) or isinstance(iGain, float)):
             logging.info('[Epos:{0}] Error all values must be int, not floats'.format(
@@ -1405,14 +1406,14 @@ class Epos:
         return True
 
     def readCurrentControlParameters(self):
-        '''Read the PI gains used in  current control mode
+        """Read the PI gains used in  current control mode
 
         Returns:
             tupple: A tupple containing:
 
             :gains: A dictionary with the current pGain and iGain
             :OK: A boolean if all went as expected or not.
-        '''
+        """
         index = self.objectIndex['Current Control Parameter']
         currModeParameters = {}
         # pGain has subindex 1
@@ -1436,10 +1437,10 @@ class Epos:
         return currModeParameters, True
 
     def printCurrentControlParameters(self):
-        '''Print the current mode control PI gains
+        """Print the current mode control PI gains
 
         Request current mode control parameter gains from device and print.
-        '''
+        """
         currModeParameters, ok = self.readCurrentControlParameters()
         if not ok:
             print('[Epos:{0}] Error requesting Position mode control parameters'.format(
@@ -1453,7 +1454,7 @@ class Epos:
         print('--------------------------------------------------------------')
 
     def setSoftwarePosLimit(self, minPos, maxPos):
-        '''Set the software position limits
+        """Set the software position limits
 
         Use encoder readings as limit position for extremes
         range = [-2147483648 | 2147483647]
@@ -1463,7 +1464,7 @@ class Epos:
             maxPos: maximum possition limit
         Return:
             bool: A boolean if all went as expected or not.
-        '''
+        """
         # validate attributes
         if not (isinstance(minPos, int) and isinstance(maxPos, int)):
             logging.info('[Epos:{0}] Error input values must be int'.format(
@@ -1493,14 +1494,14 @@ class Epos:
         return True
 
     def readSoftwarePosLimit(self):
-        '''Read the software position limit
+        """Read the software position limit
 
         Return:
             tupple: A tupple containing:
 
             :limits: a dictionary containing minPos and maxPos
             :OK: A boolean if all went as expected or not.
-        '''
+        """
         limits = {}
         index = self.objectIndex['Software Position Limit']
         # min has subindex 1
@@ -1520,8 +1521,8 @@ class Epos:
         return limits, True
 
     def printSoftwarePosLimit(self):
-        ''' Print current software position limits
-        '''
+        """ Print current software position limits
+        """
         limits, ok = self.readSoftwarePosLimit()
         if not ok:
             print('[Epos:{0}] Failed to request software position limits'.format(
@@ -1535,7 +1536,7 @@ class Epos:
         print('--------------------------------------------------------------')
 
     def setQuickStopDeceleration(self, quickstopDeceleration):
-        '''Set the quick stop deceleration.
+        """Set the quick stop deceleration.
 
         The quick stop deceleration defines the deceleration
         during a fault reaction.
@@ -1544,7 +1545,7 @@ class Epos:
             quicstopDeceleration: the value of deceleration in rpm/s
         Return:
             bool: A boolean if all went as expected or not.
-        '''
+        """
         # validate attributes
         if not isinstance(quickstopDeceleration, int):
             logging.info('[Epos:{0}] Error input value must be int'.format(
@@ -1564,7 +1565,7 @@ class Epos:
         return True
 
     def readQuickStopDeceleration(self):
-        ''' Read the quick stop deceleration.
+        """ Read the quick stop deceleration.
 
         Read deceleration used in fault reaction state.
 
@@ -1573,7 +1574,7 @@ class Epos:
 
             :quickstopDeceleration: The value of deceleration in rpm/s.
             :OK: A boolean if all went as expected or not.
-        '''
+        """
         index = self.objectIndex['QuickStop Deceleration']
         deceleration = self.readObject(index, 0x0)
         if deceleration is None:
@@ -1584,7 +1585,7 @@ class Epos:
         return deceleration, True
 
     def readPositionControlParameters(self):
-        ''' Read position mode control parameters
+        """ Read position mode control parameters
 
         Read position mode control PID gains and and feedfoward
         and acceleration values
@@ -1595,7 +1596,7 @@ class Epos:
             :posModeParameters: a dictionary containg pGain,
                 iGain, dGain, vFeed and aFeed.
             :OK: A boolean if all went as expected or not.
-        '''
+        """
         index = self.objectIndex['Position Control Parameter']
         posModeParameters = {}
         # pGain has subindex 1
@@ -1645,7 +1646,7 @@ class Epos:
         return posModeParameters, True
 
     def setPositionControlParameters(self, pGain, iGain, dGain, vFeed=0, aFeed=0):
-        '''Set position mode control parameters
+        """Set position mode control parameters
 
         Set position control PID gains and feedfoward velocity and
         acceleration values.
@@ -1705,7 +1706,7 @@ class Epos:
             aFeed: acceleration feed foward gain value. Default to 0
         Returns:
             OK: A boolean if all requests went ok or not
-        '''
+        """
         # validate attributes first
         # any float?
         if (isinstance(pGain, float) or isinstance(iGain, float) or
@@ -1784,11 +1785,11 @@ class Epos:
         return True
 
     def printPositionControlParameters(self):
-        '''Print position control mode parameters
+        """Print position control mode parameters
 
         Request device for the position control mode parameters
         and prints it.
-        '''
+        """
         posModeParameters, ok = self.readPositionControlParameters()
         if not ok:
             print('[Epos:{0}] Error requesting Position mode control parameters'.format(
@@ -1802,7 +1803,7 @@ class Epos:
         print('--------------------------------------------------------------')
 
     def readFollowingError(self):
-        '''Returns the current following error
+        """Returns the current following error
 
         Read the current following error value which is the difference
         between atual value and desired value.
@@ -1812,7 +1813,7 @@ class Epos:
 
             :followingError: value of actual following error.
             :OK: A boolean if all requests went ok or not.
-        '''
+        """
         index = self.objectIndex['Following Error Actual Value']
         followingError = self.readObject(index, 0x0)
         if not followingError:
@@ -1823,7 +1824,7 @@ class Epos:
         return followingError, True
 
     def readMaxFollowingError(self):
-        '''Read the Max following error
+        """Read the Max following error
 
         Read the max following error value which is the maximum allowed difference
         between atual value and desired value in modulus.
@@ -1833,7 +1834,7 @@ class Epos:
 
             :maxFollowingError: value of max following error.
             :OK: A boolean if all requests went ok or not.
-        '''
+        """
         index = self.objectIndex['Max Following Error']
         maxFollowingError = self.readObject(index, 0x0)
         if not maxFollowingError:
@@ -1844,7 +1845,7 @@ class Epos:
         return maxFollowingError, True
 
     def setMaxFollowingError(self, maxFollowingError):
-        '''Set the Max following error
+        """Set the Max following error
 
         The Max Following Error is the maximum permissible difference
         between demanded and actual position at any time of evaluation.
@@ -1857,7 +1858,7 @@ class Epos:
             maxFollowingError: The value of maximum following error.
         Returns:
             bool: A boolean if all requests went ok or not.
-        '''
+        """
         # validate attributes
         if not isinstance(maxFollowingError, int):
             logging.info('[Epos:{0}] Error input value must be int'.format(
@@ -1878,14 +1879,14 @@ class Epos:
         return True
 
     def readPositionValue(self):
-        '''Read current position value
+        """Read current position value
 
         Returns:
             tupple: a tupple containing:
 
             :position: current position in quadrature counts.
             :Ok: A boolean if all requests went ok or not.
-        '''
+        """
         index = self.objectIndex['Position Actual Value']
         position = self.readObject(index, 0x0)
         if position is None:
@@ -1896,7 +1897,7 @@ class Epos:
         return position, True
 
     def readPositionWindow(self):
-        '''Read current position Window value.
+        """Read current position Window value.
 
         Position window is the modulus threashold value in which the output
         is considerated to be achieved.
@@ -1906,7 +1907,7 @@ class Epos:
 
             :postionWindow: current position window in quadrature counts.
             :Ok: A boolean if all requests went ok or not.
-        '''
+        """
         index = self.objectIndex['Position Window']
         positionWindow, ok = self.readObject(index, 0x0)
         if not ok:
@@ -1916,7 +1917,7 @@ class Epos:
         return positionWindow, True
 
     def setPositionWindow(self, positionWindow):
-        '''Set position Window value
+        """Set position Window value
 
         Position window is the modulos threashold value in which the output
         is considerated to be achieved.
@@ -1925,7 +1926,7 @@ class Epos:
             positionWindow: position window in quadrature counts
         Returns:
             bool: A boolean if all requests went ok or not.
-        '''
+        """
         # validate attributes
         if not isinstance(positionWindow, int):
             logging.info('[Epos:{0}] Error input value must be int'.format(
@@ -1944,7 +1945,7 @@ class Epos:
         return True
 
     def readPositionWindowTime(self):
-        '''Read current position Window time value.
+        """Read current position Window time value.
 
         Position window time is the minimum time in milliseconds in which
         the output must be inside the position window for the target is
@@ -1955,7 +1956,7 @@ class Epos:
 
             :postionWindowTime: current position window time in milliseconds.
             :Ok: A boolean if all requests went ok or not.
-        '''
+        """
         index = self.objectIndex['Position Window Time']
         positionWindowTime, ok = self.readObject(index, 0x0)
         if not ok:
@@ -1965,7 +1966,7 @@ class Epos:
         return positionWindowTime, True
 
     def setPositionWindowTime(self, positionWindowTime):
-        '''Set position Window Time value
+        """Set position Window Time value
 
         Position window time is the minimum time in milliseconds in which
         the output must be inside the position window for the target is
@@ -1975,7 +1976,7 @@ class Epos:
             positionWindowTime: position window time in milliseconds.
         Returns:
             bool: A boolean if all requests went ok or not.
-        '''
+        """
         # validate attributes
         if not isinstance(positionWindowTime, int):
             logging.info('[Epos:{0}] Error input value must be int'.format(
@@ -1995,14 +1996,14 @@ class Epos:
         return True
 
     def readVelocityValue(self):
-        '''Read current velocity value
+        """Read current velocity value
 
         Returns:
             tupple: a tupple containing:
 
             :velocity: current velocity in rpm.
             :Ok: A boolean if all requests went ok or not.
-        '''
+        """
         index = self.objectIndex['Velocity Actual Value']
         velocity, ok = self.readObject(index, 0x0)
         if not ok:
@@ -2012,14 +2013,14 @@ class Epos:
         return velocity, True
 
     def readVelocityValueAveraged(self):
-        '''Read current velocity averaged value
+        """Read current velocity averaged value
 
         Returns:
             tupple: a tupple containing:
 
             :velocity: current velocity in rpm.
             :Ok: A boolean if all requests went ok or not.
-        '''
+        """
         index = self.objectIndex['Velocity Actual Value Averaged']
         velocity, ok = self.readObject(index, 0x0)
         if not ok:
@@ -2029,14 +2030,14 @@ class Epos:
         return velocity, True
 
     def readCurrentValue(self):
-        '''Read current value
+        """Read current value
 
         Returns:
             tupple: a tupple containing:
 
             :current: current in mA.
             :Ok: A boolean if all requests went ok or not.
-        '''
+        """
         index = self.objectIndex['Current Actual Value']
         current, ok = self.readObject(index, 0x0)
         if not ok:
@@ -2046,14 +2047,14 @@ class Epos:
         return current, True
 
     def readCurrentValueAveraged(self):
-        '''Read current averaged value
+        """Read current averaged value
 
         Returns:
             tupple: a tupple containing:
 
             :current: current averaged in mA.
             :Ok: A boolean if all requests went ok or not.
-        '''
+        """
         index = self.objectIndex['Current Actual Value Averaged']
         current, ok = self.readObject(index, 0x0)
         if not ok:
@@ -2063,26 +2064,26 @@ class Epos:
         return current, True
 
     def saveConfig(self):
-        '''Save all configurrations
-        '''
+        """Save all configurrations
+        """
         self.node.store()
         return
 
     def loadConfig(self):
-        '''Load all configurations
-        '''
+        """Load all configurations
+        """
         self.node.restore()
         return
 
 
 def main():
-    '''Test EPOS CANopen communication with some examples.
+    """Test EPOS CANopen communication with some examples.
 
     Use a few examples to test communication with Epos device using
     a few functions. Also resets the fault error if present.
 
     Show sample using also the EDS file.
-    '''
+    """
 
     import argparse
     if (sys.version_info < (3, 0)):
