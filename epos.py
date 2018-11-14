@@ -232,8 +232,8 @@ class Epos:
 
         Args:
             nodeID:    Node ID of the device.
-            channel (optional):   Port used for communication. Default can0
-            bustype (optional):   Port type used. Default socketcan.
+            _channel (optional):   Port used for communication. Default can0
+            _bustype (optional):   Port type used. Default socketcan.
             objectDictionary (optional):   Name of EDS file, if any available.
         Return:
             bool: A boolean if all went ok.
@@ -374,7 +374,7 @@ class Epos:
         index = self.objectIndex['StatusWord']
         subindex = 0
         statusword = self.readObject(index, subindex)
-        # failded to request?
+        # failed to request?
         if not statusword:
             self.logInfo('Error trying to read {0} statusword'.format(
                 self.__class__.__name__))
@@ -398,7 +398,7 @@ class Epos:
         index = self.objectIndex['ControlWord']
         subindex = 0
         controlword = self.readObject(index, subindex)
-        # failded to request?
+        # failed to request?
         if not controlword:
             self.logInfo('Error trying to read {0} controlword'.format(
                 self.__class__.__name__))
@@ -474,8 +474,8 @@ class Epos:
                 ID = 0
                 return ID
 
-        # state 'not ready to switch on' (1)
-        # statusWord == x0xx xxx1  x000 0000
+            # state 'not ready to switch on' (1)
+            # statusWord == x0xx xxx1  x000 0000
             bitmask = 0b0100000101111111
             if (bitmask & statusword == 256):
                 ID = 1
@@ -677,8 +677,7 @@ class Epos:
         position = self.readObject(index, subindex)
         # failded to request?
         if not position:
-            logging.info("[EPOS:{0}] Error trying to read EPOS PositionMode Setting Value".format(
-                sys._getframe().f_code.co_name))
+            self.logInfo("Error trying to read EPOS PositionMode Setting Value")
             return position, False
         # return value as signed int
         position = int.from_bytes(position, 'little', signed=True)
@@ -694,9 +693,8 @@ class Epos:
         """
         index = self.objectIndex['PositionMode Setting Value']
         subindex = 0
-        if(position < -2**31 or position > 2**31-1):
-            print('[Epos:{0}] Postion out of range'.format(
-                sys._getframe().f_code.co_name))
+        if position < -2**31 or position > 2**31-1 :
+            self.logInfo("Postion out of range")
             return False
         # change to bytes as an int32 value
         position = position.to_bytes(4, 'little', signed=True)
@@ -716,10 +714,9 @@ class Epos:
         index = self.objectIndex['VelocityMode Setting Value']
         subindex = 0
         velocity = self.readObject(index, subindex)
-        # failded to request?
+        # failed to request?
         if not velocity:
-            logging.info("[EPOS:{0}] Error trying to read EPOS VelocityMode Setting Value".format(
-                sys._getframe().f_code.co_name))
+            self.logInfo("Error trying to read EPOS VelocityMode Setting Value")
             return velocity, False
         # return value as signed int
         velocity = int.from_bytes(velocity, 'little', signed=True)
@@ -737,9 +734,8 @@ class Epos:
         """
         index = self.objectIndex['VelocityMode Setting Value']
         subindex = 0
-        if(velocity < -2**31 or velocity > 2**31-1):
-            print('[Epos:{0}] Velocity out of range'.format(
-                sys._getframe().f_code.co_name))
+        if velocity < -2**31 or velocity > 2**31-1:
+            self.logInfo("Velocity out of range")
             return False
         # change to bytes as an int32 value
         velocity = velocity.to_bytes(4, 'little', signed=True)
@@ -761,8 +757,7 @@ class Epos:
         current = self.readObject(index, subindex)
         # failed to request
         if not current:
-            logging.info("[EPOS:{0}] Error trying to read EPOS CurrentMode Setting Value".format(
-                sys._getframe().f_code.co_name))
+            self.logInfo("Error trying to read EPOS CurrentMode Setting Value")
             return current, False
         # return value as signed int
         current = int.from_bytes(current, 'little', signed=True)
@@ -780,9 +775,8 @@ class Epos:
         """
         index = self.objectIndex['CurrentMode Setting Value']
         subindex = 0
-        if(current < -2**15 or current > 2**15-1):
-            print('[Epos:{0}] Current out of range'.format(
-                sys._getframe().f_code.co_name))
+        if current < -2**15 or current > 2**15-1:
+            self.logInfo("Current out of range")
             return False
         # change to bytes as an int16 value
         current = current.to_bytes(2, 'little', signed=True)
@@ -802,8 +796,7 @@ class Epos:
         opMode = self.readObject(index, subindex)
         # failed to request
         if not opMode:
-            logging.info("[EPOS:{0}] Error trying to read EPOS Operation Mode".format(
-                sys._getframe().f_code.co_name))
+            self.logInfo("Error trying to read EPOS Operation Mode")
             return opMode, False
         # change to int value
         opMode = int.from_bytes(opMode, 'little', signed=True)
@@ -844,8 +837,7 @@ class Epos:
         index = self.objectIndex['Modes of Operation']
         subindex = 0
         if not opMode in self.opModes:
-            logging.info('[EPOS:{0}] Unkown Operation Mode: {1}'.format(
-                sys._getframe().f_code.co_name, opMode))
+            self.logInfo("Unknown Operation Mode: {0}".format(opMode))
             return False
         opMode = opMode.to_bytes(1, 'little', signed=True)
         return self.writeObject(index, subindex, opMode)
@@ -858,8 +850,7 @@ class Epos:
             print('Failed to request current operation mode')
             return
         if not (opMode in self.opModes):
-            logging.info('[EPOS:{0}] Unkown Operation Mode: {1}'.format(
-                sys._getframe().f_code.co_name, opMode))
+            self.logInfo("Unknown Operation Mode: {0}".format(opMode))
             return
         else:
             print('Current operation mode is \"{}\"'.format(
@@ -904,14 +895,12 @@ class Epos:
                       'disable operation', 'enable operation', 'fault reset']
 
         if not (newState in stateOrder):
-            logging.info('[EPOS:{0}] Unkown state: {1}'.format(
-                sys._getframe().f_code.co_name, newState))
+            self.logInfo("Unknown state: {0}".format(newState))
             return False
         else:
             controlword, Ok = self.readControlWord()
             if not Ok:
-                logging.info('[EPOS:{0}] Failed to retreive controlword'.format(
-                    sys._getframe().f_code.co_name))
+                self.logInfo("Failed to retreive controlword")
                 return False
             # shutdown  0xxx x110
             if newState == 'shutdown':
@@ -1013,20 +1002,16 @@ class Epos:
         # check values of input
         # ------------------------------------------------------------------------
         if not ((motorType in self.motorType) or (motorType in self.motorType.values())):
-            logging.info('[EPOS:{0}] Unknow motorType: {1} '.format(
-                sys._getframe().f_code.co_name, motorType))
+            self.logInfo("Unknown motorType: {0}".format(motorType))
             return False
         if (currentLimit < 0) or (currentLimit > 2**16 - 1):
-            logging.info('[EPOS:{0}] Current limit out of range: {1} '.format(
-                sys._getframe().f_code.co_name, currentLimit))
+            self.logInfo("Current limit out of range: {0} ".format(currentLimit))
             return False
         if (polePairNumber < 0) or (polePairNumber > 255):
-            logging.info('[EPOS:{0}] Pole pair number out of range: {1} '.format(
-                sys._getframe().f_code.co_name, polePairNumber))
+            self.logInfo("Pole pair number out of range: {0} ".format(polePairNumber))
             return False
         if (maximumSpeed < 1) or (maximumSpeed > 2**16 - 1):
-            logging.info('[EPOS:{0}] Maximum speed out of range: {1} '.format(
-                sys._getframe().f_code.co_name, maximumSpeed))
+            self.logInfo("Maximum speed out of range: {0} ".format(maximumSpeed))
             return False
         # ------------------------------------------------------------------------
         # store motorType
@@ -1037,8 +1022,7 @@ class Epos:
             motorType = self.motorType[motorType]
         Ok = self.writeObject(index, subindex, motorType.to_bytes(1, 'little'))
         if not Ok:
-            logging.info('[EPOS:{0}] Failed to set motorType'.format(
-                sys._getframe().f_code.co_name))
+            self.logInfo("Failed to set motorType")
             return Ok
         # ------------------------------------------------------------------------
         # store motorData
@@ -1051,22 +1035,19 @@ class Epos:
         # constant current limit has subindex 1
         Ok = self.writeObject(index, 1, currentLimit.to_bytes(2, 'little'))
         if not Ok:
-            logging.info('[EPOS:{0}] Failed to set currentLimit'.format(
-                sys._getframe().f_code.co_name))
+            self.logInfo("Failed to set currentLimit")
             return Ok
         # output current limit has subindex 2 and is recommended to
         # be the double of constant current limit
         Ok = self.writeObject(
             index, 2, (currentLimit * 2).to_bytes(2, 'little'))
         if not Ok:
-            logging.info('[EPOS:{0}] Failed to set output current limit'.format(
-                sys._getframe().f_code.co_name))
+            self.logInfo("Failed to set output current limit")
             return Ok
         # pole pair number has subindex 3
         Ok = self.writeObject(index, 3, polePairNumber.to_bytes(1, 'little'))
         if not Ok:
-            logging.info('[EPOS:{0}] Failed to set pole pair number: {1}'.format(
-                sys._getframe().f_code.co_name, polePairNumber))
+            self.logInfo("Failed to set pole pair number: {0}".format(polePairNumber))
             return Ok
         # maxSpeed has subindex 4
         # check if it was passed a float
@@ -1075,8 +1056,7 @@ class Epos:
             maximumSpeed = maximumSpeed.__trunc__
         Ok = self.writeObject(index, 4, maximumSpeed.to_bytes(2, 'little'))
         if not Ok:
-            logging.info('[EPOS:{0}] Failed to set maximum speed: {1}'.format(
-                sys._getframe().f_code.co_name, maximumSpeed))
+            self.logInfo("Failed to set maximum speed: {0}".format(maximumSpeed))
             return Ok
         # no fails, return True
         return True
@@ -1117,8 +1097,7 @@ class Epos:
         subindex = 0
         value = self.readObject(index, subindex)
         if value is None:
-            logging.info('[EPOS:{0}] Failed to get motorType'.format(
-                sys._getframe().f_code.co_name))
+            self.logInfo("Failed to get motorType")
             return None, False
         # append motorType to dict
         motorConfig.update({'motorType': int.from_bytes(value, 'little')})
@@ -1128,38 +1107,33 @@ class Epos:
         index = self.objectIndex['Motor Data']
         value = self.readObject(index, 1)
         if value is None:
-            logging.info('[EPOS:{0}] Failed to get currentLimit'.format(
-                sys._getframe().f_code.co_name))
+            self.logInfo("Failed to get currentLimit")
             return None, False
         motorConfig.update({'currentLimit': int.from_bytes(value, 'little')})
         # output current limit has subindex 2 and is recommended to
         # be the double of constant current limit
         value = self.readObject(index, 2)
         if value is None:
-            logging.info('[EPOS:{0}] Failed to get maxCurrentLimit'.format(
-                sys._getframe().f_code.co_name))
+            self.logInfo("Failed to get maxCurrentLimit")
             return None, False
         motorConfig.update(
             {'maxCurrentLimit': int.from_bytes(value, 'little')})
         # pole pair number has subindex 3
         value = self.readObject(index, 3)
         if value is None:
-            logging.info('[EPOS:{0}] Failed to get polePairNumber'.format(
-                sys._getframe().f_code.co_name))
+            self.logInfo("Failed to get polePairNumber")
             return None, False
         motorConfig.update({'polePairNumber': int.from_bytes(value, 'little')})
         # maxSpeed has subindex 4
         value = self.readObject(index, 4)
         if value is None:
-            logging.info('[EPOS:{0}] Failed to get maximumSpeed'.format(
-                sys._getframe().f_code.co_name))
+            self.logInfo("Failed to get maximumSpeed")
             return None, False
         motorConfig.update({'maximumSpeed': int.from_bytes(value, 'little')})
         # thermal time constant has index 5
         value = self.readObject(index, 5)
         if value is None:
-            logging.info('[EPOS:{0}] Failed to get thermalTimeConstant'.format(
-                sys._getframe().f_code.co_name))
+            self.logInfo("Failed to get thermalTimeConstant")
             return None, False
         motorConfig.update(
             {'thermalTimeConstant': int.from_bytes(value, 'little')})
@@ -1239,47 +1213,37 @@ class Epos:
             bool: A boolean if all went as expected or not.
         """
         # validate attributes first
-        if(pulseNumber < 16 or pulseNumber > 7500):
-            logging.info('[Epos:{0}] Error pulseNumber out of range: {1}'.format(
-                sys._getframe().f_code.co_name,
-                pulseNumber))
+        if pulseNumber < 16 or pulseNumber > 7500:
+            self.logInfo("Error pulseNumber out of range: {0}".format(pulseNumber))
             return False
         if not (sensorType in [1, 2, 3]):
-            logging.info('[Epos:{0}] Error sensorType not valid: {1}'.format(
-                sys._getframe().f_code.co_name,
-                sensorType))
+            self.logInfo("Error sensorType not valid: {0}".format(sensorType))
             return False
         if not (sensorPolarity in [0, 1, 2, 3]):
-            logging.info('[Epos:{0}] Error sensorPolarity not valid: {1}'.format(
-                sys._getframe().f_code.co_name,
-                sensorPolarity))
+            self.logInfo("Error sensorPolarity not valid: {0}".format(sensorPolarity))
             return False
         # change epos state first to shutdown state
         # or it will fail
         Ok = self.changeEposState('shutdown')
         if not Ok:
-            logging.info('[Epos:{0}] Error failed to change EPOS state into shutdown'.format(
-                sys._getframe().f_code.co_name))
+            self.logInfo("Error failed to change EPOS state into shutdown")
             return False
         # get index
         index = self.objectIndex['Sensor Configuration']
         # pulseNumber has subindex 1
         Ok = self.writeObject(index, 1, pulseNumber.to_bytes(2, 'little'))
         if not Ok:
-            logging.info('[Epos:{0}] Error setting pulseNumber'.format(
-                sys._getframe().f_code.co_name))
+            self.logInfo("Error setting pulseNumber")
             return False
         # sensorType has subindex 2
         Ok = self.writeObject(index, 2, sensorType.to_bytes(2, 'little'))
         if not Ok:
-            logging.info('[Epos:{0}] Error setting sensorType'.format(
-                sys._getframe().f_code.co_name))
+            self.logInfo("Error setting sensorType")
             return False
         # sensorPolarity has subindex 4
         Ok = self.writeObject(index, 4, sensorPolarity.to_bytes(2, 'little'))
         if not Ok:
-            logging.info('[Epos:{0}] Error setting sensorPolarity'.format(
-                sys._getframe().f_code.co_name))
+            self.logInfo("Error setting sensorPolarity")
             return False
         return True
 
@@ -1309,22 +1273,19 @@ class Epos:
         # pulseNumber has subindex 1
         value = self.readObject(index, 1)
         if value is None:
-            logging.info('[Epos:{0}] Error getting pulseNumber'.format(
-                sys._getframe().f_code.co_name))
+            self.logInfo("Error getting pulseNumber")
             return None, False
         sensorConfig.update({'pulseNumber': int.from_bytes(value, 'little')})
         # sensorType has subindex 2
         value = self.readObject(index, 2)
         if value is None:
-            logging.info('[Epos:{0}] Error getting sensorType'.format(
-                sys._getframe().f_code.co_name))
+            self.logInfo("Error getting sensorType")
             return None, False
         sensorConfig.update({'sensorType': int.from_bytes(value, 'little')})
         # sensorPolarity has subindex 4
         value = self.readObject(index, 4)
         if value is None:
-            logging.info('[Epos:{0}] Error getting sensorPolarity'.format(
-                sys._getframe().f_code.co_name))
+            self.logInfo("Error getting sensorPolarity")
             return None, False
         sensorConfig.update(
             {'sensorPolarity': int.from_bytes(value, 'little')})
@@ -1370,21 +1331,16 @@ class Epos:
             bool: A boolean if all went as expected or not.
         """
         # any float?
-        if (isinstance(pGain, float) or isinstance(iGain, float)):
-            logging.info('[Epos:{0}] Error all values must be int, not floats'.format(
-                sys._getframe().f_code.co_name))
+        if isinstance(pGain, float) or isinstance(iGain, float):
+            self.logInfo("Error all values must be int, not floats")
             return False
         # any out of range?
         # validate attributes first
-        if(pGain < 0 or pGain > 2**15-1):
-            logging.info('[Epos:{0}] Error pGain out of range: {1}'.format(
-                sys._getframe().f_code.co_name,
-                pGain))
+        if pGain < 0 or pGain > 2**15-1:
+            self.logInfo("Error pGain out of range: {0}".format(pGain))
             return False
-        if(iGain < 0 or iGain > 2**15-1):
-            logging.info('[Epos:{0}] Error iGain out of range: {1}'.format(
-                sys._getframe().f_code.co_name,
-                iGain))
+        if iGain < 0 or iGain > 2**15-1:
+            self.logInfo("Error iGain out of range: {0}".format(iGain))
             return False
         # all ok. Proceed
         index = self.objectIndex['Current Control Parameter']
@@ -1392,15 +1348,13 @@ class Epos:
         Ok = self.writeObject(
             index, 1, pGain.to_bytes(2, 'little', signed=True))
         if not Ok:
-            logging.info('[Epos:{0}] Error setting pGain'.format(
-                sys._getframe().f_code.co_name))
+            self.logInfo("Error setting pGain")
             return False
         # iGain has subindex 2
         Ok = self.writeObject(
             index, 2, iGain.to_bytes(2, 'little', signed=True))
         if not Ok:
-            logging.info('[Epos:{0}] Error setting iGain'.format(
-                sys._getframe().f_code.co_name))
+            self.logInfo("Error setting iGain")
             return False
         # all ok, return True
         return True
@@ -1419,8 +1373,7 @@ class Epos:
         # pGain has subindex 1
         value = self.readObject(index, 1)
         if value is None:
-            logging.info('[Epos:{0}] Error getting pGain'.format(
-                sys._getframe().f_code.co_name))
+            self.logInfo("Error getting pGain")
             return None, False
         # can not be less than zero, but is considered signed!
         currModeParameters.update(
@@ -1429,8 +1382,7 @@ class Epos:
         # iGain has subindex 2
         value = self.readObject(index, 2)
         if value is None:
-            logging.info('[Epos:{0}] Error getting iGain'.format(
-                sys._getframe().f_code.co_name))
+            self.logInfo("Error getting iGain")
             return None, False
         currModeParameters.update(
             {'iGain': int.from_bytes(value, 'little', signed=True)})
@@ -1467,29 +1419,24 @@ class Epos:
         """
         # validate attributes
         if not (isinstance(minPos, int) and isinstance(maxPos, int)):
-            logging.info('[Epos:{0}] Error input values must be int'.format(
-                sys._getframe().f_code.co_name))
+            self.logInfo("Error input values must be int")
             return False
-        if (minPos < -2**31 or minPos > 2**31-1):
-            logging.info('[Epos:{0}] Error minPos out of range'.format(
-                sys._getframe().f_code.co_name))
+        if minPos < -2**31 or minPos > 2**31-1:
+            self.logInfo("Error minPos out of range")
             return False
-        if (maxPos < -2**31 or maxPos > 2**31-1):
-            logging.info('[Epos:{0}] Error maxPos out of range'.format(
-                sys._getframe().f_code.co_name))
+        if maxPos < -2**31 or maxPos > 2**31-1:
+            self.logInfo("Error maxPos out of range")
             return False
         index = self.objectIndex['Software Position Limit']
         # minPos has subindex 1
         ok = self.writeObject(index, 0x1, minPos.to_bytes(4, 'little'))
         if not ok:
-            logging.info('[Epos:{0}] Error setting minPos'.format(
-                sys._getframe().f_code.co_name))
+            self.logInfo("Error setting minPos")
             return False
         # maxPos has subindex 2
         ok = self.writeObject(index, 0x2, maxPos.to_bytes(4, 'little'))
         if not ok:
-            logging.info('[Epos:{0}] Error setting maxPos'.format(
-                sys._getframe().f_code.co_name))
+            self.logInfo("Error setting maxPos")
             return False
         return True
 
@@ -1507,15 +1454,13 @@ class Epos:
         # min has subindex 1
         value = self.readObject(index, 0x1)
         if value is None:
-            logging.info('[Epos:{0}] Failed to read min position'.format(
-                sys._getframe().f_code.co_name))
+            self.logInfo("Failed to read min position")
             return None, False
         limits.update({'minPos': int.from_bytes(value, 'little')})
         # max has subindex 2
         value = self.readObject(index, 0x2)
         if value is None:
-            logging.info('[Epos:{0}] Failed to read max position'.format(
-                sys._getframe().f_code.co_name))
+            self.logInfo("Failed to read max position")
             return None, False
         limits.update({'maxPos': int.from_bytes(value, 'little')})
         return limits, True
@@ -1542,25 +1487,22 @@ class Epos:
         during a fault reaction.
 
         Args:
-            quicstopDeceleration: the value of deceleration in rpm/s
+            quickstopDeceleration: the value of deceleration in rpm/s
         Return:
             bool: A boolean if all went as expected or not.
         """
         # validate attributes
         if not isinstance(quickstopDeceleration, int):
-            logging.info('[Epos:{0}] Error input value must be int'.format(
-                sys._getframe().f_code.co_name))
+            self.logInfo("Error input value must be int")
             return False
-        if (quickstopDeceleration < 1 or quickstopDeceleration > 2**32-1):
-            logging.info('[Epos:{0}] Error quick stop deceleration out of range'.format(
-                sys._getframe().f_code.co_name))
+        if quickstopDeceleration < 1 or quickstopDeceleration > 2**32-1:
+            self.logInfo("Error quick stop deceleration out of range")
             return False
         index = self.objectIndex['QuickStop Deceleration']
         ok = self.writeObject(
             index, 0x0, quickstopDeceleration.to_bytes(4, 'little'))
         if not ok:
-            logging.info('[Epos:{0}] Error setting quick stop deceleration'.format(
-                sys._getframe().f_code.co_name))
+            self.logInfo("Error setting quick stop deceleration")
             return False
         return True
 
@@ -1578,8 +1520,7 @@ class Epos:
         index = self.objectIndex['QuickStop Deceleration']
         deceleration = self.readObject(index, 0x0)
         if deceleration is None:
-            logging.info('[Epos:{0}] Failed to read quick stop deceleration value'.format(
-                sys._getframe().f_code.co_name))
+            self.logInfo("Failed to read quick stop deceleration value")
             return None, False
         deceleration = int.from_bytes(deceleration, 'little')
         return deceleration, True
@@ -1602,8 +1543,7 @@ class Epos:
         # pGain has subindex 1
         value = self.readObject(index, 1)
         if value is None:
-            logging.info('[Epos:{0}] Error getting pGain'.format(
-                sys._getframe().f_code.co_name))
+            self.logInfo("Error getting pGain")
             return None, False
         # can not be less than zero, but is considered signed!
         posModeParameters.update(
@@ -1612,8 +1552,7 @@ class Epos:
         # iGain has subindex 2
         value = self.readObject(index, 2)
         if value is None:
-            logging.info('[Epos:{0}] Error getting iGain'.format(
-                sys._getframe().f_code.co_name))
+            self.logInfo("Error getting iGain")
             return None, False
         posModeParameters.update(
             {'iGain': int.from_bytes(value, 'little', signed=True)})
@@ -1621,8 +1560,7 @@ class Epos:
         # dGain has subindex 3
         value = self.readObject(index, 3)
         if value is None:
-            logging.info('[Epos:{0}] Error getting dGain'.format(
-                sys._getframe().f_code.co_name))
+            self.logInfo("Error getting dGain")
             return None, False
         posModeParameters.update(
             {'dGain': int.from_bytes(value, 'little', signed=True)})
@@ -1630,8 +1568,7 @@ class Epos:
         # vFeedFoward has subindex 4
         value = self.readObject(index, 4)
         if value is None:
-            logging.info('[Epos:{0}] Error getting vFeed'.format(
-                sys._getframe().f_code.co_name))
+            self.logInfo("Error getting vFeed")
             return None, False
         # these are not considered signed!
         posModeParameters.update({'vFeed': int.from_bytes(value, 'little')})
@@ -1639,8 +1576,7 @@ class Epos:
         # aFeedFoward has subindex 5
         value = self.readObject(index, 5)
         if value is None:
-            logging.info('[Epos:{0}] Error getting aFeed'.format(
-                sys._getframe().f_code.co_name))
+            self.logInfo("Error getting aFeed")
             return None, False
         posModeParameters.update({'aFeed': int.from_bytes(value, 'little')})
         return posModeParameters, True
@@ -1712,38 +1648,30 @@ class Epos:
         if (isinstance(pGain, float) or isinstance(iGain, float) or
             isinstance(dGain, float) or isinstance(vFeed, float) or
                 isinstance(aFeed, float)):
-            logging.info('[Epos:{0}] Error all values must be int, not floats'.format(
-                sys._getframe().f_code.co_name))
+            self.logInfo("Error all values must be int, not floats")
             return False
         # any out of range?
-        if(pGain < 0 or pGain > 2**15-1):
-            logging.info('[Epos:{0}] Error pGain out of range: {1}'.format(
-                sys._getframe().f_code.co_name,
-                pGain))
+        if pGain < 0 or pGain > 2**15-1:
+            self.logInfo("Error pGain out of range: {0}".format(pGain))
             return False
-        if (iGain < 0 or iGain > 2**15-1):
-            logging.info('[Epos:{0}] Error iGain out of range: {1}'.format(
-                sys._getframe().f_code.co_name,
+        if iGain < 0 or iGain > 2**15-1:
+            self.logInfo("Error iGain out of range: {0}".format(
                 iGain))
             return False
-        if (dGain < 0 or dGain > 2**15-1):
-            logging.info('[Epos:{0}] Error dGain out of range: {1}'.format(
-                sys._getframe().f_code.co_name,
+        if dGain < 0 or dGain > 2**15-1:
+            self.logInfo("Error dGain out of range: {0}".format(
                 dGain))
             return False
-        if (iGain < 0 or iGain > 2**15-1):
-            logging.info('[Epos:{0}] Error iGain out of range: {1}'.format(
-                sys._getframe().f_code.co_name,
+        if iGain < 0 or iGain > 2**15-1:
+            self.logInfo("Error iGain out of range: {0}".format(
                 pGain))
             return False
-        if (vFeed < 0 or vFeed > 2**16-1):
-            logging.info('[Epos:{0}] Error vFeed out of range: {1}'.format(
-                sys._getframe().f_code.co_name,
+        if vFeed < 0 or vFeed > 2**16-1:
+            self.logInfo("Error vFeed out of range: {0}".format(
                 vFeed))
             return False
-        if (aFeed < 0 or aFeed > 2**16-1):
-            logging.info('[Epos:{0}] Error aFeed out of range: {1}'.format(
-                sys._getframe().f_code.co_name,
+        if aFeed < 0 or aFeed > 2**16-1:
+            self.logInfo("Error aFeed out of range: {0}".format(
                 aFeed))
             return False
         # all ok. Proceed
@@ -1752,34 +1680,29 @@ class Epos:
         Ok = self.writeObject(
             index, 1, pGain.to_bytes(2, 'little', signed=True))
         if not Ok:
-            logging.info('[Epos:{0}] Error setting pGain'.format(
-                sys._getframe().f_code.co_name))
+            self.logInfo("Error setting pGain")
             return False
         # iGain has subindex 2
         Ok = self.writeObject(
             index, 2, iGain.to_bytes(2, 'little', signed=True))
         if not Ok:
-            logging.info('[Epos:{0}] Error setting iGain'.format(
-                sys._getframe().f_code.co_name))
+            self.logInfo("Error setting iGain")
             return False
         # dGain has subindex 3
         Ok = self.writeObject(
             index, 3, dGain.to_bytes(2, 'little', signed=True))
         if not Ok:
-            logging.info('[Epos:{0}] Error setting dGain'.format(
-                sys._getframe().f_code.co_name))
+            self.logInfo("Error setting dGain")
             return False
         # vFeed has subindex 4
         Ok = self.writeObject(index, 4, vFeed.to_bytes(2, 'little'))
         if not Ok:
-            logging.info('[Epos:{0}] Error setting vFeed'.format(
-                sys._getframe().f_code.co_name))
+            self.logInfo("Error setting vFeed")
             return False
         # aFeed has subindex 5
         Ok = self.writeObject(index, 5, aFeed.to_bytes(2, 'little'))
         if not Ok:
-            logging.info('[Epos:{0}] Error setting aFeed'.format(
-                sys._getframe().f_code.co_name))
+            self.logInfo("Error setting aFeed")
             return False
         # all ok, return True
         return True
@@ -1817,8 +1740,7 @@ class Epos:
         index = self.objectIndex['Following Error Actual Value']
         followingError = self.readObject(index, 0x0)
         if not followingError:
-            logging.info('[Epos:{0}] Error getting Following Error Actual Value'.format(
-                sys._getframe().f_code.co_name))
+            self.logInfo("Error getting Following Error Actual Value")
             return None, False
         followingError = int.from_bytes(followingError, 'little', signed=True)
         return followingError, True
@@ -1838,8 +1760,7 @@ class Epos:
         index = self.objectIndex['Max Following Error']
         maxFollowingError = self.readObject(index, 0x0)
         if not maxFollowingError:
-            logging.info('[Epos:{0}] Error getting Max Following Error Value'.format(
-                sys._getframe().f_code.co_name))
+            self.logInfo("Error getting Max Following Error Value")
             return None, False
         maxFollowingError = int.from_bytes(maxFollowingError, 'little')
         return maxFollowingError, True
@@ -1861,20 +1782,17 @@ class Epos:
         """
         # validate attributes
         if not isinstance(maxFollowingError, int):
-            logging.info('[Epos:{0}] Error input value must be int'.format(
-                sys._getframe().f_code.co_name))
+            self.logInfo("Error input value must be int")
             return False
         if (maxFollowingError < 0 or maxFollowingError > 2**32-1):
-            logging.info('[Epos:{0}] Error Max Following error out of range'.format(
-                sys._getframe().f_code.co_name))
+            self.logInfo("Error Max Following error out of range")
             return False
 
         index = self.objectIndex['Max Following Error']
         ok = self.writeObject(
             index, 0x0, maxFollowingError.to_bytes(4, 'little'))
         if not ok:
-            logging.info('[Epos:{0}] Error setting Max Following Error Value'.format(
-                sys._getframe().f_code.co_name))
+            self.logInfo("Error setting Max Following Error Value")
             return False
         return True
 
@@ -1890,8 +1808,7 @@ class Epos:
         index = self.objectIndex['Position Actual Value']
         position = self.readObject(index, 0x0)
         if position is None:
-            logging.info('[Epos:{0}] Failed to read current position value'.format(
-                sys._getframe().f_code.co_name))
+            self.logInfo("Failed to read current position value")
             return None, False
         position = int.from_bytes(position, 'little', signed=True)
         return position, True
@@ -1911,8 +1828,7 @@ class Epos:
         index = self.objectIndex['Position Window']
         positionWindow, ok = self.readObject(index, 0x0)
         if not ok:
-            logging.info('[Epos:{0}] Failed to read current position window'.format(
-                sys._getframe().f_code.co_name))
+            self.logInfo("Failed to read current position window")
             return None, False
         return positionWindow, True
 
@@ -1929,18 +1845,15 @@ class Epos:
         """
         # validate attributes
         if not isinstance(positionWindow, int):
-            logging.info('[Epos:{0}] Error input value must be int'.format(
-                sys._getframe().f_code.co_name))
+            self.logInfo("Error input value must be int")
             return False
-        if (positionWindow < 0 or positionWindow > 2**32-1):
-            logging.info('[Epos:{0}] Error position window out of range'.format(
-                sys._getframe().f_code.co_name))
+        if positionWindow < 0 or positionWindow > 2**32-1:
+            self.logInfo("Error position window out of range")
             return False
         index = self.objectIndex['Position Window']
         ok = self.writeObject(index, 0x0, positionWindow.to_bytes(4, 'little'))
         if not ok:
-            logging.info('[Epos:{0}] Failed to set current position window'.format(
-                sys._getframe().f_code.co_name))
+            self.logInfo("Failed to set current position window")
             return None, False
         return True
 
@@ -1960,8 +1873,7 @@ class Epos:
         index = self.objectIndex['Position Window Time']
         positionWindowTime, ok = self.readObject(index, 0x0)
         if not ok:
-            logging.info('[Epos:{0}] Failed to read current position window time'.format(
-                sys._getframe().f_code.co_name))
+            self.logInfo("Failed to read current position window time")
             return None, False
         return positionWindowTime, True
 
@@ -1979,19 +1891,16 @@ class Epos:
         """
         # validate attributes
         if not isinstance(positionWindowTime, int):
-            logging.info('[Epos:{0}] Error input value must be int'.format(
-                sys._getframe().f_code.co_name))
+            self.logInfo("Error input value must be int")
             return False
-        if (positionWindowTime < 0 or positionWindowTime > 2**16-1):
-            logging.info('[Epos:{0}] Error position window time out of range'.format(
-                sys._getframe().f_code.co_name))
+        if positionWindowTime < 0 or positionWindowTime > 2**16-1:
+            self.logInfo("Error position window time out of range")
             return False
         index = self.objectIndex['Position Window Time']
         ok = self.writeObject(
             index, 0x0, positionWindowTime.to_bytes(2, 'little'))
         if not ok:
-            logging.info('[Epos:{0}] Failed to set current position window time'.format(
-                sys._getframe().f_code.co_name))
+            self.logInfo("Failed to set current position window time")
             return None, False
         return True
 
@@ -2007,8 +1916,7 @@ class Epos:
         index = self.objectIndex['Velocity Actual Value']
         velocity, ok = self.readObject(index, 0x0)
         if not ok:
-            logging.info('[Epos:{0}] Failed to read current velocity value'.format(
-                sys._getframe().f_code.co_name))
+            self.logInfo("Failed to read current velocity value")
             return None, False
         return velocity, True
 
@@ -2024,8 +1932,7 @@ class Epos:
         index = self.objectIndex['Velocity Actual Value Averaged']
         velocity, ok = self.readObject(index, 0x0)
         if not ok:
-            logging.info('[Epos:{0}] Failed to read current velocity averaged value'.format(
-                sys._getframe().f_code.co_name))
+            self.logInfo("Failed to read current velocity averaged value")
             return None, False
         return velocity, True
 
@@ -2041,8 +1948,7 @@ class Epos:
         index = self.objectIndex['Current Actual Value']
         current, ok = self.readObject(index, 0x0)
         if not ok:
-            logging.info('[Epos:{0}] Failed to read current value'.format(
-                sys._getframe().f_code.co_name))
+            self.logInfo("Failed to read current value")
             return None, False
         return current, True
 
@@ -2058,8 +1964,7 @@ class Epos:
         index = self.objectIndex['Current Actual Value Averaged']
         current, ok = self.readObject(index, 0x0)
         if not ok:
-            logging.info('[Epos:{0}] Failed to read current averaged value'.format(
-                sys._getframe().f_code.co_name))
+            self.logInfo("Failed to read current averaged value")
             return None, False
         return current, True
 
@@ -2086,7 +1991,7 @@ def main():
     """
 
     import argparse
-    if (sys.version_info < (3, 0)):
+    if sys.version_info < (3, 0):
         print("Please use python version 3")
         return
 
@@ -2120,7 +2025,7 @@ def main():
     # add the handler to the root logger
     logging.getLogger('').addHandler(console)
 
-    # instanciate object
+    # instantiate object
     epos = Epos()
 
     if not (epos.begin(args.nodeID, objectDictionary=args.objDict)):
