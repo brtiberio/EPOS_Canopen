@@ -905,7 +905,7 @@ class Epos:
             # shutdown  0xxx x110
             if newState == 'shutdown':
                 # clear bits
-                mask = not (1 << 7 | 1 << 0)
+                mask = ~ (1 << 7 | 1 << 0)
                 controlword = controlword & mask
                 # set bits
                 mask = (1 << 2 | 1 << 1)
@@ -914,7 +914,7 @@ class Epos:
             # switch on 0xxx x111
             if newState == 'switch on':
                 # clear bits
-                mask = not (1 << 7)
+                mask = ~ (1 << 7)
                 controlword = controlword & mask
                 # set bits
                 mask = (1 << 2 | 1 << 1 | 1 << 0)
@@ -923,13 +923,13 @@ class Epos:
             # disable voltage 0xxx xx0x
             if newState == 'switch on':
                 # clear bits
-                mask = not (1 << 7 | 1 << 1)
+                mask = ~ (1 << 7 | 1 << 1)
                 controlword = controlword & mask
                 return self.writeControlWord(controlword)
             # quick stop 0xxx x01x
             if newState == 'quick stop':
                 # clear bits
-                mask = not (1 << 7 | 1 << 2)
+                mask = ~ (1 << 7 | 1 << 2)
                 controlword = controlword & mask
                 # set bits
                 mask = (1 << 1)
@@ -938,7 +938,7 @@ class Epos:
             # disable operation 0xxx 0111
             if newState == 'disable operation':
                 # clear bits
-                mask = not (1 << 7 | 1 << 3)
+                mask = ~ (1 << 7 | 1 << 3)
                 controlword = controlword & mask
                 # set bits
                 mask = (1 << 2 | 1 << 1 | 1 << 0)
@@ -947,7 +947,7 @@ class Epos:
             # enable operation 0xxx 1111
             if newState == 'enable operation':
                 # clear bits
-                mask = not (1 << 7)
+                mask = ~ (1 << 7)
                 controlword = controlword & mask
                 # set bits
                 mask = (1 << 3 | 1 << 2 | 1 << 1 | 1 << 0)
