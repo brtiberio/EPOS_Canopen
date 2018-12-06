@@ -137,7 +137,7 @@ def main():
     network.connect(channel=args.channel, bustype=args.bus)
 
     epos = Epos(_network=network)
-    if not (epos.begin(args.nodeID, objectDictionary=args.objDict)):
+    if not (epos.begin(args.nodeID, object_dictionary=args.objDict)):
         logging.info('Failed to begin connection with EPOS device')
         logging.info('Exiting now')
         return
@@ -146,7 +146,7 @@ def main():
     epos.node.emcy.add_callback(gotMessage)
 
     # get current state of epos
-    state = epos.checkEposState()
+    state = epos.check_state()
     if state is -1:
         logging.info('[Epos:{0}] Error: Unknown state\n'.format(
             sys._getframe().f_code.co_name))
@@ -154,21 +154,21 @@ def main():
 
     if state is 11:
         # perform fault reset
-        ok = epos.changeEposState('fault reset')
+        ok = epos.change_state('fault reset')
         if not ok:
             logging.info('[Epos:{0}] Error: Failed to change state to fault reset\n'.format(
                 sys._getframe().f_code.co_name))
             return
 
     # shutdown
-    if not epos.changeEposState('shutdown'):
+    if not epos.change_state('shutdown'):
         logging.info('Failed to change Epos state to shutdown')
         return
     # switch on
-    if not epos.changeEposState('switch on'):
+    if not epos.change_state('switch on'):
         logging.info('Failed to change Epos state to switch on')
         return
-    if not epos.changeEposState('enable operation'):
+    if not epos.change_state('enable operation'):
         logging.info('Failed to change Epos state to enable operation')
         return
 
@@ -218,10 +218,10 @@ def main():
             if (updateFlag):
                 updateFlag = False
                 # get new reference position.
-                epos.setPositionModeSetting(data['position'][I])
+                epos.set_position_mode_setting(data['position'][I])
             else:
                 # if not time to update new ref, request current position
-                aux, OK = epos.readPositionValue()
+                aux, OK = epos.read_position_value()
                 if not OK:
                     logging.info('({0}) Failed to request current position'.format(
                         sys._getframe().f_code.co_name))
@@ -240,7 +240,7 @@ def main():
     print('Time to process all vars was {0} seconds'.format(
         time.monotonic()-t0))
     # request one last time
-    aux, OK = epos.readPositionValue()
+    aux, OK = epos.read_position_value()
     if not OK:
         logging.info('({0}) Failed to request current position'.format(
             sys._getframe().f_code.co_name))
@@ -249,7 +249,7 @@ def main():
     diff = np.append(diff, data['position'][I-1]-out[-1])
     t = np.append(t, time.monotonic()-t0)
     plotter.update(t, out, diff, True)
-    if not epos.changeEposState('shutdown'):
+    if not epos.change_state('shutdown'):
         logging.info('Failed to change Epos state to shutdown')
         return
     print('Close figure to exit')

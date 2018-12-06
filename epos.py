@@ -158,46 +158,46 @@ class Epos:
                    'Motor Data': 0x6410,
                    'Supported Drive Modes': 0x6502}
     # CANopen defined error codes and Maxon codes also
-    errorIndex = {0x00000000:  'Error code: no error',
+    errorIndex = {0x00000000: 'Error code: no error',
                   # 0x050x xxxx
-                  0x05030000:  'Error code: toggle bit not alternated',
-                  0x05040000:  'Error code: SDO protocol timeout',
-                  0x05040001:  'Error code: Client/server command specifier not valid or unknown',
-                  0x05040002:  'Error code: invalid block size',
-                  0x05040003:  'Error code: invalid sequence number',
-                  0x05040004:  'Error code: CRC error',
-                  0x05040005:  'Error code: out of memory',
+                  0x05030000: 'Error code: toggle bit not alternated',
+                  0x05040000: 'Error code: SDO protocol timeout',
+                  0x05040001: 'Error code: Client/server command specifier not valid or unknown',
+                  0x05040002: 'Error code: invalid block size',
+                  0x05040003: 'Error code: invalid sequence number',
+                  0x05040004: 'Error code: CRC error',
+                  0x05040005: 'Error code: out of memory',
                   # 0x060x xxxx
-                  0x06010000:  'Error code: Unsupported access to an object',
-                  0x06010001:  'Error code: Attempt to read a write-only object',
-                  0x06010002:  'Error code: Attempt to write a read-only object',
-                  0x06020000:  'Error code: object does not exist',
-                  0x06040041:  'Error code: object can not be mapped to the PDO',
-                  0x06040042:  'Error code: the number and length of the objects to be mapped would exceed PDO length',
-                  0x06040043:  'Error code: general parameter incompatibility',
-                  0x06040047:  'Error code: general internal incompatibility in the device',
-                  0x06060000:  'Error code: access failed due to an hardware error',
-                  0x06070010:  'Error code: data type does not match, length of service parameter does not match',
-                  0x06070012:  'Error code: data type does not match, length of service parameter too high',
-                  0x06070013:  'Error code: data type does not match, length of service parameter too low',
-                  0x06090011:  'Error code: subindex does not exist',
-                  0x06090030:  'Error code: value range of parameter exceeded',
-                  0x06090031:  'Error code: value of parameter written is too high',
-                  0x06090032:  'Error code: value of parameter written is too low',
-                  0x06090036:  'Error code: maximum value is less than minimum value',
-                  0x060A0023:  'Error code: resource not available: SDO connection',
+                  0x06010000: 'Error code: Unsupported access to an object',
+                  0x06010001: 'Error code: Attempt to read a write-only object',
+                  0x06010002: 'Error code: Attempt to write a read-only object',
+                  0x06020000: 'Error code: object does not exist',
+                  0x06040041: 'Error code: object can not be mapped to the PDO',
+                  0x06040042: 'Error code: the number and length of the objects to be mapped would exceed PDO length',
+                  0x06040043: 'Error code: general parameter incompatibility',
+                  0x06040047: 'Error code: general internal incompatibility in the device',
+                  0x06060000: 'Error code: access failed due to an hardware error',
+                  0x06070010: 'Error code: data type does not match, length of service parameter does not match',
+                  0x06070012: 'Error code: data type does not match, length of service parameter too high',
+                  0x06070013: 'Error code: data type does not match, length of service parameter too low',
+                  0x06090011: 'Error code: subindex does not exist',
+                  0x06090030: 'Error code: value range of parameter exceeded',
+                  0x06090031: 'Error code: value of parameter written is too high',
+                  0x06090032: 'Error code: value of parameter written is too low',
+                  0x06090036: 'Error code: maximum value is less than minimum value',
+                  0x060A0023: 'Error code: resource not available: SDO connection',
                   # 0x0800 xxxx
-                  0x08000000:  'Error code: General error',
-                  0x08000020:  'Error code: Data cannot be transferred or stored to the application',
-                  0x08000021:  'Error code: Data cannot be transferred or stored to the application because of local control',
-                  0x08000022:  'Error code: Wrong Device State. Data can not be transfered',
-                  0x08000023:  'Error code: Object dictionary dynamic generation failed or no object dictionary present',
+                  0x08000000: 'Error code: General error',
+                  0x08000020: 'Error code: Data cannot be transferred or stored to the application',
+                  0x08000021: 'Error code: Data cannot be transferred or stored to the application because of local control',
+                  0x08000022: 'Error code: Wrong Device State. Data can not be transfered',
+                  0x08000023: 'Error code: Object dictionary dynamic generation failed or no object dictionary present',
                   # Maxon defined error codes
-                  0x0f00ffc0:  'Error code: wrong NMT state',
-                  0x0f00ffbf:  'Error code: rs232 command illegal',
-                  0x0f00ffbe:  'Error code: password incorrect',
-                  0x0f00ffbc:  'Error code: device not in service mode',
-                  0x0f00ffB9:  'Error code: error in Node-ID'
+                  0x0f00ffc0: 'Error code: wrong NMT state',
+                  0x0f00ffbf: 'Error code: rs232 command illegal',
+                  0x0f00ffbe: 'Error code: password incorrect',
+                  0x0f00ffbc: 'Error code: device not in service mode',
+                  0x0f00ffB9: 'Error code: error in Node-ID'
                   }
     # dictionary describing opMode
     opModes = {6: 'Homing Mode', 3: 'Profile Velocity Mode', 1: 'Profile Position Mode',
@@ -225,7 +225,7 @@ class Epos:
         else:
             self.logger.setLevel(logging.INFO)
 
-    def begin(self, nodeID, _channel='can0', _bustype='socketcan', objectDictionary=None):
+    def begin(self, nodeID, _channel='can0', _bustype='socketcan', object_dictionary=None):
         """ Initialize Epos device
 
         Configure and setup Epos device.
@@ -234,19 +234,19 @@ class Epos:
             nodeID:    Node ID of the device.
             _channel (optional):   Port used for communication. Default can0
             _bustype (optional):   Port type used. Default socketcan.
-            objectDictionary (optional):   Name of EDS file, if any available.
+            object_dictionary (optional):   Name of EDS file, if any available.
         Return:
             bool: A boolean if all went ok.
         """
         try:
             self.node = self.network.add_node(
-                nodeID, object_dictionary=objectDictionary)
+                nodeID, object_dictionary=object_dictionary)
             # in not connected?
             if not self.network.bus:
                 # so try to connect
                 self.network.connect(channel=_channel, bustype=_bustype)
         except Exception as e:
-            self.logInfo('Exception caught:{0}'.format(str(e)))
+            self.log_info('Exception caught:{0}'.format(str(e)))
         finally:
             # check if is connected
             if not self.network.bus:
@@ -258,11 +258,12 @@ class Epos:
     def disconnect(self):
         self.network.disconnect()
         return
+
     # --------------------------------------------------------------
     # Basic set of functions
     # --------------------------------------------------------------
 
-    def logInfo(self, message=None):
+    def log_info(self, message=None):
         """ Log a message
 
         A wrap around logging.
@@ -281,8 +282,8 @@ class Epos:
             message))
         return
 
-    def logDebug(self, message=None):
-        """ Log a message
+    def log_debug(self, message=None):
+        """ Log a message with debug level
 
         A wrap around logging.
         The log message will have the following structure\:
@@ -304,7 +305,7 @@ class Epos:
             message))
         return
 
-    def readObject(self, index, subindex):
+    def read_object(self, index, subindex):
         """Reads an object
 
          Request a read from dictionary object referenced by index and subindex.
@@ -319,14 +320,14 @@ class Epos:
             try:
                 return self.node.sdo.upload(index, subindex)
             except Exception as e:
-                self.logInfo('Exception caught:{0}'.format(str(e)))
+                self.log_info('Exception caught:{0}'.format(str(e)))
                 return None
         else:
-            self.logInfo(' Error: {0} is not connected'.format(
+            self.log_info(' Error: {0} is not connected'.format(
                 self.__class__.__name__))
             return None
 
-    def writeObject(self, index, subindex, data):
+    def write_object(self, index, subindex, data):
         """Write an object
 
          Request a write to dictionary object referenced by index and subindex.
@@ -346,13 +347,13 @@ class Epos:
                 text = "Code 0x{:08X}".format(e.code)
                 if e.code in self.errorIndex:
                     text = text + ", " + self.errorIndex[e.code]
-                self.logInfo('SdoAbortedError: ' + text)
+                self.log_info('SdoAbortedError: ' + text)
                 return False
             except canopen.SdoCommunicationError:
-                self.logInfo('SdoAbortedError: Timeout or unexpected response')
+                self.log_info('SdoAbortedError: Timeout or unexpected response')
                 return False
         else:
-            self.logInfo(' Error: {0} is not connected'.format(
+            self.log_info(' Error: {0} is not connected'.format(
                 self.__class__.__name__))
             return False
 
@@ -360,23 +361,23 @@ class Epos:
     # High level functions
     ############################################################################
 
-    def readStatusWord(self):
+    def read_statusword(self):
         """Read StatusWord
 
         Request current statusword from device.
 
         Returns:
-            tupple: A tupple containing:
+            tuple: A tuple containing:
 
             :statusword:  the current statusword or None if any error.
-            :Ok: A boolean if all went ok.
+            :ok: A boolean if all went ok.
         """
         index = self.objectIndex['StatusWord']
         subindex = 0
-        statusword = self.readObject(index, subindex)
+        statusword = self.read_object(index, subindex)
         # failed to request?
         if not statusword:
-            self.logInfo('Error trying to read {0} statusword'.format(
+            self.log_info('Error trying to read {0} statusword'.format(
                 self.__class__.__name__))
             return statusword, False
 
@@ -384,23 +385,23 @@ class Epos:
         statusword = int.from_bytes(statusword, 'little')
         return statusword, True
 
-    def readControlWord(self):
+    def read_controlword(self):
         """Read ControlWord
 
         Request current controlword from device.
 
         Returns:
-            tupple: A tupple containing:
+            tuple: A tuple containing:
 
             :controlword: the current controlword or None if any error.
-            :Ok: A boolean if all went ok.
+            :ok: A boolean if all went ok.
         """
         index = self.objectIndex['ControlWord']
         subindex = 0
-        controlword = self.readObject(index, subindex)
+        controlword = self.read_object(index, subindex)
         # failed to request?
         if not controlword:
-            self.logInfo('Error trying to read {0} controlword'.format(
+            self.log_info('Error trying to read {0} controlword'.format(
                 self.__class__.__name__))
             return controlword, False
 
@@ -408,7 +409,7 @@ class Epos:
         controlword = int.from_bytes(controlword, 'little')
         return controlword, True
 
-    def writeControlWord(self, controlword):
+    def write_controlword(self, controlword):
         """Send controlword to device
 
         Args:
@@ -418,12 +419,12 @@ class Epos:
             bool: a boolean if all went ok.
         """
         # sending new controlword
-        self.logDebug(
+        self.log_debug(
             'Sending controlword Hex={0:#06X} Bin={0:#018b}'.format(controlword))
         controlword = controlword.to_bytes(2, 'little')
-        return self.writeObject(0x6040, 0, controlword)
+        return self.write_object(0x6040, 0, controlword)
 
-    def checkEposState(self):
+    def check_state(self):
         """Check current state of Epos
 
         Ask the StatusWord of EPOS and parse it to return the current state of EPOS.
@@ -461,16 +462,16 @@ class Epos:
         Returns:
             int: numeric identification of the state or -1 in case of fail.
         """
-        statusword, ok = self.readStatusWord()
+        statusword, ok = self.read_statusword()
         if not ok:
-            self.logInfo('Failed to request StatusWord')
+            self.log_info('Failed to request StatusWord')
             return -1
         else:
 
             # state 'start' (0)
             # statusWord == x0xx xxx0  x000 0000
             bitmask = 0b0100000101111111
-            if(bitmask & statusword == 0):
+            if (bitmask & statusword == 0):
                 ID = 0
                 return ID
 
@@ -484,81 +485,81 @@ class Epos:
             # state 'switch on disabled' (2)
             # statusWord == x0xx xxx1  x100 0000
             bitmask = 0b0100000101111111
-            if(bitmask & statusword == 320):
+            if (bitmask & statusword == 320):
                 ID = 2
                 return ID
 
             # state 'ready to switch on' (3)
             # statusWord == x0xx xxx1  x010 0001
             bitmask = 0b0100000101111111
-            if(bitmask & statusword == 289):
+            if (bitmask & statusword == 289):
                 ID = 3
                 return ID
 
             # state 'switched on' (4)
             # statusWord == x0xx xxx1  x010 0011
             bitmask = 0b0000000101111111
-            if(bitmask & statusword == 291):
+            if (bitmask & statusword == 291):
                 ID = 4
                 return ID
 
             # state 'refresh' (5)
             # statusWord == x1xx xxx1  x010 0011
             bitmask = 0b0100000101111111
-            if(bitmask & statusword == 16675):
+            if (bitmask & statusword == 16675):
                 ID = 5
                 return ID
 
             # state 'measure init' (6)
             # statusWord == x1xx xxx1  x011 0011
             bitmask = 0b0100000101111111
-            if(bitmask & statusword == 16691):
+            if (bitmask & statusword == 16691):
                 ID = 6
                 return ID
             # state 'operation enable' (7)
             # statusWord == x0xx xxx1  x011 0111
             bitmask = 0b0100000101111111
-            if(bitmask & statusword == 311):
+            if (bitmask & statusword == 311):
                 ID = 7
                 return ID
 
             # state 'Quick Stop Active' (8)
             # statusWord == x0xx xxx1  x001 0111
             bitmask = 0b0100000101111111
-            if(bitmask & statusword == 279):
+            if (bitmask & statusword == 279):
                 ID = 8
                 return ID
 
             # state 'fault reaction active (disabled)' (9)
             # statusWord == x0xx xxx1  x000 1111
             bitmask = 0b0100000101111111
-            if(bitmask & statusword == 271):
+            if (bitmask & statusword == 271):
                 ID = 9
                 return ID
 
             # state 'fault reaction active (enabled)' (10)
             # statusWord == x0xx xxx1  x001 1111
             bitmask = 0b0100000101111111
-            if(bitmask & statusword == 287):
+            if (bitmask & statusword == 287):
                 ID = 10
                 return ID
 
             # state 'fault' (11)
             # statusWord == x0xx xxx1  x000 1000
             bitmask = 0b0100000101111111
-            if(bitmask & statusword == 264):
+            if (bitmask & statusword == 264):
                 ID = 11
                 return ID
 
         # in case of unknown state or fail
         # in case of unknown state or fail
-        self.logInfo('Error: Unknown state. Statusword is Bin={0:#018b}'.format(
+        self.log_info('Error: Unknown state. Statusword is Bin={0:#018b}'.format(
             int.from_bytes(statusword, 'little'))
         )
         return -1
 
-    def printEposState(self):
-        ID = self.checkEposState()
+    def print_state(self):
+        ID = self.check_state()
         if ID is -1:
             print('[{0}:{1}] Error: Unknown state\n'.format(
                 self.__class__.__name__,
@@ -571,9 +572,9 @@ class Epos:
                 ID))
         return
 
-    def printStatusWord(self):
-        statusword, Ok = self.readStatusWord()
-        if not Ok:
+    def print_statusword(self):
+        statusword, ok = self.read_statusword()
+        if not ok:
             print('[{0}:{1}] Failed to retreive statusword\n'.format(
                 self.__class__.__name__,
                 sys._getframe().f_code.co_name))
@@ -617,19 +618,19 @@ class Epos:
                 statusword & 1))
         return
 
-    def printControlWord(self, controlword=None):
+    def print_controlword(self, controlword=None):
         """Print the meaning of controlword
 
         Check the meaning of current controlword of device or check the meaning of your own controlword.
-        Usefull to check your own controlword before actually sending it to device.
+        Useful to check your own controlword before actually sending it to device.
 
         Args:
             controlword (optional): If None, request the controlword of device.
 
         """
         if not controlword:
-            controlword, Ok = self.readControlWord()
-            if not Ok:
+            controlword, ok = self.read_controlword()
+            if not ok:
                 print('[{0}:{1}] Failed to retreive controlword\n'.format(
                     self.__class__.__name__,
                     sys._getframe().f_code.co_name))
@@ -659,31 +660,31 @@ class Epos:
             controlword & 1))
         return
 
-    def readPositionModeSetting(self):
-        """Reads the setted desired Position
+    def read_position_mode_setting(self):
+        """Reads the set desired Position
 
         Ask Epos device for demand position object. If a correct
         request is made, the position is placed in answer. If
         not, an answer will be empty
 
         Returns:
-            tupple: A tupple containing:
+            tuple: A tuple containing:
 
             :position: the demanded position value.
-            :OK:       A boolean if all requests went ok or not.
+            :ok:       A boolean if all requests went ok or not.
         """
         index = self.objectIndex['PositionMode Setting Value']
         subindex = 0
-        position = self.readObject(index, subindex)
-        # failded to request?
+        position = self.read_object(index, subindex)
+        # failed to request?
         if not position:
-            self.logInfo("Error trying to read EPOS PositionMode Setting Value")
+            self.log_info("Error trying to read EPOS PositionMode Setting Value")
             return position, False
         # return value as signed int
         position = int.from_bytes(position, 'little', signed=True)
         return position, True
 
-    def setPositionModeSetting(self, position):
+    def set_position_mode_setting(self, position):
         """Sets the desired Position
 
         Ask Epos device to define position mode setting object.
@@ -693,77 +694,77 @@ class Epos:
         """
         index = self.objectIndex['PositionMode Setting Value']
         subindex = 0
-        if position < -2**31 or position > 2**31-1 :
-            self.logInfo("Postion out of range")
+        if position < -2 ** 31 or position > 2 ** 31 - 1:
+            self.log_info("Postion out of range")
             return False
         # change to bytes as an int32 value
         position = position.to_bytes(4, 'little', signed=True)
-        return self.writeObject(index, subindex, position)
+        return self.write_object(index, subindex, position)
 
-    def readVelocityModeSetting(self):
-        """Reads the setted desired velocity
+    def read_velocity_mode_setting(self):
+        """Reads the set desired velocity
 
         Asks EPOS for the desired velocity value in velocity control mode
 
         Returns:
-            tupple: A tupple containing:
+            tuple: A tuple containing:
 
-            :velocity: Value setted or None if any error.
-            :Ok: A boolean if sucessfull or not.
+            :velocity: Value set or None if any error.
+            :ok: A boolean if successful or not.
         """
         index = self.objectIndex['VelocityMode Setting Value']
         subindex = 0
-        velocity = self.readObject(index, subindex)
+        velocity = self.read_object(index, subindex)
         # failed to request?
         if not velocity:
-            self.logInfo("Error trying to read EPOS VelocityMode Setting Value")
+            self.log_info("Error trying to read EPOS VelocityMode Setting Value")
             return velocity, False
         # return value as signed int
         velocity = int.from_bytes(velocity, 'little', signed=True)
         return velocity, True
 
-    def setVelocityModeSetting(self, velocity):
+    def set_velocity_mode_setting(self, velocity):
         """Set desired velocity
 
         Set the value for desired velocity in velocity control mode.
 
         Args:
-            velocity: value to be setted.
+            velocity: value to be set.
         Returns:
-            bool: a boolean if sucessfull or not.
+            bool: a boolean if successful or not.
         """
         index = self.objectIndex['VelocityMode Setting Value']
         subindex = 0
-        if velocity < -2**31 or velocity > 2**31-1:
-            self.logInfo("Velocity out of range")
+        if velocity < -2 ** 31 or velocity > 2 ** 31 - 1:
+            self.log_info("Velocity out of range")
             return False
         # change to bytes as an int32 value
         velocity = velocity.to_bytes(4, 'little', signed=True)
-        return self.writeObject(index, subindex, velocity)
+        return self.write_object(index, subindex, velocity)
 
-    def readCurrentModeSetting(self):
-        """Read current value setted
+    def read_current_mode_setting(self):
+        """Read current value set
 
-        Asks EPOS for the current value setted in current control mode.
+        Asks EPOS for the current value set in current control mode.
 
         Returns:
-            tupple: A tupple containing:
+            tuple: A tuple containing:
 
-            :current: value setted.
-            :Ok:      a boolean if sucessfull or not.
+            :current: value set.
+            :ok:      a boolean if successful or not.
         """
         index = self.objectIndex['CurrentMode Setting Value']
         subindex = 0
-        current = self.readObject(index, subindex)
+        current = self.read_object(index, subindex)
         # failed to request
         if not current:
-            self.logInfo("Error trying to read EPOS CurrentMode Setting Value")
+            self.log_info("Error trying to read EPOS CurrentMode Setting Value")
             return current, False
         # return value as signed int
         current = int.from_bytes(current, 'little', signed=True)
         return current, True
 
-    def setCurrentModeSetting(self, current):
+    def set_current_mode_setting(self, current):
         """Set desired current
 
         Set the value for desired current in current control mode
@@ -771,38 +772,38 @@ class Epos:
         Args:
             current: the value to be set [mA]
         Returns:
-            bool: a boolean if sucessfull or not
+            bool: a boolean if successful or not
         """
         index = self.objectIndex['CurrentMode Setting Value']
         subindex = 0
-        if current < -2**15 or current > 2**15-1:
-            self.logInfo("Current out of range")
+        if current < -2 ** 15 or current > 2 ** 15 - 1:
+            self.log_info("Current out of range")
             return False
         # change to bytes as an int16 value
         current = current.to_bytes(2, 'little', signed=True)
-        return self.writeObject(index, subindex, current)
+        return self.write_object(index, subindex, current)
 
-    def readOpMode(self):
+    def read_op_mode(self):
         """Read current operation mode
 
         Returns:
-            tupple: A tupple containing:
+            tuple: A tuple containing:
 
-            :opMode: current opMode or None if request fails
-            :Ok:     A boolean if sucessfull or not
+            :op_mode: current op_mode or None if request fails
+            :ok:     A boolean if successful or not
         """
         index = self.objectIndex['Modes of Operation']
         subindex = 0
-        opMode = self.readObject(index, subindex)
+        op_mode = self.read_object(index, subindex)
         # failed to request
-        if not opMode:
-            self.logInfo("Error trying to read EPOS Operation Mode")
-            return opMode, False
+        if not op_mode:
+            self.log_info("Error trying to read EPOS Operation Mode")
+            return op_mode, False
         # change to int value
-        opMode = int.from_bytes(opMode, 'little', signed=True)
-        return opMode, True
+        op_mode = int.from_bytes(op_mode, 'little', signed=True)
+        return op_mode, True
 
-    def setOpMode(self, opMode):
+    def set_op_mode(self, op_mode):
         """Set Operation mode
 
         Sets the operation mode of Epos. OpMode is described as:
@@ -830,34 +831,34 @@ class Epos:
         +--------+-----------------------+
 
         Args:
-            opMode: the desired opMode.
+            op_mode: the desired opMode.
         Returns:
             bool:     A boolean if all requests went ok or not.
         """
         index = self.objectIndex['Modes of Operation']
         subindex = 0
-        if not opMode in self.opModes:
-            self.logInfo("Unknown Operation Mode: {0}".format(opMode))
+        if not op_mode in self.opModes:
+            self.log_info("Unknown Operation Mode: {0}".format(op_mode))
             return False
-        opMode = opMode.to_bytes(1, 'little', signed=True)
-        return self.writeObject(index, subindex, opMode)
+        op_mode = op_mode.to_bytes(1, 'little', signed=True)
+        return self.write_object(index, subindex, op_mode)
 
-    def printOpMode(self):
+    def print_op_mode(self):
         """Print current operation mode
         """
-        opMode, Ok = self.readOpMode()
-        if not Ok:
+        op_mode, ok = self.read_op_mode()
+        if not ok:
             print('Failed to request current operation mode')
             return
-        if not (opMode in self.opModes):
-            self.logInfo("Unknown Operation Mode: {0}".format(opMode))
+        if not (op_mode in self.opModes):
+            self.log_info("Unknown Operation Mode: {0}".format(op_mode))
             return
         else:
             print('Current operation mode is \"{}\"'.format(
-                self.opModes[opMode]))
+                self.opModes[op_mode]))
         return
 
-    def changeEposState(self, newState):
+    def change_state(self, new_state):
         """Change EPOS state
 
         Change Epos state using controlWord object
@@ -886,81 +887,81 @@ class Epos:
         see section 8.1.3 of firmware for more information
 
         Args:
-            newState: string with state witch user want to switch.
+            new_state: string with state witch user want to switch.
 
         Returns:
             bool: boolean if all went ok and no error was received.
         """
-        stateOrder = ['shutdown', 'switch on', 'disable voltage', 'quick stop',
-                      'disable operation', 'enable operation', 'fault reset']
+        state_order = ['shutdown', 'switch on', 'disable voltage', 'quick stop',
+                       'disable operation', 'enable operation', 'fault reset']
 
-        if not (newState in stateOrder):
-            self.logInfo("Unknown state: {0}".format(newState))
+        if not (new_state in state_order):
+            self.log_info("Unknown state: {0}".format(new_state))
             return False
         else:
-            controlword, Ok = self.readControlWord()
+            controlword, Ok = self.read_controlword()
             if not Ok:
-                self.logInfo("Failed to retreive controlword")
+                self.log_info("Failed to retrieve controlword")
                 return False
             # shutdown  0xxx x110
-            if newState == 'shutdown':
+            if new_state == 'shutdown':
                 # clear bits
                 mask = ~ (1 << 7 | 1 << 0)
                 controlword = controlword & mask
                 # set bits
                 mask = (1 << 2 | 1 << 1)
                 controlword = controlword | mask
-                return self.writeControlWord(controlword)
+                return self.write_controlword(controlword)
             # switch on 0xxx x111
-            if newState == 'switch on':
+            if new_state == 'switch on':
                 # clear bits
                 mask = ~ (1 << 7)
                 controlword = controlword & mask
                 # set bits
                 mask = (1 << 2 | 1 << 1 | 1 << 0)
                 controlword = controlword | mask
-                return self.writeControlWord(controlword)
+                return self.write_controlword(controlword)
             # disable voltage 0xxx xx0x
-            if newState == 'switch on':
+            if new_state == 'switch on':
                 # clear bits
                 mask = ~ (1 << 7 | 1 << 1)
                 controlword = controlword & mask
-                return self.writeControlWord(controlword)
+                return self.write_controlword(controlword)
             # quick stop 0xxx x01x
-            if newState == 'quick stop':
+            if new_state == 'quick stop':
                 # clear bits
                 mask = ~ (1 << 7 | 1 << 2)
                 controlword = controlword & mask
                 # set bits
                 mask = (1 << 1)
                 controlword = controlword | mask
-                return self.writeControlWord(controlword)
+                return self.write_controlword(controlword)
             # disable operation 0xxx 0111
-            if newState == 'disable operation':
+            if new_state == 'disable operation':
                 # clear bits
                 mask = ~ (1 << 7 | 1 << 3)
                 controlword = controlword & mask
                 # set bits
                 mask = (1 << 2 | 1 << 1 | 1 << 0)
                 controlword = controlword | mask
-                return self.writeControlWord(controlword)
+                return self.write_controlword(controlword)
             # enable operation 0xxx 1111
-            if newState == 'enable operation':
+            if new_state == 'enable operation':
                 # clear bits
                 mask = ~ (1 << 7)
                 controlword = controlword & mask
                 # set bits
                 mask = (1 << 3 | 1 << 2 | 1 << 1 | 1 << 0)
                 controlword = controlword | mask
-                return self.writeControlWord(controlword)
+                return self.write_controlword(controlword)
             # fault reset 1xxx xxxx
-            if newState == 'fault reset':
+            if new_state == 'fault reset':
                 # set bits
                 mask = (1 << 7)
                 controlword = controlword | mask
-                return self.writeControlWord(controlword)
+                return self.write_controlword(controlword)
 
-    def setMotorConfig(self, motorType, currentLimit, maximumSpeed, polePairNumber):
+    def set_motor_config(self, motor_type, current_limit, max_speed, pole_pair_number):
         """Set motor configuration
 
         Sets the configuration of the motor parameters. The valid motor type is:
@@ -991,166 +992,166 @@ class Epos:
         Thermal winding not changed, using default 40ms.
 
         Args:
-            motorType:      value of motor type. see table behind.
-            currentLimit:   max continuous current limit [mA].
-            maximumSpeed:   max allowed speed in current mode [rpm].
-            polePairNumber: number of pole pairs for brushless DC motors.
+            motor_type:      value of motor type. see table behind.
+            current_limit:   max continuous current limit [mA].
+            max_speed:   max allowed speed in current mode [rpm].
+            pole_pair_number: number of pole pairs for brushless DC motors.
         Returns:
             bool:     A boolean if all requests went ok or not.
         """
         # ------------------------------------------------------------------------
         # check values of input
         # ------------------------------------------------------------------------
-        if not ((motorType in self.motorType) or (motorType in self.motorType.values())):
-            self.logInfo("Unknown motorType: {0}".format(motorType))
+        if not ((motor_type in self.motorType) or (motor_type in self.motorType.values())):
+            self.log_info("Unknown motor_type: {0}".format(motor_type))
             return False
-        if (currentLimit < 0) or (currentLimit > 2**16 - 1):
-            self.logInfo("Current limit out of range: {0} ".format(currentLimit))
+        if (current_limit < 0) or (current_limit > 2 ** 16 - 1):
+            self.log_info("Current limit out of range: {0} ".format(current_limit))
             return False
-        if (polePairNumber < 0) or (polePairNumber > 255):
-            self.logInfo("Pole pair number out of range: {0} ".format(polePairNumber))
+        if (pole_pair_number < 0) or (pole_pair_number > 255):
+            self.log_info("Pole pair number out of range: {0} ".format(pole_pair_number))
             return False
-        if (maximumSpeed < 1) or (maximumSpeed > 2**16 - 1):
-            self.logInfo("Maximum speed out of range: {0} ".format(maximumSpeed))
+        if (max_speed < 1) or (max_speed > 2 ** 16 - 1):
+            self.log_info("Maximum speed out of range: {0} ".format(max_speed))
             return False
         # ------------------------------------------------------------------------
-        # store motorType
+        # store motor_type
         # ------------------------------------------------------------------------
         index = self.objectIndex['MotorType']
         subindex = 0
-        if motorType in self.motorType:
-            motorType = self.motorType[motorType]
-        Ok = self.writeObject(index, subindex, motorType.to_bytes(1, 'little'))
-        if not Ok:
-            self.logInfo("Failed to set motorType")
-            return Ok
+        if motor_type in self.motorType:
+            motor_type = self.motorType[motor_type]
+        ok = self.write_object(index, subindex, motor_type.to_bytes(1, 'little'))
+        if not ok:
+            self.log_info("Failed to set motor_type")
+            return ok
         # ------------------------------------------------------------------------
         # store motorData
         # ------------------------------------------------------------------------
         index = self.objectIndex['Motor Data']
         # check if it was passed a float
-        if isinstance(currentLimit, float):
+        if isinstance(current_limit, float):
             # if true trunc to closes int, similar to floor
-            currentLimit = currentLimit.__trunc__
+            current_limit = current_limit.__trunc__
         # constant current limit has subindex 1
-        Ok = self.writeObject(index, 1, currentLimit.to_bytes(2, 'little'))
-        if not Ok:
-            self.logInfo("Failed to set currentLimit")
-            return Ok
+        ok = self.write_object(index, 1, current_limit.to_bytes(2, 'little'))
+        if not ok:
+            self.log_info("Failed to set current_limit")
+            return ok
         # output current limit has subindex 2 and is recommended to
         # be the double of constant current limit
-        Ok = self.writeObject(
-            index, 2, (currentLimit * 2).to_bytes(2, 'little'))
-        if not Ok:
-            self.logInfo("Failed to set output current limit")
-            return Ok
+        ok = self.write_object(
+            index, 2, (current_limit * 2).to_bytes(2, 'little'))
+        if not ok:
+            self.log_info("Failed to set output current limit")
+            return ok
         # pole pair number has subindex 3
-        Ok = self.writeObject(index, 3, polePairNumber.to_bytes(1, 'little'))
-        if not Ok:
-            self.logInfo("Failed to set pole pair number: {0}".format(polePairNumber))
-            return Ok
+        ok = self.write_object(index, 3, pole_pair_number.to_bytes(1, 'little'))
+        if not ok:
+            self.log_info("Failed to set pole pair number: {0}".format(pole_pair_number))
+            return ok
         # maxSpeed has subindex 4
         # check if it was passed a float
-        if isinstance(maximumSpeed, float):
+        if isinstance(max_speed, float):
             # if true trunc to closes int, similar to floor
-            maximumSpeed = maximumSpeed.__trunc__
-        Ok = self.writeObject(index, 4, maximumSpeed.to_bytes(2, 'little'))
-        if not Ok:
-            self.logInfo("Failed to set maximum speed: {0}".format(maximumSpeed))
-            return Ok
+            max_speed = max_speed.__trunc__
+        ok = self.write_object(index, 4, max_speed.to_bytes(2, 'little'))
+        if not ok:
+            self.log_info("Failed to set maximum speed: {0}".format(max_speed))
+            return ok
         # no fails, return True
         return True
 
-    def readMotorConfig(self):
+    def read_motor_config(self):
         """Read motor configuration
 
         Read the current motor configuration
 
         Requests from EPOS the current motor type and motor data.
-        The motorConfig is a dictionary containing the following information:
+        The motor_config is a dictionary containing the following information:
 
-        * **motorType** describes the type of motor.
-        * **currentLimit** - describes the maximum continuous current limit.
-        * **maxCurrentLimit** - describes the maximum allowed current limit.
+        * **motor_type** describes the type of motor.
+        * **current_limit** - describes the maximum continuous current limit.
+        * **max_current_limit** - describes the maximum allowed current limit.
           Usually is set as two times the continuous current limit.
-        * **polePairNumber** - describes the pole pair number of the rotor of
+        * **pole_pair_number** - describes the pole pair number of the rotor of
           the brushless DC motor.
-        * **maximumSpeed** - describes the maximum allowed speed in current mode.
-        * **thermalTimeConstant** - describes the thermal time constant of motor
+        * **max_speed** - describes the maximum allowed speed in current mode.
+        * **thermal_time_constant** - describes the thermal time constant of motor
           winding is used to calculate the time how long the maximal output
           current is allowed for the connected motor [100 ms].
 
-        If unable to request the configuration or unsucessfull, None and false is
+        If unable to request the configuration or unsuccessfully, None and false is
         returned .
 
         Returns:
-            tupple: A tupple with:
+            tuple: A tuple with:
 
-            :motorConfig: A structure with the current configuration of motor
-            :OK:          A boolean if all went as expected or not.
+            :motor_config: A structure with the current configuration of motor
+            :ok:          A boolean if all went as expected or not.
         """
-        motorConfig = {}  # dictionary to store config
+        motor_config = {}  # dictionary to store config
         # ------------------------------------------------------------------------
         # store motorType
         # ------------------------------------------------------------------------
         index = self.objectIndex['MotorType']
         subindex = 0
-        value = self.readObject(index, subindex)
+        value = self.read_object(index, subindex)
         if value is None:
-            self.logInfo("Failed to get motorType")
+            self.log_info("Failed to get motorType")
             return None, False
         # append motorType to dict
-        motorConfig.update({'motorType': int.from_bytes(value, 'little')})
+        motor_config.update({'motorType': int.from_bytes(value, 'little')})
         # ------------------------------------------------------------------------
         # store motorData
         # ------------------------------------------------------------------------
         index = self.objectIndex['Motor Data']
-        value = self.readObject(index, 1)
+        value = self.read_object(index, 1)
         if value is None:
-            self.logInfo("Failed to get currentLimit")
+            self.log_info("Failed to get currentLimit")
             return None, False
-        motorConfig.update({'currentLimit': int.from_bytes(value, 'little')})
+        motor_config.update({'currentLimit': int.from_bytes(value, 'little')})
         # output current limit has subindex 2 and is recommended to
         # be the double of constant current limit
-        value = self.readObject(index, 2)
+        value = self.read_object(index, 2)
         if value is None:
-            self.logInfo("Failed to get maxCurrentLimit")
+            self.log_info("Failed to get maxCurrentLimit")
             return None, False
-        motorConfig.update(
+        motor_config.update(
             {'maxCurrentLimit': int.from_bytes(value, 'little')})
         # pole pair number has subindex 3
-        value = self.readObject(index, 3)
+        value = self.read_object(index, 3)
         if value is None:
-            self.logInfo("Failed to get polePairNumber")
+            self.log_info("Failed to get polePairNumber")
             return None, False
-        motorConfig.update({'polePairNumber': int.from_bytes(value, 'little')})
+        motor_config.update({'polePairNumber': int.from_bytes(value, 'little')})
         # maxSpeed has subindex 4
-        value = self.readObject(index, 4)
+        value = self.read_object(index, 4)
         if value is None:
-            self.logInfo("Failed to get maximumSpeed")
+            self.log_info("Failed to get maximumSpeed")
             return None, False
-        motorConfig.update({'maximumSpeed': int.from_bytes(value, 'little')})
+        motor_config.update({'maximumSpeed': int.from_bytes(value, 'little')})
         # thermal time constant has index 5
-        value = self.readObject(index, 5)
+        value = self.read_object(index, 5)
         if value is None:
-            self.logInfo("Failed to get thermalTimeConstant")
+            self.log_info("Failed to get thermalTimeConstant")
             return None, False
-        motorConfig.update(
+        motor_config.update(
             {'thermalTimeConstant': int.from_bytes(value, 'little')})
         # no fails, return dict and ok
-        return motorConfig, True
+        return motor_config, True
 
-    def printMotorConfig(self):
+    def print_motor_config(self):
         """Print current motor config
 
         Request current motor config and print it
         """
-        motorConfig, Ok = self.readMotorConfig()
-        for key, value in self.motorType.items():    # dict.items():  (for Python 3.x)
-            if value == motorConfig['motorType']:
+        motor_config, ok = self.read_motor_config()
+        for key, value in self.motorType.items():  # dict.items():  (for Python 3.x)
+            if value == motor_config['motorType']:
                 break
 
-        if not Ok:
+        if not ok:
             print('[EPOS:{0}] Failed to request current motor configuration'.format(
                 sys._getframe().f_code.co_name))
             return
@@ -1159,19 +1160,19 @@ class Epos:
         print('--------------------------------------------------------------')
         print('Motor Type is {0}'.format(key))
         print('Motor constant current limit {0}[mA]'.format(
-            motorConfig['currentLimit']))
+            motor_config['currentLimit']))
         print('Motor maximum current limit {0}[mA]'.format(
-            motorConfig['maxCurrentLimit']))
+            motor_config['maxCurrentLimit']))
         print('Motor maximum speed in current mode {0}[rpm]'.format(
-            motorConfig['maximumSpeed']))
+            motor_config['maximumSpeed']))
         print('Motor number of pole pairs {0}'.format(
-            motorConfig['polePairNumber']))
+            motor_config['polePairNumber']))
         print('Motor thermal time constant {0}[s]'.format(
-            motorConfig['currentLimit']/10.0))
+            motor_config['currentLimit'] / 10.0))
         print('--------------------------------------------------------------')
         return
 
-    def setSensorConfig(self, pulseNumber, sensorType, sensorPolarity):
+    def set_sensor_config(self, pulse_number, sensor_type, sensor_polarity):
         """Change sensor configuration
 
         Change the sensor configuration of motor. **Only possible if in disable state**
@@ -1205,53 +1206,53 @@ class Epos:
         +------+--------------------------------------------------------+
 
         Args:
-            pulseNumber:    Number of pulses per revolution.
-            sensorType:     1,2 or 3 according to the previous table.
-            sensorPolarity: a value between 0 and 3 describing the polarity
+            pulse_number:    Number of pulses per revolution.
+            sensor_type:     1,2 or 3 according to the previous table.
+            sensor_polarity: a value between 0 and 3 describing the polarity
                               of sensors as stated before.
         Returns:
             bool: A boolean if all went as expected or not.
         """
         # validate attributes first
-        if pulseNumber < 16 or pulseNumber > 7500:
-            self.logInfo("Error pulseNumber out of range: {0}".format(pulseNumber))
+        if pulse_number < 16 or pulse_number > 7500:
+            self.log_info("Error pulse_number out of range: {0}".format(pulse_number))
             return False
-        if not (sensorType in [1, 2, 3]):
-            self.logInfo("Error sensorType not valid: {0}".format(sensorType))
+        if not (sensor_type in [1, 2, 3]):
+            self.log_info("Error sensor_type not valid: {0}".format(sensor_type))
             return False
-        if not (sensorPolarity in [0, 1, 2, 3]):
-            self.logInfo("Error sensorPolarity not valid: {0}".format(sensorPolarity))
+        if not (sensor_polarity in [0, 1, 2, 3]):
+            self.log_info("Error sensor_polarity not valid: {0}".format(sensor_polarity))
             return False
         # change epos state first to shutdown state
         # or it will fail
-        Ok = self.changeEposState('shutdown')
-        if not Ok:
-            self.logInfo("Error failed to change EPOS state into shutdown")
+        ok = self.change_state('shutdown')
+        if not ok:
+            self.log_info("Error failed to change EPOS state into shutdown")
             return False
         # get index
         index = self.objectIndex['Sensor Configuration']
-        # pulseNumber has subindex 1
-        Ok = self.writeObject(index, 1, pulseNumber.to_bytes(2, 'little'))
-        if not Ok:
-            self.logInfo("Error setting pulseNumber")
+        # pulse_number has subindex 1
+        ok = self.write_object(index, 1, pulse_number.to_bytes(2, 'little'))
+        if not ok:
+            self.log_info("Error setting pulse_number")
             return False
-        # sensorType has subindex 2
-        Ok = self.writeObject(index, 2, sensorType.to_bytes(2, 'little'))
-        if not Ok:
-            self.logInfo("Error setting sensorType")
+        # sensor_type has subindex 2
+        ok = self.write_object(index, 2, sensor_type.to_bytes(2, 'little'))
+        if not ok:
+            self.log_info("Error setting sensor_type")
             return False
-        # sensorPolarity has subindex 4
-        Ok = self.writeObject(index, 4, sensorPolarity.to_bytes(2, 'little'))
-        if not Ok:
-            self.logInfo("Error setting sensorPolarity")
+        # sensor_polarity has subindex 4
+        ok = self.write_object(index, 4, sensor_polarity.to_bytes(2, 'little'))
+        if not ok:
+            self.log_info("Error setting sensor_polarity")
             return False
         return True
 
-    def readSensorConfig(self):
+    def read_sensor_config(self):
         """Read sensor configuration
 
         Requests from EPOS the current sensor configuration.
-        The sensorConfig is an struture containing the following information:
+        The sensor_config is an structure containing the following information:
 
         * sensorType - describes the type of sensor.
         * pulseNumber - describes the number of pulses per revolution in one channel.
@@ -1262,66 +1263,66 @@ class Epos:
         with 'error'.
 
         Returns:
-            tupple: A tupple containing:
+            tuple: A tuple containing:
 
-            :sensorConfig: A dictionary with the current configuration of the sensor
-            :OK: A boolean if all went as expected or not.
+            :sensor_config: A dictionary with the current configuration of the sensor
+            :ok: A boolean if all went as expected or not.
         """
-        sensorConfig = {}
+        sensor_config = {}
         # get index
         index = self.objectIndex['Sensor Configuration']
         # pulseNumber has subindex 1
-        value = self.readObject(index, 1)
+        value = self.read_object(index, 1)
         if value is None:
-            self.logInfo("Error getting pulseNumber")
+            self.log_info("Error getting pulseNumber")
             return None, False
-        sensorConfig.update({'pulseNumber': int.from_bytes(value, 'little')})
+        sensor_config.update({'pulseNumber': int.from_bytes(value, 'little')})
         # sensorType has subindex 2
-        value = self.readObject(index, 2)
+        value = self.read_object(index, 2)
         if value is None:
-            self.logInfo("Error getting sensorType")
+            self.log_info("Error getting sensorType")
             return None, False
-        sensorConfig.update({'sensorType': int.from_bytes(value, 'little')})
+        sensor_config.update({'sensorType': int.from_bytes(value, 'little')})
         # sensorPolarity has subindex 4
-        value = self.readObject(index, 4)
+        value = self.read_object(index, 4)
         if value is None:
-            self.logInfo("Error getting sensorPolarity")
+            self.log_info("Error getting sensorPolarity")
             return None, False
-        sensorConfig.update(
+        sensor_config.update(
             {'sensorPolarity': int.from_bytes(value, 'little')})
-        return sensorConfig, True
+        return sensor_config, True
 
-    def printSensorConfig(self):
+    def print_sensor_config(self):
         """Print current sensor configuration
         """
-        sensorConfig, Ok = self.readSensorConfig()
+        sensor_config, ok = self.read_sensor_config()
         # to adjust indexes ignore use a dummy first element
-        sensorType = ['', 'Incremental Encoder with index (3-channel)',
-                      'Incremental Encoder without index (2-channel)',
-                      'Hall Sensors (Remark: consider worse resolution)']
-        if not Ok:
+        sensor_type = ['', 'Incremental Encoder with index (3-channel)',
+                       'Incremental Encoder without index (2-channel)',
+                       'Hall Sensors (Remark: consider worse resolution)']
+        if not ok:
             print('[EPOS:{0}] Failed to request current sensor configuration'.format(
                 sys._getframe().f_code.co_name))
             return
         print('--------------------------------------------------------------')
         print('Current sensor configuration:')
         print('--------------------------------------------------------------')
-        print('Sensor pulse Number is {0}'.format(sensorConfig['pulseNumber']))
+        print('Sensor pulse Number is {0}'.format(sensor_config['pulseNumber']))
         print('Sensor type is {0}'.format(
-            sensorType[sensorConfig['sensorType']]))
-        value = sensorConfig['sensorPolarity']
+            sensor_type[sensor_config['sensorType']]))
+        value = sensor_config['sensorPolarity']
         if (value & 1 << 1) >> 1:
             print('Hall sensor polarity inverted')
         else:
             print('Hall sensor polarity normal')
-        if (value & 1):
+        if value & 1:
             print('Encoder polarity inverted')
         else:
             print('Encoder polarity normal')
         print('--------------------------------------------------------------')
         return
 
-    def setCurrentControlParameters(self, pGain, iGain):
+    def set_current_control_parameters(self, pGain, iGain):
         """Set the PI gains used in current control mode
 
         Args:
@@ -1332,68 +1333,68 @@ class Epos:
         """
         # any float?
         if isinstance(pGain, float) or isinstance(iGain, float):
-            self.logInfo("Error all values must be int, not floats")
+            self.log_info("Error all values must be int, not floats")
             return False
         # any out of range?
         # validate attributes first
-        if pGain < 0 or pGain > 2**15-1:
-            self.logInfo("Error pGain out of range: {0}".format(pGain))
+        if pGain < 0 or pGain > 2 ** 15 - 1:
+            self.log_info("Error pGain out of range: {0}".format(pGain))
             return False
-        if iGain < 0 or iGain > 2**15-1:
-            self.logInfo("Error iGain out of range: {0}".format(iGain))
+        if iGain < 0 or iGain > 2 ** 15 - 1:
+            self.log_info("Error iGain out of range: {0}".format(iGain))
             return False
         # all ok. Proceed
         index = self.objectIndex['Current Control Parameter']
         # pGain has subindex 1
-        Ok = self.writeObject(
+        ok = self.write_object(
             index, 1, pGain.to_bytes(2, 'little', signed=True))
-        if not Ok:
-            self.logInfo("Error setting pGain")
+        if not ok:
+            self.log_info("Error setting pGain")
             return False
         # iGain has subindex 2
-        Ok = self.writeObject(
+        ok = self.write_object(
             index, 2, iGain.to_bytes(2, 'little', signed=True))
-        if not Ok:
-            self.logInfo("Error setting iGain")
+        if not ok:
+            self.log_info("Error setting iGain")
             return False
         # all ok, return True
         return True
 
-    def readCurrentControlParameters(self):
+    def read_current_control_parameters(self):
         """Read the PI gains used in  current control mode
 
         Returns:
-            tupple: A tupple containing:
+            tuple: A tuple containing:
 
             :gains: A dictionary with the current pGain and iGain
-            :OK: A boolean if all went as expected or not.
+            :ok: A boolean if all went as expected or not.
         """
         index = self.objectIndex['Current Control Parameter']
-        currModeParameters = {}
+        curr_mode_parameters = {}
         # pGain has subindex 1
-        value = self.readObject(index, 1)
+        value = self.read_object(index, 1)
         if value is None:
-            self.logInfo("Error getting pGain")
+            self.log_info("Error getting pGain")
             return None, False
         # can not be less than zero, but is considered signed!
-        currModeParameters.update(
+        curr_mode_parameters.update(
             {'pGain': int.from_bytes(value, 'little', signed=True)})
 
         # iGain has subindex 2
-        value = self.readObject(index, 2)
+        value = self.read_object(index, 2)
         if value is None:
-            self.logInfo("Error getting iGain")
+            self.log_info("Error getting iGain")
             return None, False
-        currModeParameters.update(
+        curr_mode_parameters.update(
             {'iGain': int.from_bytes(value, 'little', signed=True)})
-        return currModeParameters, True
+        return curr_mode_parameters, True
 
-    def printCurrentControlParameters(self):
+    def print_current_control_parameters(self):
         """Print the current mode control PI gains
 
         Request current mode control parameter gains from device and print.
         """
-        currModeParameters, ok = self.readCurrentControlParameters()
+        curr_mode_parameters, ok = self.read_current_control_parameters()
         if not ok:
             print('[Epos:{0}] Error requesting Position mode control parameters'.format(
                 sys._getframe().f_code.co_name))
@@ -1401,74 +1402,74 @@ class Epos:
         print('--------------------------------------------------------------')
         print('Current Position mode control parameters:')
         print('--------------------------------------------------------------')
-        for key, value in currModeParameters.items():
+        for key, value in curr_mode_parameters.items():
             print('{0}: {1}'.format(key, value))
         print('--------------------------------------------------------------')
 
-    def setSoftwarePosLimit(self, minPos, maxPos):
+    def set_software_pos_limit(self, min_pos, max_pos):
         """Set the software position limits
 
         Use encoder readings as limit position for extremes
         range = [-2147483648 | 2147483647]
 
         Args:
-            minPos: minimum possition limit
-            maxPos: maximum possition limit
+            min_pos: minimum possition limit
+            max_pos: maximum possition limit
         Return:
             bool: A boolean if all went as expected or not.
         """
         # validate attributes
-        if not (isinstance(minPos, int) and isinstance(maxPos, int)):
-            self.logInfo("Error input values must be int")
+        if not (isinstance(min_pos, int) and isinstance(max_pos, int)):
+            self.log_info("Error input values must be int")
             return False
-        if minPos < -2**31 or minPos > 2**31-1:
-            self.logInfo("Error minPos out of range")
+        if min_pos < -2 ** 31 or min_pos > 2 ** 31 - 1:
+            self.log_info("Error min_pos out of range")
             return False
-        if maxPos < -2**31 or maxPos > 2**31-1:
-            self.logInfo("Error maxPos out of range")
+        if max_pos < -2 ** 31 or max_pos > 2 ** 31 - 1:
+            self.log_info("Error max_pos out of range")
             return False
         index = self.objectIndex['Software Position Limit']
-        # minPos has subindex 1
-        ok = self.writeObject(index, 0x1, minPos.to_bytes(4, 'little'))
+        # min_pos has subindex 1
+        ok = self.write_object(index, 0x1, min_pos.to_bytes(4, 'little'))
         if not ok:
-            self.logInfo("Error setting minPos")
+            self.log_info("Error setting min_pos")
             return False
-        # maxPos has subindex 2
-        ok = self.writeObject(index, 0x2, maxPos.to_bytes(4, 'little'))
+        # max_pos has subindex 2
+        ok = self.write_object(index, 0x2, max_pos.to_bytes(4, 'little'))
         if not ok:
-            self.logInfo("Error setting maxPos")
+            self.log_info("Error setting max_pos")
             return False
         return True
 
-    def readSoftwarePosLimit(self):
+    def read_software_pos_limit(self):
         """Read the software position limit
 
         Return:
-            tupple: A tupple containing:
+            tuple: A tuple containing:
 
             :limits: a dictionary containing minPos and maxPos
-            :OK: A boolean if all went as expected or not.
+            :ok: A boolean if all went as expected or not.
         """
         limits = {}
         index = self.objectIndex['Software Position Limit']
         # min has subindex 1
-        value = self.readObject(index, 0x1)
+        value = self.read_object(index, 0x1)
         if value is None:
-            self.logInfo("Failed to read min position")
+            self.log_info("Failed to read min position")
             return None, False
         limits.update({'minPos': int.from_bytes(value, 'little')})
         # max has subindex 2
-        value = self.readObject(index, 0x2)
+        value = self.read_object(index, 0x2)
         if value is None:
-            self.logInfo("Failed to read max position")
+            self.log_info("Failed to read max position")
             return None, False
         limits.update({'maxPos': int.from_bytes(value, 'little')})
         return limits, True
 
-    def printSoftwarePosLimit(self):
+    def print_software_pos_limit(self):
         """ Print current software position limits
         """
-        limits, ok = self.readSoftwarePosLimit()
+        limits, ok = self.read_software_pos_limit()
         if not ok:
             print('[Epos:{0}] Failed to request software position limits'.format(
                 sys._getframe().f_code.co_name))
@@ -1480,108 +1481,108 @@ class Epos:
         print('Maximum [qc]: {0}'.format(limits['maxPos']))
         print('--------------------------------------------------------------')
 
-    def setQuickStopDeceleration(self, quickstopDeceleration):
+    def set_quick_stop_deceleration(self, quickstop_deceleration):
         """Set the quick stop deceleration.
 
         The quick stop deceleration defines the deceleration
         during a fault reaction.
 
         Args:
-            quickstopDeceleration: the value of deceleration in rpm/s
+            quickstop_deceleration: the value of deceleration in rpm/s
         Return:
             bool: A boolean if all went as expected or not.
         """
         # validate attributes
-        if not isinstance(quickstopDeceleration, int):
-            self.logInfo("Error input value must be int")
+        if not isinstance(quickstop_deceleration, int):
+            self.log_info("Error input value must be int")
             return False
-        if quickstopDeceleration < 1 or quickstopDeceleration > 2**32-1:
-            self.logInfo("Error quick stop deceleration out of range")
+        if quickstop_deceleration < 1 or quickstop_deceleration > 2 ** 32 - 1:
+            self.log_info("Error quick stop deceleration out of range")
             return False
         index = self.objectIndex['QuickStop Deceleration']
-        ok = self.writeObject(
-            index, 0x0, quickstopDeceleration.to_bytes(4, 'little'))
+        ok = self.write_object(
+            index, 0x0, quickstop_deceleration.to_bytes(4, 'little'))
         if not ok:
-            self.logInfo("Error setting quick stop deceleration")
+            self.log_info("Error setting quick stop deceleration")
             return False
         return True
 
-    def readQuickStopDeceleration(self):
+    def read_quickstop_deceleration(self):
         """ Read the quick stop deceleration.
 
         Read deceleration used in fault reaction state.
 
         Returns:
-            tupple: A tupple containing:
+            tuple: A tuple containing:
 
-            :quickstopDeceleration: The value of deceleration in rpm/s.
-            :OK: A boolean if all went as expected or not.
+            :quickstop_deceleration: The value of deceleration in rpm/s.
+            :ok: A boolean if all went as expected or not.
         """
         index = self.objectIndex['QuickStop Deceleration']
-        deceleration = self.readObject(index, 0x0)
+        deceleration = self.read_object(index, 0x0)
         if deceleration is None:
-            self.logInfo("Failed to read quick stop deceleration value")
+            self.log_info("Failed to read quick stop deceleration value")
             return None, False
         deceleration = int.from_bytes(deceleration, 'little')
         return deceleration, True
 
-    def readPositionControlParameters(self):
+    def read_position_control_parameters(self):
         """ Read position mode control parameters
 
         Read position mode control PID gains and and feedfoward
         and acceleration values
 
         Returns:
-            tupple: A tupple containing:
+            tuple: A tuple containing:
 
-            :posModeParameters: a dictionary containg pGain,
+            :pos_mode_parameters: a dictionary containing pGain,
                 iGain, dGain, vFeed and aFeed.
-            :OK: A boolean if all went as expected or not.
+            :ok: A boolean if all went as expected or not.
         """
         index = self.objectIndex['Position Control Parameter']
-        posModeParameters = {}
+        pos_mode_parameters = {}
         # pGain has subindex 1
-        value = self.readObject(index, 1)
+        value = self.read_object(index, 1)
         if value is None:
-            self.logInfo("Error getting pGain")
+            self.log_info("Error getting pGain")
             return None, False
         # can not be less than zero, but is considered signed!
-        posModeParameters.update(
+        pos_mode_parameters.update(
             {'pGain': int.from_bytes(value, 'little', signed=True)})
 
         # iGain has subindex 2
-        value = self.readObject(index, 2)
+        value = self.read_object(index, 2)
         if value is None:
-            self.logInfo("Error getting iGain")
+            self.log_info("Error getting iGain")
             return None, False
-        posModeParameters.update(
+        pos_mode_parameters.update(
             {'iGain': int.from_bytes(value, 'little', signed=True)})
 
         # dGain has subindex 3
-        value = self.readObject(index, 3)
+        value = self.read_object(index, 3)
         if value is None:
-            self.logInfo("Error getting dGain")
+            self.log_info("Error getting dGain")
             return None, False
-        posModeParameters.update(
+        pos_mode_parameters.update(
             {'dGain': int.from_bytes(value, 'little', signed=True)})
 
         # vFeedFoward has subindex 4
-        value = self.readObject(index, 4)
+        value = self.read_object(index, 4)
         if value is None:
-            self.logInfo("Error getting vFeed")
+            self.log_info("Error getting vFeed")
             return None, False
         # these are not considered signed!
-        posModeParameters.update({'vFeed': int.from_bytes(value, 'little')})
+        pos_mode_parameters.update({'vFeed': int.from_bytes(value, 'little')})
 
         # aFeedFoward has subindex 5
-        value = self.readObject(index, 5)
+        value = self.read_object(index, 5)
         if value is None:
-            self.logInfo("Error getting aFeed")
+            self.log_info("Error getting aFeed")
             return None, False
-        posModeParameters.update({'aFeed': int.from_bytes(value, 'little')})
-        return posModeParameters, True
+        pos_mode_parameters.update({'aFeed': int.from_bytes(value, 'little')})
+        return pos_mode_parameters, True
 
-    def setPositionControlParameters(self, pGain, iGain, dGain, vFeed=0, aFeed=0):
+    def set_position_control_parameters(self, pGain, iGain, dGain, vFeed=0, aFeed=0):
         """Set position mode control parameters
 
         Set position control PID gains and feedfoward velocity and
@@ -1646,74 +1647,74 @@ class Epos:
         # validate attributes first
         # any float?
         if (isinstance(pGain, float) or isinstance(iGain, float) or
-            isinstance(dGain, float) or isinstance(vFeed, float) or
+                isinstance(dGain, float) or isinstance(vFeed, float) or
                 isinstance(aFeed, float)):
-            self.logInfo("Error all values must be int, not floats")
+            self.log_info("Error all values must be int, not floats")
             return False
         # any out of range?
-        if pGain < 0 or pGain > 2**15-1:
-            self.logInfo("Error pGain out of range: {0}".format(pGain))
+        if pGain < 0 or pGain > 2 ** 15 - 1:
+            self.log_info("Error pGain out of range: {0}".format(pGain))
             return False
-        if iGain < 0 or iGain > 2**15-1:
-            self.logInfo("Error iGain out of range: {0}".format(
+        if iGain < 0 or iGain > 2 ** 15 - 1:
+            self.log_info("Error iGain out of range: {0}".format(
                 iGain))
             return False
-        if dGain < 0 or dGain > 2**15-1:
-            self.logInfo("Error dGain out of range: {0}".format(
+        if dGain < 0 or dGain > 2 ** 15 - 1:
+            self.log_info("Error dGain out of range: {0}".format(
                 dGain))
             return False
-        if iGain < 0 or iGain > 2**15-1:
-            self.logInfo("Error iGain out of range: {0}".format(
+        if iGain < 0 or iGain > 2 ** 15 - 1:
+            self.log_info("Error iGain out of range: {0}".format(
                 pGain))
             return False
-        if vFeed < 0 or vFeed > 2**16-1:
-            self.logInfo("Error vFeed out of range: {0}".format(
+        if vFeed < 0 or vFeed > 2 ** 16 - 1:
+            self.log_info("Error vFeed out of range: {0}".format(
                 vFeed))
             return False
-        if aFeed < 0 or aFeed > 2**16-1:
-            self.logInfo("Error aFeed out of range: {0}".format(
+        if aFeed < 0 or aFeed > 2 ** 16 - 1:
+            self.log_info("Error aFeed out of range: {0}".format(
                 aFeed))
             return False
         # all ok. Proceed
         index = self.objectIndex['Position Control Parameter']
         # pGain has subindex 1
-        Ok = self.writeObject(
+        ok = self.write_object(
             index, 1, pGain.to_bytes(2, 'little', signed=True))
-        if not Ok:
-            self.logInfo("Error setting pGain")
+        if not ok:
+            self.log_info("Error setting pGain")
             return False
         # iGain has subindex 2
-        Ok = self.writeObject(
+        ok = self.write_object(
             index, 2, iGain.to_bytes(2, 'little', signed=True))
-        if not Ok:
-            self.logInfo("Error setting iGain")
+        if not ok:
+            self.log_info("Error setting iGain")
             return False
         # dGain has subindex 3
-        Ok = self.writeObject(
+        ok = self.write_object(
             index, 3, dGain.to_bytes(2, 'little', signed=True))
-        if not Ok:
-            self.logInfo("Error setting dGain")
+        if not ok:
+            self.log_info("Error setting dGain")
             return False
         # vFeed has subindex 4
-        Ok = self.writeObject(index, 4, vFeed.to_bytes(2, 'little'))
-        if not Ok:
-            self.logInfo("Error setting vFeed")
+        ok = self.write_object(index, 4, vFeed.to_bytes(2, 'little'))
+        if not ok:
+            self.log_info("Error setting vFeed")
             return False
         # aFeed has subindex 5
-        Ok = self.writeObject(index, 5, aFeed.to_bytes(2, 'little'))
-        if not Ok:
-            self.logInfo("Error setting aFeed")
+        ok = self.write_object(index, 5, aFeed.to_bytes(2, 'little'))
+        if not ok:
+            self.log_info("Error setting aFeed")
             return False
         # all ok, return True
         return True
 
-    def printPositionControlParameters(self):
+    def print_position_control_parameters(self):
         """Print position control mode parameters
 
         Request device for the position control mode parameters
         and prints it.
         """
-        posModeParameters, ok = self.readPositionControlParameters()
+        pos_mode_parameters, ok = self.read_position_control_parameters()
         if not ok:
             print('[Epos:{0}] Error requesting Position mode control parameters'.format(
                 sys._getframe().f_code.co_name))
@@ -1721,51 +1722,51 @@ class Epos:
         print('--------------------------------------------------------------')
         print('Current Position mode control parameters:')
         print('--------------------------------------------------------------')
-        for key, value in posModeParameters.items():
+        for key, value in pos_mode_parameters.items():
             print('{0}: {1}'.format(key, value))
         print('--------------------------------------------------------------')
 
-    def readFollowingError(self):
+    def read_following_error(self):
         """Returns the current following error
 
         Read the current following error value which is the difference
         between atual value and desired value.
 
         Returns:
-            tupple: a tupple containing:
+            tuple: a tuple containing:
 
-            :followingError: value of actual following error.
-            :OK: A boolean if all requests went ok or not.
+            :following_error: value of actual following error.
+            :ok: A boolean if all requests went ok or not.
         """
         index = self.objectIndex['Following Error Actual Value']
-        followingError = self.readObject(index, 0x0)
-        if not followingError:
-            self.logInfo("Error getting Following Error Actual Value")
+        following_error = self.read_object(index, 0x0)
+        if not following_error:
+            self.log_info("Error getting Following Error Actual Value")
             return None, False
-        followingError = int.from_bytes(followingError, 'little', signed=True)
-        return followingError, True
+        following_error = int.from_bytes(following_error, 'little', signed=True)
+        return following_error, True
 
-    def readMaxFollowingError(self):
+    def read_max_following_error(self):
         """Read the Max following error
 
         Read the max following error value which is the maximum allowed difference
-        between atual value and desired value in modulus.
+        between actual value and desired value in modulus.
 
         Returns:
-            tupple: a tupple containing:
+            tuple: a tuple containing:
 
-            :maxFollowingError: value of max following error.
-            :OK: A boolean if all requests went ok or not.
+            :max_following_error: value of max following error.
+            :ok: A boolean if all requests went ok or not.
         """
         index = self.objectIndex['Max Following Error']
-        maxFollowingError = self.readObject(index, 0x0)
-        if not maxFollowingError:
-            self.logInfo("Error getting Max Following Error Value")
+        max_following_error = self.read_object(index, 0x0)
+        if not max_following_error:
+            self.log_info("Error getting Max Following Error Value")
             return None, False
-        maxFollowingError = int.from_bytes(maxFollowingError, 'little')
-        return maxFollowingError, True
+        max_following_error = int.from_bytes(max_following_error, 'little')
+        return max_following_error, True
 
-    def setMaxFollowingError(self, maxFollowingError):
+    def set_max_following_error(self, max_following_error):
         """Set the Max following error
 
         The Max Following Error is the maximum permissible difference
@@ -1776,205 +1777,205 @@ class Epos:
         or it is even blocked.
 
         Args:
-            maxFollowingError: The value of maximum following error.
+            max_following_error: The value of maximum following error.
         Returns:
             bool: A boolean if all requests went ok or not.
         """
         # validate attributes
-        if not isinstance(maxFollowingError, int):
-            self.logInfo("Error input value must be int")
+        if not isinstance(max_following_error, int):
+            self.log_info("Error input value must be int")
             return False
-        if (maxFollowingError < 0 or maxFollowingError > 2**32-1):
-            self.logInfo("Error Max Following error out of range")
+        if (max_following_error < 0 or max_following_error > 2 ** 32 - 1):
+            self.log_info("Error Max Following error out of range")
             return False
 
         index = self.objectIndex['Max Following Error']
-        ok = self.writeObject(
-            index, 0x0, maxFollowingError.to_bytes(4, 'little'))
+        ok = self.write_object(
+            index, 0x0, max_following_error.to_bytes(4, 'little'))
         if not ok:
-            self.logInfo("Error setting Max Following Error Value")
+            self.log_info("Error setting Max Following Error Value")
             return False
         return True
 
-    def readPositionValue(self):
+    def read_position_value(self):
         """Read current position value
 
         Returns:
-            tupple: a tupple containing:
+            tuple: a tuple containing:
 
             :position: current position in quadrature counts.
-            :Ok: A boolean if all requests went ok or not.
+            :ok: A boolean if all requests went ok or not.
         """
         index = self.objectIndex['Position Actual Value']
-        position = self.readObject(index, 0x0)
+        position = self.read_object(index, 0x0)
         if position is None:
-            self.logInfo("Failed to read current position value")
+            self.log_info("Failed to read current position value")
             return None, False
         position = int.from_bytes(position, 'little', signed=True)
         return position, True
 
-    def readPositionWindow(self):
+    def read_position_window(self):
         """Read current position Window value.
 
-        Position window is the modulus threashold value in which the output
-        is considerated to be achieved.
+        Position window is the modulus threshold value in which the output
+        is considered to be achieved.
 
         Returns:
-            tupple: a tupple containing:
+            tuple: a tuple containing:
 
-            :postionWindow: current position window in quadrature counts.
-            :Ok: A boolean if all requests went ok or not.
+            :postion_window: current position window in quadrature counts.
+            :ok: A boolean if all requests went ok or not.
         """
         index = self.objectIndex['Position Window']
-        positionWindow, ok = self.readObject(index, 0x0)
+        position_window, ok = self.read_object(index, 0x0)
         if not ok:
-            self.logInfo("Failed to read current position window")
+            self.log_info("Failed to read current position window")
             return None, False
-        return positionWindow, True
+        return position_window, True
 
-    def setPositionWindow(self, positionWindow):
+    def set_position_window(self, position_window):
         """Set position Window value
 
-        Position window is the modulos threashold value in which the output
-        is considerated to be achieved.
+        Position window is the modulus threshold value in which the output
+        is considered to be achieved.
 
         Args:
-            positionWindow: position window in quadrature counts
+            position_window: position window in quadrature counts
         Returns:
             bool: A boolean if all requests went ok or not.
         """
         # validate attributes
-        if not isinstance(positionWindow, int):
-            self.logInfo("Error input value must be int")
+        if not isinstance(position_window, int):
+            self.log_info("Error input value must be int")
             return False
-        if positionWindow < 0 or positionWindow > 2**32-1:
-            self.logInfo("Error position window out of range")
+        if position_window < 0 or position_window > 2 ** 32 - 1:
+            self.log_info("Error position window out of range")
             return False
         index = self.objectIndex['Position Window']
-        ok = self.writeObject(index, 0x0, positionWindow.to_bytes(4, 'little'))
+        ok = self.write_object(index, 0x0, position_window.to_bytes(4, 'little'))
         if not ok:
-            self.logInfo("Failed to set current position window")
+            self.log_info("Failed to set current position window")
             return None, False
         return True
 
-    def readPositionWindowTime(self):
+    def read_position_window_time(self):
         """Read current position Window time value.
 
         Position window time is the minimum time in milliseconds in which
         the output must be inside the position window for the target is
-        considerated to have been reached.
+        considered to have been reached.
 
         Returns:
-            tupple: a tupple containing:
+            tuple: a tuple containing:
 
             :postionWindowTime: current position window time in milliseconds.
-            :Ok: A boolean if all requests went ok or not.
+            :ok: A boolean if all requests went ok or not.
         """
         index = self.objectIndex['Position Window Time']
-        positionWindowTime, ok = self.readObject(index, 0x0)
+        position_window_time, ok = self.read_object(index, 0x0)
         if not ok:
-            self.logInfo("Failed to read current position window time")
+            self.log_info("Failed to read current position window time")
             return None, False
-        return positionWindowTime, True
+        return position_window_time, True
 
-    def setPositionWindowTime(self, positionWindowTime):
+    def set_position_window_time(self, position_window_time):
         """Set position Window Time value
 
         Position window time is the minimum time in milliseconds in which
         the output must be inside the position window for the target is
-        considerated to have been reached.
+        considered to have been reached.
 
         Args:
-            positionWindowTime: position window time in milliseconds.
+            position_window_time: position window time in milliseconds.
         Returns:
             bool: A boolean if all requests went ok or not.
         """
         # validate attributes
-        if not isinstance(positionWindowTime, int):
-            self.logInfo("Error input value must be int")
+        if not isinstance(position_window_time, int):
+            self.log_info("Error input value must be int")
             return False
-        if positionWindowTime < 0 or positionWindowTime > 2**16-1:
-            self.logInfo("Error position window time out of range")
+        if position_window_time < 0 or position_window_time > 2 ** 16 - 1:
+            self.log_info("Error position window time out of range")
             return False
         index = self.objectIndex['Position Window Time']
-        ok = self.writeObject(
-            index, 0x0, positionWindowTime.to_bytes(2, 'little'))
+        ok = self.write_object(
+            index, 0x0, position_window_time.to_bytes(2, 'little'))
         if not ok:
-            self.logInfo("Failed to set current position window time")
+            self.log_info("Failed to set current position window time")
             return None, False
         return True
 
-    def readVelocityValue(self):
+    def read_velocity_value(self):
         """Read current velocity value
 
         Returns:
-            tupple: a tupple containing:
+            tuple: a tuple containing:
 
             :velocity: current velocity in rpm.
-            :Ok: A boolean if all requests went ok or not.
+            :ok: A boolean if all requests went ok or not.
         """
         index = self.objectIndex['Velocity Actual Value']
-        velocity, ok = self.readObject(index, 0x0)
+        velocity, ok = self.read_object(index, 0x0)
         if not ok:
-            self.logInfo("Failed to read current velocity value")
+            self.log_info("Failed to read current velocity value")
             return None, False
         return velocity, True
 
-    def readVelocityValueAveraged(self):
+    def read_velocity_value_averaged(self):
         """Read current velocity averaged value
 
         Returns:
-            tupple: a tupple containing:
+            tuple: a tuple containing:
 
             :velocity: current velocity in rpm.
-            :Ok: A boolean if all requests went ok or not.
+            :ok: A boolean if all requests went ok or not.
         """
         index = self.objectIndex['Velocity Actual Value Averaged']
-        velocity, ok = self.readObject(index, 0x0)
+        velocity, ok = self.read_object(index, 0x0)
         if not ok:
-            self.logInfo("Failed to read current velocity averaged value")
+            self.log_info("Failed to read current velocity averaged value")
             return None, False
         return velocity, True
 
-    def readCurrentValue(self):
+    def read_current_value(self):
         """Read current value
 
         Returns:
-            tupple: a tupple containing:
+            tuple: a tuple containing:
 
             :current: current in mA.
-            :Ok: A boolean if all requests went ok or not.
+            :ok: A boolean if all requests went ok or not.
         """
         index = self.objectIndex['Current Actual Value']
-        current, ok = self.readObject(index, 0x0)
+        current, ok = self.read_object(index, 0x0)
         if not ok:
-            self.logInfo("Failed to read current value")
+            self.log_info("Failed to read current value")
             return None, False
         return current, True
 
-    def readCurrentValueAveraged(self):
+    def read_current_value_averaged(self):
         """Read current averaged value
 
         Returns:
-            tupple: a tupple containing:
+            tuple: a tuple containing:
 
             :current: current averaged in mA.
-            :Ok: A boolean if all requests went ok or not.
+            :ok: A boolean if all requests went ok or not.
         """
         index = self.objectIndex['Current Actual Value Averaged']
-        current, ok = self.readObject(index, 0x0)
+        current, ok = self.read_object(index, 0x0)
         if not ok:
-            self.logInfo("Failed to read current averaged value")
+            self.log_info("Failed to read current averaged value")
             return None, False
         return current, True
 
-    def saveConfig(self):
-        """Save all configurrations
+    def save_config(self):
+        """Save all configurations
         """
         self.node.store()
         return
 
-    def loadConfig(self):
+    def load_config(self):
         """Load all configurations
         """
         self.node.restore()
@@ -2028,7 +2029,7 @@ def main():
     # instantiate object
     epos = Epos()
 
-    if not (epos.begin(args.nodeID, objectDictionary=args.objDict)):
+    if not (epos.begin(args.nodeID, object_dictionary=args.objDict)):
         logging.info('Failed to begin connection with EPOS device')
         logging.info('Exiting now')
         return
@@ -2054,7 +2055,7 @@ def main():
 
     # use simple hex values
     # try to read status word
-    statusword = epos.readObject(0x6041, 0)
+    statusword = epos.read_object(0x6041, 0)
     if not statusword:
         print("[EPOS] Error trying to read EPOS statusword\n")
         return
@@ -2063,16 +2064,16 @@ def main():
         print("The statusword is \n Hex={0:#06X} Bin={0:#018b}".format(
             int.from_bytes(statusword, 'little')))
 
-    # test printStatusWord and state
+    # test print_statusword and state
     print('----------------------------------------------------------', flush=True)
     print('Testing print of StatusWord and State and ControlWord')
     print('----------------------------------------------------------', flush=True)
-    epos.printEposState()
+    epos.print_state()
     print('----------------------------------------------------------', flush=True)
-    epos.printStatusWord()
+    epos.print_statusword()
     print('----------------------------------------------------------', flush=True)
     # try to read controlword using hex codes
-    controlword = epos.readObject(0x6040, 0)
+    controlword = epos.read_object(0x6040, 0)
     if not controlword:
         logging.info("[EPOS] Error trying to read EPOS controlword\n")
     else:
@@ -2088,11 +2089,11 @@ def main():
         print('----------------------------------------------------------', flush=True)
         # sending new controlword
         controlword = controlword.to_bytes(2, 'little')
-        epos.writeObject(0x6040, 0, controlword)
+        epos.write_object(0x6040, 0, controlword)
         # check led status to see if it is green and blinking
-    epos.printPositionControlParameters()
-    epos.printMotorConfig()
-    epos.printSensorConfig()
+    epos.print_position_control_parameters()
+    epos.print_motor_config()
+    epos.print_sensor_config()
     epos.disconnect()
     return
 

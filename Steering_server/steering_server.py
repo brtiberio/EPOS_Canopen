@@ -24,7 +24,6 @@
 import logging
 import sys
 import threading
-import signal
 from time import sleep
 import queue
 
@@ -32,59 +31,59 @@ sys.path.append('../')
 from epos import Epos
 
 
-def startCalibration(results=None, epos=None, exitFlag=None, debug=False):
-    '''
+def start_calibration(results=None, epos=None, exit_flag=None, debug=False):
+    """
     To be done
-    '''
+    """
     logger = logging.getLogger('CALIBRATION')
     if debug:
         logger.setLevel(logging.DEBUG)
     else:
         logger.setLevel(logging.INFO)
     # check if inputs were supplied
-    if not epos or not exitFlag or not results:
+    if not epos or not exit_flag or not results:
         logger.info('[{0}] Error: check arguments supplied\n'.format(
             sys._getframe().f_code.co_name))
         return
 
-    maxValue = 0
-    minValue = 0
+    max_value = 0
+    min_value = 0
     # start requesting for positions of sensor
 
-    while(exitFlag.isSet() == False):
-        currentValue, OK = epos.readPositionValue()
+    while (exit_flag.isSet() == False):
+        currentValue, OK = epos.read_position_value()
         if not OK:
             logging.info('({0}) Failed to request current position'.format(
                 sys._getframe().f_code.co_name))
-            minValue = None
-            maxValue = None
+            min_value = None
+            max_value = None
             return
-        if currentValue > maxValue:
-            maxValue = currentValue
-        if currentValue < minValue:
-            minValue = currentValue
+        if currentValue > max_value:
+            max_value = currentValue
+        if currentValue < min_value:
+            min_value = currentValue
         # sleep?
         sleep(0.005)
 
     logging.info('({0}) Finishing calibration routine'.format(
         sys._getframe().f_code.co_name))
-    results.put({'minValue': minValue, 'maxValue': maxValue})
+    results.put({'min_value': min_value, 'max_value': max_value})
     return
 
 
-def emcyErrorPrint(EmcyError):
-    '''Print any EMCY Error Received on CAN BUS
-    '''
+def emcy_error_print(emcy_error):
+    """Print any EMCY Error Received on CAN BUS
+    """
     logging.info('[{0}] Got an EMCY message: {1}'.format(
-        sys._getframe().f_code.co_name, EmcyError))
+        sys._getframe().f_code.co_name, emcy_error))
     return
 
 
 def main():
-    '''Perform steering wheel calibration.
+    """Perform steering wheel calibration.
 
     Ask user to turn the steering wheel to the extremes and finds the max
-    '''
+    """
 
     import argparse
     if (sys.version_info < (3, 0)):
@@ -122,47 +121,47 @@ def main():
     logging.getLogger('').addHandler(console)
 
     # event flag to exit
-    exitFlag = threading.Event()
+    exit_flag = threading.Event()
 
-    # instanciate object
+    # instantiate object
     epos = Epos()
 
-    minValue = 0
-    maxValue = 0
-    resultsQueue = queue.Queue()
+    min_value = 0
+    max_value = 0
+    results_queue = queue.Queue()
     # declare threads
-    eposThread = threading.Thread(name="EPOS", target=startCalibration,
-                                       args=(resultsQueue, epos, exitFlag))
+    epos_thread = threading.Thread(name="EPOS", target=start_calibration,
+                                   args=(results_queue, epos, exit_flag))
 
-    if not (epos.begin(args.nodeID, objectDictionary=args.objDict)):
+    if not (epos.begin(args.nodeID, object_dictionary=args.objDict)):
         logging.info('Failed to begin connection with EPOS device')
         logging.info('Exiting now')
         return
     # emcy messages handles
-    epos.node.emcy.add_callback(emcyErrorPrint)
+    epos.node.emcy.add_callback(emcy_error_print)
 
     try:
-        eposThread.start()
+        epos_thread.start()
         print("Please move steering wheel to extreme positions to calibrate...")
         input("Press Enter when done...")
     except KeyboardInterrupt as e:
-        logging.warning('Got execption {0}... exiting now'.format(e))
+        logging.warning('Got exception {0}... exiting now'.format(e))
         return
 
-    exitFlag.set()
-    eposThread.join()
+    exit_flag.set()
+    epos_thread.join()
     try:
-        retVals = resultsQueue.get(timeout=30)
+        ret_vals = results_queue.get(timeout=30)
     except queue.Empty:
-        logging.info("Queue responce timeout")
+        logging.info("Queue response timeout")
         return
-    if retVals is None:
+    if ret_vals is None:
         logging.info("Failed to perform calibration")
         return
-    maxValue = retVals['maxValue']
-    minValue = retVals['minValue']
+    max_value = ret_vals['max_value']
+    min_value = ret_vals['min_value']
     print("---------------------------------------------")
-    print("Max Value: {0}\nMin Value: {1}".format(maxValue, minValue))
+    print("Max Value: {0}\nMin Value: {1}".format(max_value, min_value))
     print("---------------------------------------------")
     return
 
