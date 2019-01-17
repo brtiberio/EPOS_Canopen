@@ -32,6 +32,7 @@ class Epos:
     nodeID = 1
     network = None
     _connected = False
+    errorDetected = False
 
     # List of motor types
     motorType = {'DC motor': 1, 'Sinusoidal PM BL motor': 10,
@@ -211,6 +212,42 @@ class Epos:
              9: 'fault reaction active (disabled)', 10: 'fault reaction active (enable)', 11: 'fault',
              -1: 'Unknown'}
 
+    # dictionary describing emcy codes received on CANBus
+    emcy_descriptions = [
+        # Code   Description
+        (0x0000, "Error Reset / No Error"),
+        (0x1000, "Generic Error"),
+        (0x2310, "Over Current Error"),
+        (0x3210, "Over Voltage Error"),
+        (0x3220, "Under Voltage"),
+        (0x4210, "Over Temperature"),
+        (0x5113, "Supply Voltage (+5V) too low"),
+        (0x6100, "Internal Software Error"),
+        (0x6320, "Software Parameter Error"),
+        (0x7320, "Sensor Position Error"),
+        (0x8110, "CAN Overrun Error (Objects lost)"),
+        (0x8111, "CAN Overrun Error"),
+        (0x8120, "CAN Passive Mode Error"),
+        (0x8130, "CAN Life Guard Error"),
+        (0x8150, "CAN Transmit COB-ID collision"),
+        (0x81FD, "CAN Bus Off"),
+        (0x81FE, "CAN Rx Queue Overrun"),
+        (0x81FF, "CAN Tx Queue Overrun"),
+        (0x8210, "CAN PDO length Error"),
+        (0x8611, "Following Error"),
+        (0x9000, "External Error"),
+        (0xF001, "Hall Sensor Error"),
+        (0xFF02, "Index Processing Error"),
+        (0xFF03, "Encoder Resolution Error"),
+        (0xFF04, "Hall Sensor not found Error"),
+        (0xFF06, "Negative Limit Error"),
+        (0xFF07, "Positive Limit Error"),
+        (0xFF08, "Hall Angle detection Error"),
+        (0xFF09, "Software Position Limit Error"),
+        (0xFF0A, "Position Sensor Breach"),
+        (0xFF0B, "System Overloaded")
+    ]
+
     def __init__(self, _network=None, debug=False):
 
         # check if network is passed over or create a new one
@@ -241,22 +278,39 @@ class Epos:
         try:
             self.node = self.network.add_node(
                 nodeID, object_dictionary=object_dictionary)
+            # emcy messages handles
+            self.node.emcy.add_callback(self.emcy_error_print)
             # in not connected?
             if not self.network.bus:
                 # so try to connect
                 self.network.connect(channel=_channel, bustype=_bustype)
-        except Exception as e:
-            self.log_info('Exception caught:{0}'.format(str(e)))
-        finally:
-            # check if is connected
-            if not self.network.bus:
+            val, _ = self.read_statusword()  # test if we really have response or is only connected to CAN bus
+            if val is None:
                 self._connected = False
-            else:
-                self._connected = True
+        except Exception as e:
+            self.log_info("Exception caught:{0}".format(str(e)))
+            self._connected = False
+        finally:
             return self._connected
 
     def disconnect(self):
         self.network.disconnect()
+        return
+
+    def emcy_error_print(self, emcy_error):
+        """Print any EMCY Error Received on CAN BUS
+        """
+        if emcy_error.code is 0:
+            self.errorDetected = False
+        else:
+            for code, description in self.emcy_descriptions:
+                if emcy_error.code == code:
+                    self.errorDetected = True
+                    self.log_info("Got an EMCY message: Code: 0x{0:04X} {1}".format(code, description))
+                    return
+            # if no description was found, print generic info
+            self.errorDetected = True
+            self.log_info('Got an EMCY message: {0}'.format(emcy_error))
         return
 
     # --------------------------------------------------------------
