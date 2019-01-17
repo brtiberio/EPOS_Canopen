@@ -314,7 +314,7 @@ class Epos:
              index:     reference of dictionary object index
              subindex:  reference of dictionary object subindex
          Returns:
-             bytes:  message returned by EPOS or empty if unsucessfull
+             bytes:  message returned by EPOS or empty if unsuccessful
         """
         if self._connected:
             try:
@@ -357,9 +357,9 @@ class Epos:
                 self.__class__.__name__))
             return False
 
-    ############################################################################
+    # --------------------------------------------------------------------------
     # High level functions
-    ############################################################################
+    # --------------------------------------------------------------------------
 
     def read_statusword(self):
         """Read StatusWord
@@ -471,85 +471,73 @@ class Epos:
             # state 'start' (0)
             # statusWord == x0xx xxx0  x000 0000
             bitmask = 0b0100000101111111
-            if (bitmask & statusword == 0):
-                ID = 0
-                return ID
+            if bitmask & statusword == 0:
+                return 0
 
             # state 'not ready to switch on' (1)
             # statusWord == x0xx xxx1  x000 0000
             bitmask = 0b0100000101111111
-            if (bitmask & statusword == 256):
-                ID = 1
-                return ID
+            if bitmask & statusword == 256:
+                return 1
 
             # state 'switch on disabled' (2)
             # statusWord == x0xx xxx1  x100 0000
             bitmask = 0b0100000101111111
-            if (bitmask & statusword == 320):
-                ID = 2
-                return ID
+            if bitmask & statusword == 320:
+                return 2
 
             # state 'ready to switch on' (3)
             # statusWord == x0xx xxx1  x010 0001
             bitmask = 0b0100000101111111
-            if (bitmask & statusword == 289):
-                ID = 3
-                return ID
+            if bitmask & statusword == 289:
+                return 3
 
             # state 'switched on' (4)
             # statusWord == x0xx xxx1  x010 0011
             bitmask = 0b0000000101111111
-            if (bitmask & statusword == 291):
-                ID = 4
-                return ID
+            if bitmask & statusword == 291:
+                return 4
 
             # state 'refresh' (5)
             # statusWord == x1xx xxx1  x010 0011
             bitmask = 0b0100000101111111
-            if (bitmask & statusword == 16675):
-                ID = 5
-                return ID
+            if bitmask & statusword == 16675:
+                return 5
 
             # state 'measure init' (6)
             # statusWord == x1xx xxx1  x011 0011
             bitmask = 0b0100000101111111
-            if (bitmask & statusword == 16691):
-                ID = 6
-                return ID
+            if bitmask & statusword == 16691:
+                return 6
             # state 'operation enable' (7)
             # statusWord == x0xx xxx1  x011 0111
             bitmask = 0b0100000101111111
-            if (bitmask & statusword == 311):
-                ID = 7
-                return ID
+            if bitmask & statusword == 311:
+                return 7
 
             # state 'Quick Stop Active' (8)
             # statusWord == x0xx xxx1  x001 0111
             bitmask = 0b0100000101111111
-            if (bitmask & statusword == 279):
-                ID = 8
-                return ID
+            if bitmask & statusword == 279:
+                return 8
 
             # state 'fault reaction active (disabled)' (9)
             # statusWord == x0xx xxx1  x000 1111
             bitmask = 0b0100000101111111
-            if (bitmask & statusword == 271):
-                ID = 9
-                return ID
+            if bitmask & statusword == 271:
+                return 9
 
             # state 'fault reaction active (enabled)' (10)
             # statusWord == x0xx xxx1  x001 1111
             bitmask = 0b0100000101111111
-            if (bitmask & statusword == 287):
-                ID = 10
-                return ID
+            if bitmask & statusword == 287:
+                return 10
 
             # state 'fault' (11)
             # statusWord == x0xx xxx1  x000 1000
             bitmask = 0b0100000101111111
-            if (bitmask & statusword == 264):
-                ID = 11
-                return ID
+            if bitmask & statusword == 264:
+                return 11
 
         # in case of unknown state or fail
         # in case of unknown state or fail
@@ -631,7 +619,7 @@ class Epos:
         if not controlword:
             controlword, ok = self.read_controlword()
             if not ok:
-                print('[{0}:{1}] Failed to retreive controlword\n'.format(
+                print('[{0}:{1}] Failed to retrieve controlword\n'.format(
                     self.__class__.__name__,
                     sys._getframe().f_code.co_name))
                 return
@@ -695,7 +683,7 @@ class Epos:
         index = self.objectIndex['PositionMode Setting Value']
         subindex = 0
         if position < -2 ** 31 or position > 2 ** 31 - 1:
-            self.log_info("Postion out of range")
+            self.log_info("Position out of range")
             return False
         # change to bytes as an int32 value
         position = position.to_bytes(4, 'little', signed=True)
@@ -1413,8 +1401,8 @@ class Epos:
         range = [-2147483648 | 2147483647]
 
         Args:
-            min_pos: minimum possition limit
-            max_pos: maximum possition limit
+            min_pos: minimum position limit
+            max_pos: maximum position limit
         Return:
             bool: A boolean if all went as expected or not.
         """
@@ -1639,8 +1627,8 @@ class Epos:
             pGain: Proportional gain value
             iGain: Integral gain value
             dGain: Derivative gain value
-            vFeed: velocity feed foward gain value. Default to 0
-            aFeed: acceleration feed foward gain value. Default to 0
+            vFeed: velocity feed forward gain value. Default to 0
+            aFeed: acceleration feed forward gain value. Default to 0
         Returns:
             OK: A boolean if all requests went ok or not
         """
@@ -1730,7 +1718,7 @@ class Epos:
         """Returns the current following error
 
         Read the current following error value which is the difference
-        between atual value and desired value.
+        between actual value and desired value.
 
         Returns:
             tuple: a tuple containing:
@@ -1785,7 +1773,7 @@ class Epos:
         if not isinstance(max_following_error, int):
             self.log_info("Error input value must be int")
             return False
-        if (max_following_error < 0 or max_following_error > 2 ** 32 - 1):
+        if max_following_error < 0 or max_following_error > 2 ** 32 - 1:
             self.log_info("Error Max Following error out of range")
             return False
 
@@ -1823,7 +1811,7 @@ class Epos:
         Returns:
             tuple: a tuple containing:
 
-            :postion_window: current position window in quadrature counts.
+            :position_window: current position window in quadrature counts.
             :ok: A boolean if all requests went ok or not.
         """
         index = self.objectIndex['Position Window']
@@ -1868,7 +1856,7 @@ class Epos:
         Returns:
             tuple: a tuple containing:
 
-            :postionWindowTime: current position window time in milliseconds.
+            :position_window_time: current position window time in milliseconds.
             :ok: A boolean if all requests went ok or not.
         """
         index = self.objectIndex['Position Window Time']
