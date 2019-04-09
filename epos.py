@@ -284,6 +284,7 @@ class Epos:
             if not self.network.bus:
                 # so try to connect
                 self.network.connect(channel=_channel, bustype=_bustype)
+            self._connected = True
             val, _ = self.read_statusword()  # test if we really have response or is only connected to CAN bus
             if val is None:
                 self._connected = False

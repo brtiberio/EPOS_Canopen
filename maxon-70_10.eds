@@ -2514,6 +2514,8 @@ ObjFlags=3
 ParameterName=Internal DataRecorder Data Buffer
 ObjectType=0x2
 ;StorageLocation=RAM
+DataType=0x000F
+AccessType=ro
 ObjFlags=3
 
 [2020]

@@ -25,27 +25,32 @@ import logging
 import sys
 import threading
 import time
-import queue
 import numpy as np
+from can import CanError
 
 sys.path.append('../')
 from epos import Epos
 
+import pydevd
+pydevd.settrace('192.168.31.124', port=8000, stdoutToServer=True, stderrToServer=True)
 
 # ----------------------------------------------------------------------------------------------------------------------
 # Redefined class for Epos controller to add additional functionalities
 # ----------------------------------------------------------------------------------------------------------------------
+
+
 class EposController(Epos):
     maxFollowingError = 7500
-    minValue = 0  # type: int
-    maxValue = 0  # type: int
-    zeroRef = 0  # type: int
+    min_value = 0  # type: int
+    max_value = 0  # type: int
+    zero_ref = 0  # type: int
     calibrated = 0  # type: bool
     QC_TO_DELTA = -7.501E-4  # type: float
     DELTA_TO_QC = 1.0 / QC_TO_DELTA  # type: float
-    maxAngle = 29  # type: int
-    minAngle = -maxAngle
+    max_angle = 29  # type: int
+    min_angle = -max_angle
     dataDir = "./data/"  # type: str
+    current_position = None
 
     def get_qc_position(self, delta):
         """ Converts angle of wheels to qc
@@ -62,18 +67,18 @@ class EposController(Epos):
         if not self.calibrated:
             self.log_info('Device is not yet calibrated')
             return None
-        if delta > self.maxAngle:
-            self.log_info('Angle exceeds limits: maxAngle: {0}\t requested: {1}'.format(
-                self.maxAngle,
+        if delta > self.max_angle:
+            self.log_info('Angle exceeds limits: max_angle: {0}\t requested: {1}'.format(
+                self.max_angle,
                 delta))
             return None
-        if delta < self.minAngle:
-            self.log_info('Angle exceeds limits: minAngle: {0}\t requested: {1}'.format(
-                self.minAngle,
+        if delta < self.min_angle:
+            self.log_info('Angle exceeds limits: min_angle: {0}\t requested: {1}'.format(
+                self.min_angle,
                 delta))
             return None
         # perform calculations y = mx + b
-        val = delta * self.DELTA_TO_QC + self.zeroRef
+        val = delta * self.DELTA_TO_QC + self.zero_ref
         val = round(val)
         return int(val)
 
@@ -92,7 +97,7 @@ class EposController(Epos):
             return None
 
         # perform calculations y = mx + b and solve to x
-        delta = (qc - self.zeroRef) * self.QC_TO_DELTA
+        delta = (qc - self.zero_ref) * self.QC_TO_DELTA
         return float(delta)
 
     def start_calibration(self, exit_flag=None):
@@ -149,12 +154,12 @@ class EposController(Epos):
 
         self.log_info(
             'Finished calibration routine with {0} fail readings'.format(num_fails))
-        self.minValue = min_value
-        self.maxValue = max_value
-        self.zeroRef = round((max_value - min_value) / 2.0 + min_value)
+        self.min_value = min_value
+        self.max_value = max_value
+        self.zero_ref = round((max_value - min_value) / 2.0 + min_value)
         self.calibrated = 1
-        self.log_info('MinValue: {0}, MaxValue: {1}, ZeroRef: {2}'.format(
-            self.minValue, self.maxValue, self.zeroRef
+        self.log_info('MinValue: {0}, MaxValue: {1}, zero_ref: {2}'.format(
+            self.min_value, self.max_value, self.zero_ref
         ))
         return
 
@@ -221,22 +226,11 @@ class EposController(Epos):
                     self.log_info('Failed to change Epos state to shutdown')
                 return False
 
-        if pos_final > self.maxValue or pos_final < self.minValue:
+        if pos_final > self.max_value or pos_final < self.min_value:
             self.log_info('Final position exceeds physical limits')
             return False
 
-        p_start, ok = self.read_position_value()
-        num_fails = 0
-        if not ok:
-            self.log_info('Failed to request current position')
-            while num_fails < 5 and not ok:
-                p_start, ok = self.read_position_value()
-                if not ok:
-                    num_fails = num_fails + 1
-            if num_fails == 5:
-                self.log_info(
-                    'Failed to request current position for 5 times... exiting')
-                return False
+        p_start = self.current_position
 
         # -----------------------------------------------------------------------
         # get current state of epos and change it if necessary
@@ -314,14 +308,11 @@ class EposController(Epos):
                 # reading a position takes time, as so, it should be enough
                 # for it reaches end value since steps are expected to be
                 # small
-                aux, ok = self.read_position_value()
-                if not ok:
-                    self.log_info('Failed to request current position')
-                    num_fails = num_fails + 1
-                else:
-                    out_var = np.append(out_var, [aux])
-                    tout = np.append(tout, [time.monotonic() - t0])
-                    ref_error = np.append(ref_error, [in_var[-1] - out_var[-1]])
+                time.sleep(0.01)
+                aux = self.current_position
+                out_var = np.append(out_var, [aux])
+                tout = np.append(tout, [time.monotonic() - t0])
+                ref_error = np.append(ref_error, [in_var[-1] - out_var[-1]])
             # not finished
             else:
                 # get reference position for that time
@@ -353,25 +344,47 @@ class EposController(Epos):
                 if not ok:
                     self.log_info('Failed to set target position')
                     num_fails = num_fails + 1
-                aux, ok = self.read_position_value()
-                if not ok:
-                    self.log_info('Failed to request current position')
-                    num_fails = num_fails + 1
-                else:
-                    out_var = np.append(out_var, [aux])
-                    tout = np.append(tout, [time.monotonic() - t0])
-                    ref_error = np.append(ref_error, [in_var[-1] - out_var[-1]])
-                    if abs(ref_error[-1]) > max_error:
-                        self.change_state('shutdown')
-                        self.log_info(
-                            'Something seems wrong, error is growing to mutch!!!')
-                        return False
+                time.sleep(0.01)
+                aux = self.current_position
+
+                out_var = np.append(out_var, [aux])
+                tout = np.append(tout, [time.monotonic() - t0])
+                ref_error = np.append(ref_error, [in_var[-1] - out_var[-1]])
+                if abs(ref_error[-1]) > max_error:
+                    self.change_state('shutdown')
+                    self.log_info(
+                        'Something seems wrong, error is growing to mutch!!!')
+                    return False
             # require sleep?
-            time.sleep(0.005)
-        self.log_info('Finished with {0} fails'.format(num_fails))
+            time.sleep(0.01)
+        self.log_info('Finished positioning. Current position {0}'.format(self.current_position))
         return True
 
+    def print_position(self, message):
+        """Print velocity value received from PDO
 
+        Args:
+            message: message received in PDO
+        """
+        self.log_debug('{0} received'.format(message.name))
+        for var in message:
+            self.log_debug('{0} = {1:06X}'.format(var.name, var.raw))
+            if var.index == 0x6041:
+                pass
+            if var.index == 0x6064:
+                logging.info('{0:+06.3f} Degrees'.format(self.get_delta_angle(var.raw)))
+
+    def update_position(self, message):
+        """Update position value received from PDO
+
+        Args:
+            message: message received in PDO
+        """
+        self.log_debug('{0} received'.format(message.name))
+        for var in message:
+            # self.log_debug('{0} = {1:06X}'.format(var.name, var.raw))
+            if var.index == 0x6064:
+                self.current_position = var.raw
 
 
 def main():
@@ -381,7 +394,7 @@ def main():
     """
 
     import argparse
-    if (sys.version_info < (3, 0)):
+    if sys.version_info < (3, 0):
         print("Please use python version 3")
         return
 
@@ -419,14 +432,11 @@ def main():
     exit_flag = threading.Event()
 
     # instantiate object
-    epos = Epos()
+    epos = EposController()
 
-    min_value = 0
-    max_value = 0
-    results_queue = queue.Queue()
     # declare threads
-    epos_thread = threading.Thread(name="EPOS", target=start_calibration,
-                                   args=(results_queue, epos, exit_flag))
+    epos_thread = threading.Thread(name="EPOS", target=epos.start_calibration,
+                                   args=(exit_flag, ))
 
     if not (epos.begin(args.nodeID, object_dictionary=args.objDict)):
         logging.info('Failed to begin connection with EPOS device')
@@ -443,20 +453,55 @@ def main():
 
     exit_flag.set()
     epos_thread.join()
-    try:
-        ret_vals = results_queue.get(timeout=30)
-    except queue.Empty:
-        logging.info("Queue response timeout")
-        return
-    if ret_vals is None:
-        logging.info("Failed to perform calibration")
-        return
-    max_value = ret_vals['max_value']
-    min_value = ret_vals['min_value']
     print("---------------------------------------------")
-    print("Max Value: {0}\nMin Value: {1}".format(max_value, min_value))
+    print("Max Value: {0}\nMin Value: {1}".format(epos.max_value, epos.min_value))
     print("---------------------------------------------")
+
+    # configure pdo objects.
+    if args.objDict is None:
+        return
+    # --------------------------------------------------------------------------
+    # configure pdo objects
+    # --------------------------------------------------------------------------
+    epos.node.pdo.read()
+    epos.node.nmt.state = 'PRE-OPERATIONAL'
+    # Do some changes to TxPDO3
+    epos.node.pdo.tx[3].clear()
+    epos.node.pdo.tx[3].add_variable(0x6041, 0, 16)
+    epos.node.pdo.tx[3].add_variable(0x6064, 0, 32)
+    epos.node.pdo.tx[3].enabled = True
+    epos.node.pdo.tx[2].inhibit_time = 0.1
+    epos.node.pdo.tx[3].trans_type = 255
+    epos.node.pdo.tx[3].add_callback(epos.update_position)
+    epos.node.pdo.tx[3].save()
+    # Set back into operational mode
+    epos.node.nmt.state = 'OPERATIONAL'
+    # TODO change State is failing. to be checked
+    time.sleep(0.01)
+    epos.change_state('shutdown')
+
+    print("Ctrl+C to exit... ")
+    while True:
+        try:
+            angle = float(input('Set your position...'))
+            print('Setting angle to {0}'.format(angle))
+            epos.move_to_position(angle, is_angle=True)
+            time.sleep(3)
+        except CanError:
+            print("Message NOT sent")
+            break
+        except ValueError:
+            print("Invalid value")
+        except KeyboardInterrupt as e:
+            print('Got {0}\nexiting now'.format(e))
+            break
+        finally:
+            pass
+
+    epos.node.nmt.state = 'PRE-OPERATIONAL'
+    epos.change_state('shutdown')
     return
+
 
 
 if __name__ == '__main__':
