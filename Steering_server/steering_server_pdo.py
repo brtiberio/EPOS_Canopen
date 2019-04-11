@@ -28,14 +28,13 @@ import time
 import numpy as np
 from can import CanError
 
-sys.path.append('../')
-from epos import Epos
+from ..epos import Epos
 
-import pydevd
-pydevd.settrace('192.168.31.124', port=8000, stdoutToServer=True, stderrToServer=True)
+# import pydevd
+# pydevd.settrace('192.168.31.124', port=8000, stdoutToServer=True, stderrToServer=True)
 
 # ----------------------------------------------------------------------------------------------------------------------
-# Redefined class for Epos controller to add additional functionalities
+# Redefined class for Epos controller to add additional functionality
 # ----------------------------------------------------------------------------------------------------------------------
 
 
@@ -82,7 +81,7 @@ class EposController(Epos):
         val = round(val)
         return int(val)
 
-    def get_delta_angle(self, qc):
+    def get_delta_angle(self, qc=None):
         """ Converts qc of steering wheel to angle of wheel
 
         Given the desired qc steering position, convert the requested value to angle of bicycle model in degrees.
@@ -95,7 +94,8 @@ class EposController(Epos):
         if not self.calibrated:
             self.log_info('Device is not yet calibrated')
             return None
-
+        if qc is None:
+            qc = self.current_position
         # perform calculations y = mx + b and solve to x
         delta = (qc - self.zero_ref) * self.QC_TO_DELTA
         return float(delta)
@@ -157,7 +157,7 @@ class EposController(Epos):
         self.min_value = min_value
         self.max_value = max_value
         self.zero_ref = round((max_value - min_value) / 2.0 + min_value)
-        self.calibrated = 1
+        self.calibrated = True
         self.log_info('MinValue: {0}, MaxValue: {1}, zero_ref: {2}'.format(
             self.min_value, self.max_value, self.zero_ref
         ))
@@ -262,17 +262,17 @@ class EposController(Epos):
         # Find remaining constants
         # -----------------------------------------------------------------------
         # absolute of displacement
-        l = abs(pos_final - p_start)
-        if l is 0:
+        dist_to_travel = abs(pos_final - p_start)
+        if dist_to_travel is 0:
             # already in final point
             return True
         # do we need  a constant velocity phase?
-        if l > max_l13:
-            t2 = 2.0 * (l - max_l13) / (max_acceleration * t1_max)
+        if dist_to_travel > max_l13:
+            t2 = 2.0 * (dist_to_travel - max_l13) / (max_acceleration * t1_max)
             t1 = t1_max
             t3 = t1_max
         else:
-            t1 = np.sqrt(2 * l / max_acceleration)
+            t1 = np.sqrt(2 * dist_to_travel / max_acceleration)
             t2 = 0.0
             t3 = t1
 
@@ -470,7 +470,8 @@ def main():
     epos.node.pdo.tx[3].add_variable(0x6041, 0, 16)
     epos.node.pdo.tx[3].add_variable(0x6064, 0, 32)
     epos.node.pdo.tx[3].enabled = True
-    epos.node.pdo.tx[2].inhibit_time = 0.1
+    # multiple of 100 microseconds
+    epos.node.pdo.tx[2].inhibit_time = 10  # 1 millisecond
     epos.node.pdo.tx[3].trans_type = 255
     epos.node.pdo.tx[3].add_callback(epos.update_position)
     epos.node.pdo.tx[3].save()
@@ -483,10 +484,13 @@ def main():
     print("Ctrl+C to exit... ")
     while True:
         try:
-            angle = float(input('Set your position...'))
-            print('Setting angle to {0}'.format(angle))
-            epos.move_to_position(angle, is_angle=True)
-            time.sleep(3)
+            # run it free to test update
+            epos.log_info("current_position: {0:+06.2f}".format(epos.get_delta_angle()))
+            time.sleep(0.01)
+            # angle = float(input('Set your position...'))
+            # print('Setting angle to {0}'.format(angle))
+            # epos.move_to_position(angle, is_angle=True)
+            # time.sleep(3)
         except CanError:
             print("Message NOT sent")
             break
@@ -501,7 +505,6 @@ def main():
     epos.node.nmt.state = 'PRE-OPERATIONAL'
     epos.change_state('shutdown')
     return
-
 
 
 if __name__ == '__main__':
